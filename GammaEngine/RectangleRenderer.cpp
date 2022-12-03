@@ -1,0 +1,38 @@
+#include "stdafx.h"
+
+RectangleRenderer::RectangleRenderer() :Renderer()
+{
+}
+RectangleRenderer::RectangleRenderer(Transform* t) :Renderer(t)
+{
+	size = vector2(100, 100);
+}
+
+RectangleRenderer::RectangleRenderer(Transform* t, vector2 s) :Renderer(t, s)
+{
+
+}
+
+RectangleRenderer::RectangleRenderer(Transform* t, vector2 s, vector2 o) :Renderer(t, s, o)
+{
+}
+
+RectangleRenderer::~RectangleRenderer()
+{
+
+}
+void RectangleRenderer::Render()
+{
+	vector2 renderPos = transform->position + offset;
+	vector2 renderSize = size;
+	renderSize.x = renderSize.x * transform->scale.x;
+	renderSize.y = renderSize.y * transform->scale.y;
+	Renderer::Adjust(renderPos, renderSize);
+	D2D1_RECT_F rectangle;
+	rectangle.left = renderPos.x-renderSize.x/2;
+	rectangle.top = renderPos.y - renderSize.y / 2;
+	rectangle.right = renderPos.x + renderSize.x / 2;
+	rectangle.bottom= renderPos.y + renderSize.y / 2;
+
+	renderTarget->DrawRectangle(rectangle, brush);
+}
