@@ -6,9 +6,10 @@ public:
 	TestScript();
 	TestScript(Transform *);
 	~TestScript();
-	virtual void Update();
-	virtual void OnCollisionEnter();
-	virtual void OnCollisionExit();
+	virtual void Start();
+	virtual void LateUpdate();
+	virtual void OnCollisionEnter(CollisionResponse response);
+	virtual void OnCollisionExit(CollisionResponse response);
 private:
 
 };

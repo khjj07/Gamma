@@ -40,6 +40,21 @@
     <Filter Include="Framework\Component\Collider">
       <UniqueIdentifier>{b7a4ab52-90ee-4dda-bb5d-a2024c14b611}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Framework\System\Timer">
+      <UniqueIdentifier>{8f03c5c3-406c-4b65-b217-0374f4fb6efc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\System\Tween">
+      <UniqueIdentifier>{1664fe5d-5eff-48d5-958a-8268a9312870}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\System\Physics">
+      <UniqueIdentifier>{129ac39d-ed30-4e89-8039-4c8b88d41bfb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\System\Debug">
+      <UniqueIdentifier>{1fdbd7c9-c899-409b-88bf-d820ec0f000f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Scripts">
+      <UniqueIdentifier>{34c46d23-9113-4391-a035-fb9c9065ffc0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -93,9 +108,6 @@
     <ClInclude Include="Renderer.h">
       <Filter>Framework\Component\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="TestScript.h">
-      <Filter>Game\Prefab</Filter>
-    </ClInclude>
     <ClInclude Include="Test.h">
       <Filter>Game\Prefab</Filter>
     </ClInclude>
@@ -108,14 +120,8 @@
     <ClInclude Include="Cam1.h">
       <Filter>Game\Prefab</Filter>
     </ClInclude>
-    <ClInclude Include="Cam1Script.h">
-      <Filter>Game\Prefab</Filter>
-    </ClInclude>
     <ClInclude Include="BoxCollider.h">
       <Filter>Framework\Component\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="CollisionSystem.h">
-      <Filter>Framework\System</Filter>
     </ClInclude>
     <ClInclude Include="Collider.h">
       <Filter>Framework\Component\Collider</Filter>
@@ -131,6 +137,42 @@
     </ClInclude>
     <ClInclude Include="Util.h">
       <Filter>Framework\Etc</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Framework\System\Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="TimerHandler.h">
+      <Filter>Framework\System\Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="Tween.h">
+      <Filter>Framework\System\Tween</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics.h">
+      <Filter>Framework\System\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionSystem.h">
+      <Filter>Framework\System\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="LineRenderer.h">
+      <Filter>Framework\Component\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Debug.h">
+      <Filter>Framework\System\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="CircleCollider.h">
+      <Filter>Framework\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Box2.h">
+      <Filter>Game\Prefab</Filter>
+    </ClInclude>
+    <ClInclude Include="Cam1Script.h">
+      <Filter>Game\Scripts</Filter>
+    </ClInclude>
+    <ClInclude Include="Box2Script.h">
+      <Filter>Game\Scripts</Filter>
+    </ClInclude>
+    <ClInclude Include="TestScript.h">
+      <Filter>Game\Scripts</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -173,9 +215,6 @@
     <ClCompile Include="Renderer.cpp">
       <Filter>Framework\Component\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="TestScript.cpp">
-      <Filter>Game\Prefab</Filter>
-    </ClCompile>
     <ClCompile Include="Test.cpp">
       <Filter>Game\Prefab</Filter>
     </ClCompile>
@@ -188,14 +227,8 @@
     <ClCompile Include="Cam1.cpp">
       <Filter>Game\Prefab</Filter>
     </ClCompile>
-    <ClCompile Include="Cam1Script.cpp">
-      <Filter>Game\Prefab</Filter>
-    </ClCompile>
     <ClCompile Include="BoxCollider.cpp">
       <Filter>Framework\Component\Collider</Filter>
-    </ClCompile>
-    <ClCompile Include="CollisionSystem.cpp">
-      <Filter>Framework\System</Filter>
     </ClCompile>
     <ClCompile Include="Collider.cpp">
       <Filter>Framework\Component\Collider</Filter>
@@ -211,6 +244,42 @@
     </ClCompile>
     <ClCompile Include="Util.cpp">
       <Filter>Framework\Etc</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Framework\System\Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="TimerHandler.cpp">
+      <Filter>Framework\System\Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="Tween.cpp">
+      <Filter>Framework\System\Tween</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics.cpp">
+      <Filter>Framework\System\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionSystem.cpp">
+      <Filter>Framework\System\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="LineRenderer.cpp">
+      <Filter>Framework\Component\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug.cpp">
+      <Filter>Framework\System\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="CircleCollider.cpp">
+      <Filter>Framework\Component\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2.cpp">
+      <Filter>Game\Prefab</Filter>
+    </ClCompile>
+    <ClCompile Include="Cam1Script.cpp">
+      <Filter>Game\Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="TestScript.cpp">
+      <Filter>Game\Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2Script.cpp">
+      <Filter>Game\Scripts</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

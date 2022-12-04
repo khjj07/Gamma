@@ -20,6 +20,7 @@
 #include <d2d1.h>
 #include <dwrite.h>
 #include <vector>
+#include  <algorithm>
 #include "Type.h"
 #include "Util.h"
 //base
@@ -29,18 +30,25 @@
 #include "DirectXModule.h"
 #include "Screen.h"
 #include "Input.h"
+#include "Time.h"
+#include "TimerHandler.h"
+#include "Timer.h"
+#include "Tween.h"
 
 #include "Component.h"
 #include "Camera.h"
 //render
 #include "Renderer.h"
 #include "FillEllipseRenderer.h"
+#include "LineRenderer.h"
 #include "RectangleRenderer.h"
 #include "TextRenderer.h"
 //collision
 #include "Collider.h"
 #include "BoxCollider.h"
+#include "CircleCollider.h"
 #include "CollisionSystem.h"
+#include "Physics.h"
 
 
 #include "Transform.h"
@@ -49,7 +57,7 @@
 #include "Scene.h"
 #include "Engine.h"
 
-#include "Time.h"
+
 
 using namespace std;
 using namespace D2D1;

@@ -19,12 +19,17 @@ void Scene::Start()
 	}
 }
 
-void Scene::Update()
+void Scene::Frame()
 {
 	for (gameObjectIter = gameObjectList.begin(); gameObjectIter < gameObjectList.end(); gameObjectIter++)
 	{
 		if ((*gameObjectIter)->isEnabled)
 			(*gameObjectIter)->Update();
+	}
+	for (gameObjectIter = gameObjectList.begin(); gameObjectIter < gameObjectList.end(); gameObjectIter++)
+	{
+		if ((*gameObjectIter)->isEnabled)
+			(*gameObjectIter)->LateUpdate();
 	}
 }
 

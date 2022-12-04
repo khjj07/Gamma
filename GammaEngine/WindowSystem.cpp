@@ -84,6 +84,7 @@ void WindowSystem::Initialize(int& screenWidth,int& screenHeight)
 	Screen::height = (rcClient.bottom - rcClient.top);
 	hWnd = CreateWindowEx(WS_EX_APPWINDOW, applicationName, applicationName, WS_OVERLAPPEDWINDOW, posX, posY, (rcClient.right - rcClient.left), (rcClient.bottom - rcClient.top), NULL, NULL, hInstance, NULL);
 	ShowWindow(hWnd, SW_SHOW);
+	ShowCursor(false);
 	SetForegroundWindow(hWnd);
 	SetFocus(hWnd);
 	
@@ -96,8 +97,7 @@ void WindowSystem::Initialize(int& screenWidth,int& screenHeight)
 void WindowSystem::Run(Engine* engine)
 {
 	Time* time = Time::Instance();
-	Input* input = Input::Instance();
-	CollisionSystem* collisionSystem = CollisionSystem::Instance();
+	
 	MSG msg;
 	ZeroMemory(&msg, sizeof(MSG));
 	while (true)
@@ -113,10 +113,8 @@ void WindowSystem::Run(Engine* engine)
 		else
 		{
 			time->Frame();
-			collisionSystem->Frame();
 			if (!engine->Frame())
 				break;
-			input->Frame();
 		}
 	}
 }

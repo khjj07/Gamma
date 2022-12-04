@@ -12,7 +12,7 @@ public:
 	~TextRenderer();
 	virtual void Render();
 public:
-	string text;
+	string text=string("");
 	IDWriteTextFormat* textFormat;
 private:
 

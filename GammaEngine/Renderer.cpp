@@ -6,7 +6,7 @@ Renderer::Renderer() : Component()
 	DirectXModule* dxModule = DirectXModule::Instance();
 	renderTarget = dxModule->renderTarget;
 	dxModule->renderComponentList.push_back(this);
-	renderTarget->CreateSolidColorBrush(ColorF(ColorF::Red, 1), (ID2D1SolidColorBrush**)&brush);
+	renderTarget->CreateSolidColorBrush(ColorF(ColorF::Black, 1), (ID2D1SolidColorBrush**)&brush);
 }
 
 
@@ -18,7 +18,7 @@ Renderer::Renderer(Transform* t) : Component(t)
 	transform = t;
 	size = vector2();
 	offset = vector2();
-	renderTarget->CreateSolidColorBrush(ColorF(ColorF::Red, 1), (ID2D1SolidColorBrush**)&brush);
+	renderTarget->CreateSolidColorBrush(ColorF(ColorF::Black, 1), (ID2D1SolidColorBrush**)&brush);
 }
 Renderer::Renderer(Transform* t, vector2 s): Component(t)
 {
@@ -28,7 +28,7 @@ Renderer::Renderer(Transform* t, vector2 s): Component(t)
 	transform = t;
 	size = s;
 	offset = vector2();
-	renderTarget->CreateSolidColorBrush(ColorF(ColorF::Red, 1), (ID2D1SolidColorBrush**)&brush);
+	renderTarget->CreateSolidColorBrush(ColorF(ColorF::Black, 1), (ID2D1SolidColorBrush**)&brush);
 }
 
 Renderer::Renderer(Transform* t, vector2 s, vector2 o) : Component(t)
@@ -39,7 +39,7 @@ Renderer::Renderer(Transform* t, vector2 s, vector2 o) : Component(t)
 	transform = t;
 	size = s;
 	offset = o;
-	renderTarget->CreateSolidColorBrush(ColorF(ColorF::Red, 1), (ID2D1SolidColorBrush**)&brush);
+	renderTarget->CreateSolidColorBrush(ColorF(ColorF::Black, 1), (ID2D1SolidColorBrush**)&brush);
 }
 
 Renderer::~Renderer()
@@ -70,6 +70,20 @@ void Renderer::SetBrush<ID2D1LinearGradientBrush>(ID2D1GradientStopCollection* s
 	vector2 scale = transform->scale;
 	renderTarget->CreateLinearGradientBrush(LinearGradientBrushProperties(Point2F(pos.x+offset.x, pos.y + offset.y),
 	Point2F(pos.x + offset.x +size.x*scale.x, pos.y + offset.y + size.y * scale.y)),stops,(ID2D1LinearGradientBrush**) &brush);
+}
+
+void Renderer::Adjust(vector2& v)
+{
+	if (Camera::main)
+	{
+		vector2 center = vector2(Screen::width / 2, Screen::height / 2) - Camera::main->transform->position;
+
+		v = v / Camera::main->orthoScale + center;
+	}
+	else
+	{
+		v = v + vector2(Screen::width / 2, Screen::height / 2);
+	}
 }
 
 void Renderer::Adjust(vector2& pos,vector2& size)

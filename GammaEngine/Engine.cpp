@@ -17,6 +17,11 @@ void Engine::Initialize(Scene* scene)
 bool Engine::Frame()
 {
 	DirectXModule* dxModule = DirectXModule::Instance();
+	CollisionSystem* collisionSystem = CollisionSystem::Instance();
+	Timer* timer = Timer::Instance();
+
+	Input* input = Input::Instance();
+	
 	if (!addBuffer.empty())
 	{
 		for (gameObjectIter = addBuffer.begin(); gameObjectIter < addBuffer.end(); gameObjectIter++)
@@ -40,8 +45,11 @@ bool Engine::Frame()
 		currentScene->Enable();
 		nextScene = nullptr;
 	}
+	timer->Frame();
+	collisionSystem->Frame();
 	currentScene->Start();
-	currentScene->Update();
+	currentScene->Frame();
+	input->Frame();
 	dxModule->Render();
 	return true;
 }

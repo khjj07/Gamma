@@ -12,25 +12,48 @@ TestScript::TestScript(Transform* t):Component(t)
 TestScript::~TestScript()
 {
 }
-
-void TestScript::Update()
+void TestScript::Start()
 {
-	float speed = 100;
+	transform->rotation = 45;
+}
+
+void TestScript::LateUpdate()
+{
+	transform->GetComponent<LineRenderer>()->src = transform->position;
 	vector2 pos = Camera::main->ScreenToWorldPoint(Input::GetMousePosition());
-	char str[100];
-	sprintf_s(str, "x:%.2f  y:%.2f \n x:%.2f  y:%.2f",pos.x- Input::GetMousePosition().x,pos.y- Input::GetMousePosition().y, Input::GetMousePosition().x, Input::GetMousePosition().y);
+	
+	RaycastResponse  res = Physics::Raycast(transform->position, pos, string("box"));
+	if (res.hit)
+	{
+		transform->GetComponent<LineRenderer>()->SetBrush<ID2D1SolidColorBrush>(ColorF::Red, 1);
+		transform->GetComponent<LineRenderer>()->dst = res.position;
+		if (res.gameObject->GetComponent<LineRenderer>())
+		{
+			res.gameObject->GetComponent<LineRenderer>()->src = res.position;
 
-	transform->GetComponent<TextRenderer>()->text = string(str);
-	transform->position = pos;
-	//transform->GetComponent<FillEllipseRenderer>()->SetBrush<ID2D1SolidColorBrush>(ColorF::Blue, 1);
+			vector2 diff = res.position - transform->position;
+			res.gameObject->GetComponent<LineRenderer>()->dst = res.position + vector2::Reflect(diff,res.normal) ;
+		}
+	}
+	else
+	{
+		transform->GetComponent<LineRenderer>()->SetBrush<ID2D1SolidColorBrush>(ColorF::Black, 1);
+		transform->GetComponent<LineRenderer>()->dst = pos;
+	}
 }
 
-void TestScript::OnCollisionEnter()
+void TestScript::OnCollisionEnter(CollisionResponse response)
 {
-	transform->GetComponent<RectangleRenderer>()->SetBrush<ID2D1SolidColorBrush>(ColorF::Red, 1);
+	if (response.other->CompareTag(string("box")))
+	{
+		transform->GetComponent<RectangleRenderer>()->SetBrush<ID2D1SolidColorBrush>(ColorF::Red, 1);
+	}
 }
 
-void TestScript::OnCollisionExit()
+void TestScript::OnCollisionExit(CollisionResponse response)
 {
-	transform->GetComponent<RectangleRenderer>()->SetBrush<ID2D1SolidColorBrush>(ColorF::Black, 1);
+	if (response.other->CompareTag(string("box")))
+	{
+		transform->GetComponent<RectangleRenderer>()->SetBrush<ID2D1SolidColorBrush>(ColorF::Black, 1);
+	}
 }

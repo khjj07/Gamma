@@ -3,9 +3,9 @@
 
 Box::Box()
 {
-	AddComponent<BoxCollider>();
-	GetComponent<BoxCollider>()->bounds = vector2(100, 100);
-	AddComponent<RectangleRenderer>();
-	transform->position.x = 300;
-	transform->position.y = 300;
+	AddComponent<CircleCollider>();
+	GetComponent<CircleCollider>()->radius = 40;
+	AddComponent<FillEllipseRenderer>();
+	GetComponent<FillEllipseRenderer>()->size = vector2(80, 80);
+	tag = string("box");
 }

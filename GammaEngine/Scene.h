@@ -10,7 +10,7 @@ public:
 	Scene();
 	~Scene();
 	void Start();
-	void Update();
+	void Frame();
 	void OnDestroy();
 	void OnDisable();
 	void OnEnable();

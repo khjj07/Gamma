@@ -3,16 +3,16 @@
 #include "TestScript.h"
 Test::Test()
 {
-	transform->position.x = 0;
-	transform->position.y = 0;
+	transform->position.x = -500;
+	transform->position.y = -500;
 	AddComponent<RectangleRenderer>();
-	AddComponent<TextRenderer>();
+	AddComponent<LineRenderer>();
 	AddComponent<TestScript>();
 	AddComponent<BoxCollider>();
-	GetComponent<BoxCollider>()->bounds=vector2(100,100);
+	GetComponent<RectangleRenderer>()->size=vector2(100,100);
 	GetComponent<RectangleRenderer>()->SetBrush<ID2D1SolidColorBrush>(ColorF::Black,1.0f);
-	GetComponent<TextRenderer>()->size = vector2(1000, 100);
-
+	GetComponent<RectangleRenderer>()->order = 10;
+	GetComponent<BoxCollider>()->bounds=vector2(100,100);
 
 	/*
 	ID2D1GradientStopCollection* pGradientStops = NULL;

@@ -34,5 +34,8 @@ void RectangleRenderer::Render()
 	rectangle.right = renderPos.x + renderSize.x / 2;
 	rectangle.bottom= renderPos.y + renderSize.y / 2;
 
+
+	D2D1_POINT_2F center = { renderPos.x,  renderPos.y};
+	renderTarget->SetTransform(Matrix3x2F::Rotation(transform->rotation, center));
 	renderTarget->DrawRectangle(rectangle, brush);
 }

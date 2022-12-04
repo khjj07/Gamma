@@ -15,20 +15,12 @@ Cam1Script::~Cam1Script()
 
 void Cam1Script::Update()
 {
-	if(Input::GetKey('A'))
-	{
-		transform->position.x -= 100 * Time::deltaTime;
-	}
-	if(Input::GetKey('D'))
-	{
-		transform->position.x += 100 * Time::deltaTime;
-	}
 	if(Input::mouseScrollDelta > 0)
 	{
-		transform->GetComponent<Camera>()->orthoScale += 0.1;
+		transform->GetComponent<Camera>()->orthoScale -= 0.1;
 	}
 	else if(Input::mouseScrollDelta < 0)
 	{
-		transform->GetComponent<Camera>()->orthoScale -= 0.1;
+		transform->GetComponent<Camera>()->orthoScale += 0.1;
 	}
 }

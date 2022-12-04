@@ -1,14 +1,14 @@
 #pragma once
 class Collider;
 class Transform;
-class CircleCollider;
+class BoxCollider;
 struct CollisionResponse;
-class BoxCollider :public Collider
+class CircleCollider :public Collider
 {
 public:
-	BoxCollider();
-	BoxCollider(Transform*);
-	~BoxCollider();
+	CircleCollider();
+	CircleCollider(Transform*);
+	~CircleCollider();
 public:
 	virtual bool InBound(vector2);
 	virtual CollisionResponse Collide(Collider*, bool);
@@ -16,7 +16,7 @@ public:
 	CollisionResponse Check(BoxCollider* other, bool collided);
 	CollisionResponse Check(CircleCollider* other, bool collided);
 public:
-	vector2 bounds;
+	float radius;
 private:
 
 };

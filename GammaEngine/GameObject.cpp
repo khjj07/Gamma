@@ -30,6 +30,15 @@ void GameObject::Update()
 	}
 }
 
+void GameObject::LateUpdate()
+{
+	for (componentIter = componentList.begin(); componentIter < componentList.end(); componentIter++)
+	{
+		(*componentIter)->LateUpdate();
+	}
+}
+
+
 void GameObject::OnDestroy()
 {
 	for (componentIter = componentList.begin(); componentIter < componentList.end(); componentIter++)
@@ -56,26 +65,77 @@ void GameObject::OnEnable()
 	}
 }
 
-void GameObject::OnCollisionEnter()
+void GameObject::OnCollisionEnter(CollisionResponse response)
 {
 	for (componentIter = componentList.begin(); componentIter < componentList.end(); componentIter++)
 	{
-		(*componentIter)->OnCollisionEnter();
+		(*componentIter)->OnCollisionEnter(response);
 	}
 }
 
-void GameObject::OnCollisionStay()
+void GameObject::OnCollisionStay(CollisionResponse response)
 {
 	for (componentIter = componentList.begin(); componentIter < componentList.end(); componentIter++)
 	{
-		(*componentIter)->OnCollisionStay();
+		(*componentIter)->OnCollisionStay(response);
 	}
 }
 
-void GameObject::OnCollisionExit()
+void GameObject::OnCollisionExit(CollisionResponse response)
 {
 	for (componentIter = componentList.begin(); componentIter < componentList.end(); componentIter++)
 	{
-		(*componentIter)->OnCollisionExit();
+		(*componentIter)->OnCollisionExit(response);
 	}
+}
+
+bool GameObject::CompareTag(string str)
+{
+	if (this->tag == str)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool GameObject::CompareTag(char* str)
+{
+	if (strcmp(this->tag.c_str(), str)==0)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+
+bool GameObject::CompareTags(vector<string> strList)
+{
+	vector<string>::iterator iter;
+	for (iter = strList.begin(); iter < strList.end(); iter++)
+	{
+		if (CompareTag((*iter)))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+bool GameObject::CompareTags(vector<char*> strList)
+{
+	vector<char*>::iterator iter;
+	for (iter = strList.begin(); iter < strList.end(); iter++)
+	{
+		if (CompareTag((*iter)))
+		{
+			return true;
+		}
+	}
+	return false;
 }

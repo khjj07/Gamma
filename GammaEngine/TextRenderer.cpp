@@ -26,16 +26,20 @@ TextRenderer::~TextRenderer()
 }
 void TextRenderer::Render()
 {
-	vector2 renderPos = transform->position + offset;
-	vector2 renderSize = size;
-	renderSize.x = renderSize.x * transform->scale.x;
-	renderSize.y = renderSize.y * transform->scale.y;
-	Renderer::Adjust(renderPos, renderSize);
-	renderTarget->DrawText(
-		ToTCHAR(text),
-		text.length() - 1,
-		textFormat,
-		D2D1::RectF(renderPos.x, renderPos.y, renderPos.x+renderSize.x, renderPos.y+renderSize.y),
-		brush
-	);
+	if (text.length() > 0)
+	{
+		vector2 renderPos = transform->position + offset;
+		vector2 renderSize = size;
+		renderSize.x = renderSize.x * transform->scale.x;
+		renderSize.y = renderSize.y * transform->scale.y;
+		Renderer::Adjust(renderPos);
+		renderTarget->DrawText(
+			ToTCHAR(text),
+			text.length() - 1,
+			textFormat,
+			RectF(renderPos.x, renderPos.y, renderPos.x + renderSize.x, renderPos.y + renderSize.y),
+			brush
+		);
+	}
+	
 }

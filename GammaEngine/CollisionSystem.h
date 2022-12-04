@@ -13,6 +13,7 @@ struct CollisionResponse
 {
 	CollisionState state;  //충돌 상태 나타내는 객체.
 	Collider* other;
+	vector2 normal;
 };
 struct Collided
 {

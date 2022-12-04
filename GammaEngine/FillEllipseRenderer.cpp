@@ -33,5 +33,7 @@ void FillEllipseRenderer::Render()
 	ellipse.radiusY = renderSize.y/2;
 	ellipse.point.x = renderPos.x;
 	ellipse.point.y = renderPos.y;
+	D2D1_POINT_2F center = { renderPos.x,  renderPos.y };
+	renderTarget->SetTransform(Matrix3x2F::Rotation(transform->rotation, center));
 	renderTarget->FillEllipse(ellipse, brush);
 }

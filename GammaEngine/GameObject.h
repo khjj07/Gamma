@@ -13,14 +13,21 @@ public:
 	~GameObject();
 	void Start();
 	void Update();
+	void LateUpdate();
 	void OnDestroy();
 	void OnDisable();
 	void OnEnable();
-	void OnCollisionEnter();
-	void OnCollisionStay();
-	void OnCollisionExit();
+	void OnCollisionEnter(CollisionResponse response);
+	void OnCollisionStay(CollisionResponse response);
+	void OnCollisionExit(CollisionResponse response);
+	bool CompareTag(string);
+	bool CompareTag(char*);
+	bool CompareTags(vector<string>);
+	bool CompareTags(vector<char*>);
+
 public:
 	Transform* transform;
+	string tag=string("");
 	bool isStarted = false;
 	bool isEnabled = true;
 

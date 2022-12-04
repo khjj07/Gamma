@@ -23,6 +23,10 @@ void Component::Update()
 {
 	
 }
+void Component::LateUpdate()
+{
+
+}
 
 void Component::OnDestroy()
 {
@@ -44,17 +48,17 @@ void Component::Render()
 
 }
 
-void Component::OnCollisionEnter()
+void Component::OnCollisionEnter(CollisionResponse response)
 {
 
 }
 
-void Component::OnCollisionStay()
+void Component::OnCollisionStay(CollisionResponse response)
 {
 
 }
 
-void Component::OnCollisionExit()
+void Component::OnCollisionExit(CollisionResponse response)
 {
 
 }
