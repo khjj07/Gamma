@@ -32,10 +32,6 @@ void BoxScript::OnCollisionEnter(CollisionResponse response)
 void BoxScript::OnCollisionStay(CollisionResponse response)
 {
     float proj = vector2::Dot(correction, response.normal);
-    if (correction.Length() == 0)
-    {
-        proj = response.distance;
-    }
     vector2 comp = response.normal* (response.distance - proj);
     correction = correction + comp;
     transform->position += comp;

@@ -162,13 +162,11 @@ vector2 BoxCollider::GetNormalVector(vector2 v)
 		if (vector2::Dot(upA, v) > 0)
 		{
 			return rightA;
-
 		}
 		else
 		{
 			return -rightA;
 		}
-		
 	}
 	else
 	{

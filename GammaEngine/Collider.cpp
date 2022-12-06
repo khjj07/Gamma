@@ -142,6 +142,16 @@ vector2 Collider::GetContactPoint(BoxCollider* A, BoxCollider* B)
 	vector2 upB = vector2(-sin(thetaB), cos(thetaB));
 	vector2 rightB = vector2(cos(thetaB), sin(thetaB));
 
+	vector2 UpA = upA * A->bounds.y / 2 * A->transform->scale.y;
+	vector2 DownA = upA * -A->bounds.y / 2 * A->transform->scale.y;
+	vector2 RightA = rightA * A->bounds.x / 2 * A->transform->scale.x;
+	vector2 LeftA = rightA * -A->bounds.x / 2 * A->transform->scale.x;
+	vector2 UpB = upB * B->bounds.y / 2 * B->transform->scale.y;
+	vector2 DownB = upB * -B->bounds.y / 2 * B->transform->scale.y;
+	vector2 RightB = rightB * B->bounds.x / 2 * B->transform->scale.x;
+	vector2 LeftB = rightB * -B->bounds.x / 2 * B->transform->scale.x;
+
+
 	vector2 leftUpA = upA * A->bounds.y / 2 * A->transform->scale.y + rightA * -A->bounds.x / 2 * A->transform->scale.x;
 	vector2 rightUpA = upA * A->bounds.y / 2 * A->transform->scale.y + rightA * A->bounds.x / 2 * A->transform->scale.x;
 	vector2 leftDownA = upA * -A->bounds.y / 2 * A->transform->scale.y + rightA * -A->bounds.x / 2 * A->transform->scale.x;
@@ -154,72 +164,89 @@ vector2 Collider::GetContactPoint(BoxCollider* A, BoxCollider* B)
 
 	vector2 result;
 	
-	if (GetIntersectPoint(leftUpA, rightUpA, leftUpB, rightUpB, result))
+	if (A->InBound(B->transform->position +LeftB))
 	{
-		return result;
+		return B->transform->position + LeftB;
 	}
-	if(GetIntersectPoint(leftUpA, rightUpA, rightUpB,rightDownB, result))
+
+	if (A->InBound(B->transform->position + RightB))
 	{
-		return result;
+		return B->transform->position + RightB;
 	}
-	if (GetIntersectPoint(leftUpA, rightUpA, rightDownB, leftDownB, result))
+
+	if (A->InBound(B->transform->position + UpB))
 	{
-		return result;
+		return B->transform->position + UpB;
 	}
-	if (GetIntersectPoint(leftUpA, rightUpA, leftDownB, leftUpB, result))
+
+	if (A->InBound(B->transform->position + DownB))
 	{
-		return result;
+		return B->transform->position + DownB;
 	}
-	if (GetIntersectPoint(rightUpA, rightDownA, leftUpB, rightUpB, result))
+
+
+	if (B->InBound(A->transform->position + LeftA))
 	{
-		return result;
+		return A->transform->position + LeftA;
 	}
-	if (GetIntersectPoint(rightUpA, rightDownA, rightUpB, rightDownB, result))
+
+	if (B->InBound(A->transform->position + RightA))
 	{
-		return result;
+		return A->transform->position + RightA;
 	}
-	if(GetIntersectPoint(rightUpA, rightDownA, rightDownB, leftDownB, result))
+
+	if (B->InBound(A->transform->position + UpA))
 	{
-		return result;
+		return A->transform->position + UpA;
 	}
-	if (GetIntersectPoint(rightUpA, rightDownA, leftDownB, leftUpB, result))
+
+	if (B->InBound(A->transform->position + DownA))
 	{
-		return result;
+		return A->transform->position + DownA;
 	}
-	if (GetIntersectPoint(rightDownA, leftDownA, leftUpB, rightUpB, result))
+
+
+
+	if (A->InBound(B->transform->position + leftUpB))
 	{
-		return result;
+		return B->transform->position + leftUpB;
 	}
-	if (GetIntersectPoint(rightDownA, leftDownA, rightUpB, rightDownB, result))
+
+	if (A->InBound(B->transform->position + rightUpB))
 	{
-		return result;
+		return B->transform->position + rightUpB;
 	}
-	if (GetIntersectPoint(rightDownA, leftDownA, rightDownB, leftDownB, result))
+
+	if (A->InBound(B->transform->position + rightDownB))
 	{
-		return result;
+		return B->transform->position + rightDownB;
 	}
-	if (GetIntersectPoint(rightDownA, leftDownA, leftDownB, leftUpB, result))
+
+	if (A->InBound(B->transform->position + leftDownB))
 	{
-		return result;
+		return B->transform->position + leftDownB;
 	}
-	if (GetIntersectPoint(leftDownA, leftUpA, leftUpB, rightUpB, result))
+
+	if (B->InBound(A->transform->position + leftUpA))
 	{
-		return result;
+		return A->transform->position + leftUpA;
 	}
-	if (GetIntersectPoint(leftDownA, leftUpA, rightUpB, rightDownB, result))
+
+	if (B->InBound(A->transform->position + rightUpA))
 	{
-		return result;
+		return A->transform->position + rightUpA;
 	}
-	if (GetIntersectPoint(leftDownA, leftUpA, rightDownB, leftDownB, result))
+
+	if (B->InBound(A->transform->position + rightDownA))
 	{
-		return result;
+		return A->transform->position + rightDownA;
 	}
-	if (GetIntersectPoint(leftDownA, leftUpA, leftDownB, leftUpB, result))
+
+	if (B->InBound(A->transform->position + leftDownA))
 	{
-		return result;
+		return A->transform->position + leftDownA;
 	}
 	
-	return result;
 }
 
 bool Collider::Circle_to_Circle(vector2 centerA, float rangeA, vector2 centerB, float rangeB)
@@ -288,6 +315,5 @@ vector2 Collider::GetNormalVector(vector2 v)
 
 bool Collider::InBound(vector2 v)
 {
-	return false;
-	
+	return false;	
 }
