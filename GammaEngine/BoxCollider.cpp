@@ -41,10 +41,13 @@ CollisionResponse BoxCollider::Check(BoxCollider* other, bool collided)
 	{
 		check = OBB_to_OBB(this,other);
 	}
-
-	//result.normal = other->GetNormalVector();
-
-
+	if (check)
+	{
+		vector2 contactPoint = GetContactPoint(this, other);
+		result.normal = other->GetNormalVector(contactPoint);
+		result.position = contactPoint;
+		result.distance = vector2::Distance(transform->position, contactPoint);
+	}
 	if (!collided && check)
 	{
 		result.state = Enter;
@@ -84,9 +87,14 @@ CollisionResponse BoxCollider::Check(CircleCollider* other, bool collided)
 		check = Circle_to_OBB(this, other);
 		
 	}
+	if (check)
+	{
+		vector2 contactPoint = GetContactPoint(this, other);
+		result.normal = other->GetNormalVector(contactPoint);
+		result.position = contactPoint;
+		result.distance = vector2::Distance(transform->position, contactPoint);
 
-	vector2 contactPoint = GetContactPoint(this, other);
-	result.normal = other->GetNormalVector(contactPoint);
+	}
 
 
 	if (!collided && check)

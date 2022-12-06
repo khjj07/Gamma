@@ -7,8 +7,8 @@ Box2::Box2()
 	AddComponent<RectangleRenderer>();
 	AddComponent<LineRenderer>();
 	AddComponent<Box2Script>();
-	GetComponent<BoxCollider>()->bounds = vector2(500,20);
-	GetComponent<RectangleRenderer>()->size = vector2(500, 20);
+	GetComponent<BoxCollider>()->bounds = vector2(500,40);
+	GetComponent<RectangleRenderer>()->size = vector2(500, 40);
 	GetComponent<RectangleRenderer>()->order = -1;
 
 	transform->position.x = 300;

@@ -38,7 +38,7 @@ void TextRenderer::Render()
 			text.length() - 1,
 			textFormat,
 			RectF(renderPos.x, renderPos.y, renderPos.x + renderSize.x, renderPos.y + renderSize.y),
-			brush
+			pen
 		);
 	}
 	

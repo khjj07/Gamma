@@ -10,7 +10,6 @@ Test::Test()
 	AddComponent<TestScript>();
 	AddComponent<BoxCollider>();
 	GetComponent<RectangleRenderer>()->size=vector2(100,100);
-	GetComponent<RectangleRenderer>()->SetBrush<ID2D1SolidColorBrush>(ColorF::Black,1.0f);
 	GetComponent<RectangleRenderer>()->order = 10;
 	GetComponent<BoxCollider>()->bounds=vector2(100,100);
 

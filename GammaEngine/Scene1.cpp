@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "Scene1.h"
-#include "FillEllipseRenderer.h"
 #include "Test.h"
 #include "Cam1.h"
 #include "Box.h"

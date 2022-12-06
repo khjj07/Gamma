@@ -19,6 +19,7 @@
 #include <d2d1_1.h>
 #include <d2d1.h>
 #include <dwrite.h>
+#include <wincodec.h>
 #include <vector>
 #include  <algorithm>
 #include "Type.h"
@@ -39,9 +40,10 @@
 #include "Camera.h"
 //render
 #include "Renderer.h"
-#include "FillEllipseRenderer.h"
-#include "LineRenderer.h"
+#include "EllipseRenderer.h"
 #include "RectangleRenderer.h"
+#include "BitmapRenderer.h"
+#include "LineRenderer.h"
 #include "TextRenderer.h"
 //collision
 #include "Collider.h"

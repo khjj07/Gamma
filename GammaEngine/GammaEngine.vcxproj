@@ -133,6 +133,7 @@
     <ClInclude Include="Box2.h" />
     <ClInclude Include="Box2Script.h" />
     <ClInclude Include="BoxCollider.h" />
+    <ClInclude Include="BoxScript.h" />
     <ClInclude Include="Cam1.h" />
     <ClInclude Include="Cam1Script.h" />
     <ClInclude Include="Camera.h" />
@@ -142,7 +143,8 @@
     <ClInclude Include="Component.h" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="DirectXModule.h" />
-    <ClInclude Include="FillEllipseRenderer.h" />
+    <ClInclude Include="BitmapRenderer.h" />
+    <ClInclude Include="EllipseRenderer.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Input.h" />
@@ -171,6 +173,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Box.cpp" />
+    <ClCompile Include="BoxScript.cpp" />
     <ClCompile Include="Box2.cpp" />
     <ClCompile Include="Box2Script.cpp" />
     <ClCompile Include="BoxCollider.cpp" />
@@ -183,7 +186,8 @@
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Debug.cpp" />
     <ClCompile Include="DirectXModule.cpp" />
-    <ClCompile Include="FillEllipseRenderer.cpp" />
+    <ClCompile Include="BitmapRenderer.cpp" />
+    <ClCompile Include="EllipseRenderer.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Input.cpp" />
@@ -203,6 +207,7 @@
     <ClCompile Include="TimerHandler.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Tween.cpp" />
+    <ClCompile Include="Type.cpp" />
     <ClCompile Include="Util.cpp" />
     <ClCompile Include="WindowSystem.cpp" />
   </ItemGroup>

@@ -15,7 +15,7 @@ Box2Script::~Box2Script()
 
 void Box2Script::Start()
 {
-	Tween::Animate(transform->rotation, PLAYBACK::LOOP_PINGPONG, 70,EASING::INOUTBOUNCE,10);
+	//Tween::Animate(transform->rotation, PLAYBACK::LOOP_PINGPONG, 70,EASING::INOUTBOUNCE,10);
 	//transform->rotation = 90;
 	
 }

@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "TestScript.h"
-
+#include "Box.h"
 TestScript::TestScript()
 {
 }
@@ -25,7 +25,7 @@ void TestScript::LateUpdate()
 	RaycastResponse  res = Physics::Raycast(transform->position, pos, string("box"));
 	if (res.hit)
 	{
-		transform->GetComponent<LineRenderer>()->SetBrush<ID2D1SolidColorBrush>(ColorF::Red, 1);
+		transform->GetComponent<LineRenderer>()->SetPen<ID2D1SolidColorBrush>(ColorF::Red, 1);
 		transform->GetComponent<LineRenderer>()->dst = res.position;
 		if (res.gameObject->GetComponent<LineRenderer>())
 		{
@@ -37,8 +37,14 @@ void TestScript::LateUpdate()
 	}
 	else
 	{
-		transform->GetComponent<LineRenderer>()->SetBrush<ID2D1SolidColorBrush>(ColorF::Black, 1);
+		transform->GetComponent<LineRenderer>()->SetPen<ID2D1SolidColorBrush>(ColorF::Black, 1);
 		transform->GetComponent<LineRenderer>()->dst = pos;
+	}
+	if (Input::GetMouseButtonDown(0))
+	{
+		GameObject* box = new Box();
+		box->transform->position = pos;
+		Instantiate(box);
 	}
 }
 

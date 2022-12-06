@@ -28,11 +28,14 @@ void LineRenderer::Render()
 
     Adjust(s);
     Adjust(d);
-    renderTarget->DrawLine(
-        Point2F(s.x, s.y),
-        Point2F(d.x, d.y),
-        brush,
-        0.5f,
-        style
-    );
+    if (pen)
+    {
+        renderTarget->DrawLine(
+            Point2F(s.x, s.y),
+            Point2F(d.x, d.y),
+            pen,
+            0.5f,
+            style
+        );
+    }
 }

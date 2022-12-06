@@ -1,4 +1,28 @@
 #include "stdafx.h"
+
+bool GetIntersectPoint(vector2 AP1, vector2 AP2,
+	vector2 BP1, vector2 BP2, vector2& IP)
+{
+	double t;
+	double s;
+	double under = (BP2.y - BP1.y) * (AP2.x - AP1.x) - (BP2.x - BP1.x) * (AP2.y - AP1.y);
+	if (under == 0) return false;
+
+	double _t = (BP2.x - BP1.x) * (AP1.y - BP1.y) - (BP2.y - BP1.y) * (AP1.x - BP1.x);
+	double _s = (AP2.x - AP1.x) * (AP1.y - BP1.y) - (AP2.y - AP1.y) * (AP1.x - BP1.x);
+
+	t = _t / under;
+	s = _s / under;
+
+	if (t < 0.0 || t>1.0 || s < 0.0 || s>1.0) return false;
+	if (_t == 0 && _s == 0) return false;
+
+	IP.x = AP1.x + t * (double)(AP2.x - AP1.x);
+	IP.y = AP1.y + t * (double)(AP2.y - AP1.y);
+
+	return true;
+}
+
 bool Collider::AABB_to_AABB(BoxCollider* A, BoxCollider* B)
 {
 
@@ -118,9 +142,84 @@ vector2 Collider::GetContactPoint(BoxCollider* A, BoxCollider* B)
 	vector2 upB = vector2(-sin(thetaB), cos(thetaB));
 	vector2 rightB = vector2(cos(thetaB), sin(thetaB));
 
+	vector2 leftUpA = upA * A->bounds.y / 2 * A->transform->scale.y + rightA * -A->bounds.x / 2 * A->transform->scale.x;
+	vector2 rightUpA = upA * A->bounds.y / 2 * A->transform->scale.y + rightA * A->bounds.x / 2 * A->transform->scale.x;
+	vector2 leftDownA = upA * -A->bounds.y / 2 * A->transform->scale.y + rightA * -A->bounds.x / 2 * A->transform->scale.x;
+	vector2 rightDownA = upA * -A->bounds.y / 2 * A->transform->scale.y + rightA * A->bounds.x / 2 * A->transform->scale.x;
 
+	vector2 leftUpB = upB * B->bounds.y / 2 * B->transform->scale.y + rightB * -B->bounds.x / 2 * B->transform->scale.x;
+	vector2 rightUpB = upB * B->bounds.y / 2 * B->transform->scale.y + rightB * B->bounds.x / 2 * B->transform->scale.x;
+	vector2 leftDownB = upB * -B->bounds.y / 2 * B->transform->scale.y + rightB * -B->bounds.x / 2 * B->transform->scale.x;
+	vector2 rightDownB = upB * -B->bounds.y / 2 * B->transform->scale.y + rightB * B->bounds.x / 2 * B->transform->scale.x;
 
-
+	vector2 result;
+	
+	if (GetIntersectPoint(leftUpA, rightUpA, leftUpB, rightUpB, result))
+	{
+		return result;
+	}
+	if(GetIntersectPoint(leftUpA, rightUpA, rightUpB,rightDownB, result))
+	{
+		return result;
+	}
+	if (GetIntersectPoint(leftUpA, rightUpA, rightDownB, leftDownB, result))
+	{
+		return result;
+	}
+	if (GetIntersectPoint(leftUpA, rightUpA, leftDownB, leftUpB, result))
+	{
+		return result;
+	}
+	if (GetIntersectPoint(rightUpA, rightDownA, leftUpB, rightUpB, result))
+	{
+		return result;
+	}
+	if (GetIntersectPoint(rightUpA, rightDownA, rightUpB, rightDownB, result))
+	{
+		return result;
+	}
+	if(GetIntersectPoint(rightUpA, rightDownA, rightDownB, leftDownB, result))
+	{
+		return result;
+	}
+	if (GetIntersectPoint(rightUpA, rightDownA, leftDownB, leftUpB, result))
+	{
+		return result;
+	}
+	if (GetIntersectPoint(rightDownA, leftDownA, leftUpB, rightUpB, result))
+	{
+		return result;
+	}
+	if (GetIntersectPoint(rightDownA, leftDownA, rightUpB, rightDownB, result))
+	{
+		return result;
+	}
+	if (GetIntersectPoint(rightDownA, leftDownA, rightDownB, leftDownB, result))
+	{
+		return result;
+	}
+	if (GetIntersectPoint(rightDownA, leftDownA, leftDownB, leftUpB, result))
+	{
+		return result;
+	}
+	if (GetIntersectPoint(leftDownA, leftUpA, leftUpB, rightUpB, result))
+	{
+		return result;
+	}
+	if (GetIntersectPoint(leftDownA, leftUpA, rightUpB, rightDownB, result))
+	{
+		return result;
+	}
+	if (GetIntersectPoint(leftDownA, leftUpA, rightDownB, leftDownB, result))
+	{
+		return result;
+	}
+	if (GetIntersectPoint(leftDownA, leftUpA, leftDownB, leftUpB, result))
+	{
+		return result;
+	}
+	
+	return result;
 }
 
 bool Collider::Circle_to_Circle(vector2 centerA, float rangeA, vector2 centerB, float rangeB)

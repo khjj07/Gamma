@@ -1,11 +1,13 @@
 #include "stdafx.h"
 #include "Box.h"
+#include "BoxScript.h"
 
 Box::Box()
 {
-	AddComponent<CircleCollider>();
-	GetComponent<CircleCollider>()->radius = 40;
-	AddComponent<FillEllipseRenderer>();
-	GetComponent<FillEllipseRenderer>()->size = vector2(80, 80);
+	AddComponent<BoxCollider>();
+	AddComponent<BoxScript>();
+	GetComponent<BoxCollider>()->bounds = vector2(80,80);
+	AddComponent<RectangleRenderer>();
+	GetComponent<RectangleRenderer>()->size = vector2(80, 80);
 	tag = string("box");
 }

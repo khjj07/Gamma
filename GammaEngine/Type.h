@@ -3,6 +3,10 @@ struct vector2
 {
 	float x;
 	float y;
+	static vector2 Up;
+	static vector2 Down;
+	static vector2 Left;
+	static vector2 Right;
 	vector2()
 	{
 		x = 0;
@@ -15,6 +19,7 @@ struct vector2
 	}
 	vector2 operator -()
 	{
+
 		return vector2(-x, -y);
 	}
 	vector2 operator +(vector2 a)
@@ -84,11 +89,12 @@ struct vector2
 	{
 		return v - normal * vector2::Dot(v, normal) * 2;
 	}
+	
 };
+
 
 struct rect2D {
 	vector2 min;
 	vector2 max;
 };
-
 

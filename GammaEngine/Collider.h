@@ -15,6 +15,7 @@ public:
 	static bool Circle_to_AABB(CircleCollider* A, BoxCollider* B);
 	static bool Circle_to_OBB(BoxCollider*, CircleCollider*);
 	static vector2 GetContactPoint(BoxCollider*, CircleCollider*);
+	static vector2 GetContactPoint(BoxCollider*, BoxCollider*);
 	static bool Circle_to_Circle(vector2 centerA, float rangeA, vector2 centerB, float rangeB);
 	bool CompareTag(string str);
 	bool CompareTag(char* str);
