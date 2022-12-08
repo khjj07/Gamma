@@ -46,7 +46,13 @@ CollisionResponse BoxCollider::Check(BoxCollider* other, bool collided)
 		vector2 contactPoint = GetContactPoint(this, other);
 		result.normal = other->GetNormalVector(contactPoint);
 		result.position = contactPoint;
-		result.distance = vector2::Distance(transform->position, contactPoint);
+
+		float thetaA = transform->rotation / 180 * PI;
+		vector2 upA = vector2(-sin(thetaA), cos(thetaA));
+		vector2 rightA = vector2(cos(thetaA), sin(thetaA));
+		vector2 leftUpA = transform->position + upA * bounds.y / 2 * transform->scale.y + rightA * -bounds.x / 2 * transform->scale.x;
+		vector2 p1 = transform->position - contactPoint;
+		result.distance = vector2::Length(p1)- vector2::Dot(result.normal, leftUpA);;
 	}
 	if (!collided && check)
 	{

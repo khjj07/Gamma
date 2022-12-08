@@ -10,13 +10,15 @@ public:
 	Collider(Transform*);
 	~Collider();
 public:
+	static bool GetIntersectPoint(vector2 AP1, vector2 AP2,vector2 BP1, vector2 BP2, vector2& IP);
 	static bool AABB_to_AABB(BoxCollider*, BoxCollider*);
 	static bool OBB_to_OBB(BoxCollider*,BoxCollider*);
 	static bool Circle_to_AABB(CircleCollider* A, BoxCollider* B);
 	static bool Circle_to_OBB(BoxCollider*, CircleCollider*);
+	static bool Circle_to_Circle(vector2 centerA, float rangeA, vector2 centerB, float rangeB);
 	static vector2 GetContactPoint(BoxCollider*, CircleCollider*);
 	static vector2 GetContactPoint(BoxCollider*, BoxCollider*);
-	static bool Circle_to_Circle(vector2 centerA, float rangeA, vector2 centerB, float rangeB);
+public:
 	bool CompareTag(string str);
 	bool CompareTag(char* str);
 	bool CompareTags(vector<string> strList);
