@@ -49,6 +49,7 @@
 #include "Collider.h"
 #include "BoxCollider.h"
 #include "CircleCollider.h"
+#include "PolygonCollider.h"
 #include "CollisionSystem.h"
 #include "Physics.h"
 

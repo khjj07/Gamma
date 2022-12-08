@@ -15,8 +15,8 @@ Box2Script::~Box2Script()
 
 void Box2Script::Start()
 {
-	//Tween::Animate(transform->rotation, PLAYBACK::LOOP_PINGPONG, 70,EASING::INOUTBOUNCE,10);
-	//transform->rotation = 90;
+	Tween::Animate(transform->rotation, PLAYBACK::LOOP_FORWARD, 360,EASING::LINEAR,10);
+	transform->rotation = 40;
 	
 }
 
@@ -52,7 +52,7 @@ void Box2Script::OnCollisionEnter(CollisionResponse response)
 {
 	if (response.other->CompareTag(string("box")))
 	{
-		transform->GetComponent<RectangleRenderer>()->SetBrush<ID2D1SolidColorBrush>(ColorF::Blue, 1);
+		transform->GetComponent<RectangleRenderer>()->SetPen<ID2D1SolidColorBrush>(ColorF::Blue, 1);
 	}
 }
 
@@ -60,6 +60,6 @@ void Box2Script::OnCollisionExit(CollisionResponse response)
 {
 	if (response.other->CompareTag(string("box")))
 	{
-		transform->GetComponent<RectangleRenderer>()->SetBrush<ID2D1SolidColorBrush>(ColorF::Black, 1);
+		transform->GetComponent<RectangleRenderer>()->SetPen<ID2D1SolidColorBrush>(ColorF::Black, 1);
 	}
 }

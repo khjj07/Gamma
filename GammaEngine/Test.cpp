@@ -8,10 +8,10 @@ Test::Test()
 	AddComponent<RectangleRenderer>();
 	AddComponent<LineRenderer>();
 	AddComponent<TestScript>();
-	AddComponent<BoxCollider>();
+	//AddComponent<BoxCollider>();
 	GetComponent<RectangleRenderer>()->size=vector2(100,100);
 	GetComponent<RectangleRenderer>()->order = 10;
-	GetComponent<BoxCollider>()->bounds=vector2(100,100);
+	//GetComponent<BoxCollider>()->bounds=vector2(100,100);
 
 	/*
 	ID2D1GradientStopCollection* pGradientStops = NULL;

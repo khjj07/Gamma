@@ -180,6 +180,9 @@
     <ClInclude Include="BoxScript.h">
       <Filter>Game\Scripts</Filter>
     </ClInclude>
+    <ClInclude Include="PolygonCollider.h">
+      <Filter>Framework\Component\Collider</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -295,6 +298,9 @@
     </ClCompile>
     <ClCompile Include="Type.cpp">
       <Filter>Framework\Etc</Filter>
+    </ClCompile>
+    <ClCompile Include="PolygonCollider.cpp">
+      <Filter>Framework\Component\Collider</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
