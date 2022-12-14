@@ -4,7 +4,8 @@ BoxCollider::BoxCollider() :Collider()
 {
 
 }
-BoxCollider::BoxCollider(Transform* t):Collider(t)
+
+BoxCollider::BoxCollider(GameObject* t):Collider(t)
 {
 
 }

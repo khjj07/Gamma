@@ -6,9 +6,7 @@ class TextRenderer : public Renderer
 {
 public:
 	TextRenderer();
-	TextRenderer(Transform* t);
-	TextRenderer(Transform* t, vector2);
-	TextRenderer(Transform* t, vector2, vector2);
+	TextRenderer(GameObject* t);
 	~TextRenderer();
 	virtual void Render();
 public:

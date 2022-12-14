@@ -1,18 +1,22 @@
 #pragma once
-#include <functional>
-using namespace std;
 #define TWEEN_STEP 0.01
-class TimerHandler;
+
+/// <summary>
+/// Tween의 재생 정보를 표현하는 enum 타입 
+/// </summary>
 enum PLAYBACK
 {
-	ONCE_FORWARD,
-	ONCE_BACKWARD,
-	ONCE_PINGPONG,
-	LOOP_FORWARD,
-	LOOP_BACKWARD,
-	LOOP_PINGPONG
+	ONCE_FORWARD,//1회 정방향
+	ONCE_BACKWARD,//1회 역방향
+	ONCE_PINGPONG,//1회 왔다갔다
+	LOOP_FORWARD,//반복 정방향
+	LOOP_BACKWARD,//반복 역방향
+	LOOP_PINGPONG//반복 왔다갔다
 };
 
+/// <summary>
+/// Easing 함수 테이블 인덱스
+/// </summary>
 enum EASING
 {
 	LINEAR,
@@ -47,14 +51,21 @@ enum EASING
 	OUTQUINT,
 	INOUTQUINT
 };
+
+/// <summary>
+/// Tween과 관련한 정보를 포함하는 기본 구조체 
+/// </summary>
 struct TweenData
 {
-	float duration;
-	function<void()> callback;
-	float accumulation;
-	TimerHandler* handler;
+	float duration;//기간
+	function<void()> callback;//콜백함수
+	float accumulation;//누적
+	TimerHandler* handler;//핸들러
 };
 
+/// <summary>
+/// Float형 TweenData
+/// </summary>
 struct TweenDataF :public TweenData
 {
 	function<float(float)> easingFunc;
@@ -74,6 +85,9 @@ struct TweenDataF :public TweenData
 	};
 };
 
+/// <summary>
+/// vector2형 TweenData
+/// </summary>
 struct TweenDataV :public TweenData
 {
 	function<float(float)> easingFunc;
@@ -93,23 +107,25 @@ struct TweenDataV :public TweenData
 	};
 };
 
+/// <summary>
+/// Tween 애니메이션을 생성 제거 관리하는 class
+/// </summary>
 class Tween
 {
 public:
 	Tween();
 	~Tween();
+
 public:
-	static void CancelAnimate(TweenData* data);
-	static TweenData* Animate(float& src,PLAYBACK playback,float dst, EASING easing,float duration,float delay=0,function<void()> callback=nullptr);
-	static TweenData* Animate(vector2& src,PLAYBACK playback,vector2 dst, EASING easing,float duration,float delay=0,function<void()> callback=nullptr);
+	static void CancelAnimate(TweenData* data);//Tween Animation을 취소하는 함수
+	static TweenData* Animate(float& src,PLAYBACK playback,float dst, EASING easing,float duration,float delay=0,function<void()> callback=nullptr);//Tween 애니메이션을 생성하는 함수
+	static TweenData* Animate(vector2& src,PLAYBACK playback,vector2 dst, EASING easing,float duration,float delay=0,function<void()> callback=nullptr);//Tween 애니메이션을 생성하는 함수
+
 private:
 	static function<float(float)> easingFuction[31];
 	static function<void(TweenDataF*)> stepF[6];
 	static function<void(TweenDataV*)> stepV[6];
-
 };
-
-
 
 static void StepOnceForwardF(TweenDataF* data);
 static void StepOnceBackwardF(TweenDataF* data);
@@ -118,14 +134,12 @@ static void StepLoopForwardF(TweenDataF* data);
 static void StepLoopBackwardF(TweenDataF* data);
 static void StepLoopPingpongF(TweenDataF* data);
 
-
 static void StepOnceForwardV(TweenDataV* data);
 static void StepOnceBackwardV(TweenDataV* data);
 static void StepOncePingpongV(TweenDataV* data);
 static void StepLoopForwardV(TweenDataV* data);
 static void StepLoopBackwardV(TweenDataV* data);
 static void StepLoopPingpongV(TweenDataV* data);
-
 
 static float easeLinear(float x);
 static float easeInSine(float x);

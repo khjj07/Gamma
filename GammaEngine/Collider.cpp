@@ -234,11 +234,10 @@ Collider::Collider() : Component()
 	CollisionSystem::Instance()->collidedList.push_back(Collided(this));
 }
 
-Collider::Collider(Transform* t) : Component(t)
+Collider::Collider(GameObject* t) : Component(t)
 {
 	CollisionSystem::Instance()->colliderList.push_back(this);
 	CollisionSystem::Instance()->collidedList.push_back(Collided(this));
-	gameObject = transform->gameObject;
 }
 
 

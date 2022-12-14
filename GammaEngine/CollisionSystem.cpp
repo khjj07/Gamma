@@ -13,14 +13,15 @@ void CollisionSystem::Frame()
 {
 	vector<Collider*>::iterator iter1,iter2;
 	vector<Collided>::iterator collidedIter;
+
 	collidedIter= collidedList.begin();
 	for (iter1 = colliderList.begin(); iter1 < colliderList.end(); iter1++)
 	{
-		if ((*iter1)->transform->gameObject->isEnabled)
+		if ((*iter1)->gameObject->isEnabled)
 		{
 			for (iter2 = colliderList.begin(); iter2 < colliderList.end(); iter2++)
 			{
-				if ((*iter2)->transform->gameObject->isEnabled && *iter1 != *iter2)
+				if ((*iter2)->gameObject->isEnabled && *iter1 != *iter2)
 				{
 					bool collided=false;
 					if (find((*collidedIter).list.begin(), (*collidedIter).list.end(), (*iter2)) != (*collidedIter).list.end())

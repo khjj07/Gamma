@@ -29,7 +29,6 @@ void GetRayCondition(vector2 from,vector2 v,Collider* col, float &objectRange,bo
 	}
 }
 
-
 Physics::Physics()
 {
 
@@ -44,7 +43,6 @@ bool Physics::InBound(rect2D rect, vector2 v)
 {
 	return (rect.min.x <= v.x && rect.min.y <= v.y && rect.max.x >= v.x && rect.max.y >= v.y);
 }
-
 
 RaycastResponse  Physics::Raycast(vector2 from, vector2 to, string tag)
 {
@@ -118,6 +116,7 @@ RaycastResponse  Physics::Raycast(vector2 from, vector2 to, vector<string> tags)
 		GetRayCondition(from, v, a, objectRangeB, OnDirectionB, InRangeB);
 		return vector2::Distance(a->transform->position, from) - objectRangeA < vector2::Distance(b->transform->position, from) - objectRangeB;
 	});
+
 	for (iter = rayList.begin(); iter < rayList.end(); iter++)
 	{
 		float objectRange;

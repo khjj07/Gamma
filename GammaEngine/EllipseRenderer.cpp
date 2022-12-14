@@ -2,19 +2,12 @@
 
 EllipseRenderer::EllipseRenderer() :Renderer()
 {
+
 }
-EllipseRenderer::EllipseRenderer(Transform* t) :Renderer(t)
+
+EllipseRenderer::EllipseRenderer(GameObject* t) :Renderer(t)
 {
 	size = vector2(100, 100);
-}
-
-EllipseRenderer::EllipseRenderer(Transform* t,vector2 s) :Renderer(t,s)
-{
-
-}
-
-EllipseRenderer::EllipseRenderer(Transform* t,vector2 s,vector2 o) :Renderer(t,s,o)
-{
 }
 
 EllipseRenderer::~EllipseRenderer()

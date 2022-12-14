@@ -7,7 +7,7 @@ class BoxCollider :public Collider
 {
 public:
 	BoxCollider();
-	BoxCollider(Transform*);
+	BoxCollider(GameObject*);
 	~BoxCollider();
 public:
 	virtual bool InBound(vector2);

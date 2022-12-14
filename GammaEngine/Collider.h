@@ -7,7 +7,7 @@ class Collider : public Component
 {
 public:
 	Collider();
-	Collider(Transform*);
+	Collider(GameObject*);
 	~Collider();
 public:
 	static bool GetIntersectPoint(vector2 AP1, vector2 AP2,vector2 BP1, vector2 BP2, vector2& IP);
@@ -27,8 +27,6 @@ public:
 	virtual bool InBound(vector2);
 	virtual vector2 GetNormalVector(vector2);
 	virtual CollisionResponse Collide(Collider*, bool) = 0;
-public:
-	GameObject* gameObject;
 private:
 
 };

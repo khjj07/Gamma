@@ -5,7 +5,7 @@ Box2Script::Box2Script()
 {
 }
 
-Box2Script::Box2Script(Transform* t) :Component(t)
+Box2Script::Box2Script(GameObject* t):Component(t)
 {
 }
 

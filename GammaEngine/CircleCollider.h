@@ -7,7 +7,7 @@ class CircleCollider :public Collider
 {
 public:
 	CircleCollider();
-	CircleCollider(Transform*);
+	CircleCollider(GameObject*);
 	~CircleCollider();
 public:
 	virtual bool InBound(vector2);

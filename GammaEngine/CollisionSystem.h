@@ -1,22 +1,33 @@
 #pragma once
 
+class Collider;
 
-enum CollisionState //콜리젼 상태 정의하는 열거형
+/// <summary>
+/// 콜리전의 현재 상태를 구분하는 enum 타입
+/// </summary>
+enum CollisionState
 {
-	Enter, //막 충돌했다. 
-	Exit, //막 충돌 상태에서 벗어났다. 
-	Stay, //충돌 상태가 유지되고 있다.
-	Not //충돌하지 않고 있다.
+	Enter, 
+	Exit, 
+	Stay,
+	Not
 };
 
+/// <summary>
+/// 콜리전 결과를 반환을 위한 구조체
+/// </summary>
 struct CollisionResponse
 {
-	CollisionState state;  //충돌 상태 나타내는 객체.
+	CollisionState state;
 	Collider* other;
 	vector2 normal;
 	vector2 position;
 	float distance;
 };
+
+/// <summary>
+/// 이전 프레임에서의 충돌관계를 저장하는 구조체
+/// </summary>
 struct Collided
 {
 	Collider* self;
@@ -27,15 +38,19 @@ struct Collided
 	}
 };
 
+/// <summary>
+/// 콜리전을 관리하는 class
+/// </summary>
 class CollisionSystem : public Singleton<CollisionSystem>
 {
 public:
 	CollisionSystem();
 	~CollisionSystem();
+
+public:
 	void Frame();
+
 public:
 	vector<Collider*> colliderList;
 	vector<Collided> collidedList;
-private:
-
 };

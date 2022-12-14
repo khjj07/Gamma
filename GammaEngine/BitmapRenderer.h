@@ -6,9 +6,8 @@ class BitmapRenderer : public Renderer
 {
 public:
 	BitmapRenderer();
-	BitmapRenderer(Transform* t);
-	BitmapRenderer(Transform* t, vector2);
-	BitmapRenderer(Transform* t, vector2, vector2);
+	BitmapRenderer(GameObject* t);
+
 	~BitmapRenderer();
 	virtual void Render();
 	int LoadBitmapImage(string filename);

@@ -6,9 +6,7 @@ class LineRenderer : public Renderer
 {
 public:
 	LineRenderer();
-	LineRenderer(Transform* t);
-	LineRenderer(Transform* t, vector2);
-	LineRenderer(Transform* t, vector2, vector2);
+	LineRenderer(GameObject* t);
 	~LineRenderer();
 	virtual void Render();
 public:

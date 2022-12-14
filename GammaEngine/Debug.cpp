@@ -11,6 +11,7 @@ Debug::Debug()
 
 Debug::~Debug()
 {
+
 }
 
 DebugScript::DebugScript() :Component()
@@ -18,18 +19,18 @@ DebugScript::DebugScript() :Component()
 
 }
 
-DebugScript::DebugScript(Transform* t) :Component(t)
+DebugScript::DebugScript(GameObject* t) :Component(t)
 {
 
 }
 
 DebugScript::~DebugScript()
 {
+
 }
 
 void DebugScript::Update()
 {
-
 	transform->position = Camera::main->ScreenToWorldPoint(vector2(10, 10));
 	//transform->scale = Camera::main->ScreenToWorldScale(vector2(1, 1));
 

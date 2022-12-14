@@ -4,7 +4,8 @@ CircleCollider::CircleCollider() :Collider()
 {
 
 }
-CircleCollider::CircleCollider(Transform* t) :Collider(t)
+
+CircleCollider::CircleCollider(GameObject* t) :Collider(t)
 {
 
 }

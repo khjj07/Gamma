@@ -4,9 +4,10 @@ Component::Component()
 {
 }
 
-Component::Component(Transform *t)
+Component::Component(GameObject* g)
 {
-	transform = t;
+	gameObject = g;
+	transform = g->transform;
 }
 
 Component::~Component()

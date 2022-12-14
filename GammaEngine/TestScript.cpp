@@ -5,7 +5,7 @@ TestScript::TestScript()
 {
 }
 
-TestScript::TestScript(Transform* t):Component(t)
+TestScript::TestScript(GameObject* t):Component(t)
 {
 }
 

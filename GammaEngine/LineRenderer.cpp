@@ -3,18 +3,10 @@
 LineRenderer::LineRenderer() :Renderer()
 {
 }
-LineRenderer::LineRenderer(Transform* t) :Renderer(t)
+
+LineRenderer::LineRenderer(GameObject* t) :Renderer(t)
 {
 
-}
-
-LineRenderer::LineRenderer(Transform* t, vector2 s) :Renderer(t, s)
-{
-
-}
-
-LineRenderer::LineRenderer(Transform* t, vector2 s, vector2 o) :Renderer(t, s, o)
-{
 }
 
 LineRenderer::~LineRenderer()

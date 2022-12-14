@@ -1,7 +1,7 @@
-#pragma 
-class GameObject;
-class Component;
-class Transform;
+#pragma once
+/// <summary>
+/// 디버그용 클래스
+/// </summary>
 class Debug : public GameObject
 {
 public:
@@ -12,11 +12,14 @@ private:
 
 };
 
+/// <summary>
+/// 디버그 스크립트 클래스
+/// </summary>
 class DebugScript : public Component
 {
 public:
 	DebugScript();
-	DebugScript(Transform*);
+	DebugScript(GameObject*);
 	~DebugScript();
 	virtual void Update();
 public:

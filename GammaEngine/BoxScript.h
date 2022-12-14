@@ -5,7 +5,7 @@ class BoxScript : public Component
 {
 public:
 	BoxScript();
-	BoxScript(Transform*);
+	BoxScript(GameObject*);
 	~BoxScript();
 	virtual void Start();
 	virtual void Update();

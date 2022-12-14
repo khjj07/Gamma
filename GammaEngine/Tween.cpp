@@ -1,6 +1,5 @@
 #include "stdafx.h"
 
-
 function<void(TweenDataF*)> Tween::stepF[6] = {
 	StepOnceForwardF,
 	StepOnceBackwardF,
@@ -9,6 +8,7 @@ function<void(TweenDataF*)> Tween::stepF[6] = {
 	StepLoopBackwardF,
 	StepLoopPingpongF
 };
+
 function<void(TweenDataV*)> Tween::stepV[6] = {
 	StepOnceForwardV,
 	StepOnceBackwardV,
@@ -52,21 +52,21 @@ easeOutQuint,
 easeInOutQuint
 };
 
-
 Tween::Tween()
 {
 }
 
 Tween::~Tween()
 {
+
 }
+
 void Tween::CancelAnimate(TweenData* data)
 {
 	Timer::Cancel(data->handler);
 	data->handler = nullptr;
 	delete data;
 }
-
 
 TweenData* Tween::Animate(float& src, PLAYBACK playback, float dst, EASING ease, float duration, float delay, function<void()> callback)
 {
@@ -117,9 +117,7 @@ void StepOnceForwardF(TweenDataF* data)
 			Timer::Cancel(data->handler);
 		}
 	});
-	
 }
-
 
 void StepOnceForwardV(TweenDataV* data)
 {
@@ -259,6 +257,7 @@ void StepLoopBackwardF(TweenDataF* data)
 		}
 	});
 }
+
 void StepLoopBackwardV(TweenDataV* data)
 {
 	data->src = data->dst;
@@ -274,7 +273,6 @@ void StepLoopBackwardV(TweenDataV* data)
 		}
 	});
 }
-
 
 void StepLoopPingpongF(TweenDataF* data)
 {
@@ -298,7 +296,6 @@ void StepLoopPingpongF(TweenDataF* data)
 	});
 }
 
-
 void StepLoopPingpongV(TweenDataV* data)
 {
 	data->handler = Timer::Delay(TWEEN_STEP, true, [data]() {
@@ -320,8 +317,6 @@ void StepLoopPingpongV(TweenDataV* data)
 		}
 	});
 }
-
-
 
 float easeInSine(float x)
 {

@@ -7,7 +7,7 @@ class PolygonCollider :public Collider
 {
 public:
 	PolygonCollider();
-	PolygonCollider(Transform*);
+	PolygonCollider(GameObject*);
 	~PolygonCollider();
 public:
 	virtual bool InBound(vector2);

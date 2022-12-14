@@ -1,8 +1,10 @@
 #include "stdafx.h"
+
 int Input::mouse[3] = {1,2,4};
 KeyState Input::key[256] = { KeyState::not, };
 HWND Input::hWnd = NULL;
 short Input::mouseScrollDelta = 0;
+
 Input::Input()
 {
 	
@@ -10,12 +12,12 @@ Input::Input()
 
 Input::~Input()
 {
+
 }
+
 void Input::Initialize(HWND hwnd)
 {
 	hWnd = hwnd;
-	
-
 }
 
 void Input::Frame()
@@ -33,7 +35,6 @@ void Input::Frame()
 			key[i] = KeyState::not;
 	}
 }
-
 
 bool Input::GetKey(int k)
 {
@@ -70,6 +71,7 @@ bool Input::GetMouseButton(int k)
 	}
 	return false;
 }
+
 bool Input::GetMouseButtonDown(int k)
 {
 	if (GetAsyncKeyState(mouse[k]) && key[mouse[k]] == KeyState::pressed)
@@ -78,6 +80,7 @@ bool Input::GetMouseButtonDown(int k)
 	}
 	return false;
 }
+
 bool Input::GetMouseButtonUp(int k)
 {
 	if (key[mouse[k]] == KeyState::released)

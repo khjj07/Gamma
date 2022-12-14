@@ -21,6 +21,7 @@
 #include <dwrite.h>
 #include <wincodec.h>
 #include <vector>
+#include <functional>
 #include  <algorithm>
 #include "Type.h"
 #include "Util.h"

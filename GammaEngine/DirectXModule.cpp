@@ -46,12 +46,14 @@ void  DirectXModule::Render()
 	sort(renderList.begin(), renderList.end(), [](Renderer* a, Renderer* b) {
 		return a->order < b->order;
 	});
+
 	for(renderComponentIter = renderList.begin(); renderComponentIter < renderList.end(); renderComponentIter++)
 	{
 		(*renderComponentIter)->Render();
 		D2D1_POINT_2F center = { 0,0 };
 		renderTarget->SetTransform(Matrix3x2F::Rotation(0, center));
 	}
+
 	renderTarget->EndDraw();
 }
 
@@ -62,8 +64,8 @@ void  DirectXModule::Release()
 	{
 		(*iter)->Release();
 	}
+
 	renderTarget->Release();
 	writeFactory->Release();
-	
 	factory->Release();
 }

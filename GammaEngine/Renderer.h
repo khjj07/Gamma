@@ -10,9 +10,7 @@ class Renderer : public Component
 {
 public:
 	Renderer();
-	Renderer(Transform* t);
-	Renderer(Transform* t, vector2);
-	Renderer(Transform* t, vector2, vector2);
+	Renderer(GameObject* g);
 	~Renderer();
 public:
 	template<class T>
@@ -26,7 +24,6 @@ public:
 	void Adjust(vector2& v);
 	void Adjust(vector2& pos, vector2& size);
 public:
-	Transform* transform;
 	vector2 size;
 	vector2 offset;
 	ID2D1HwndRenderTarget* renderTarget;

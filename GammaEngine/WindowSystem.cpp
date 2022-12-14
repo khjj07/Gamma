@@ -9,28 +9,22 @@ WindowSystem::WindowSystem()
 LRESULT CALLBACK WndProc(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
 {
 	DirectXModule* dxModule = DirectXModule::Instance();
+
 	switch (umsg)
 	{
 	case WM_MOUSEWHEEL:
 		Input::mouseScrollDelta = (SHORT)HIWORD(wparam);
 		break;
 	case WM_DESTROY:
-	{
 		dxModule->Release();
 		PostQuitMessage(0);
 		return 0;
-	}
 	case WM_CLOSE:
-	{
 		dxModule->Release();
 		PostQuitMessage(0);
 		return 0;
-	}
-
 	default:
-	{
 		return DefWindowProc(hwnd, umsg, wparam, lparam);
-	}
 	}
 }
 
@@ -60,7 +54,6 @@ void WindowSystem::Initialize(int& screenWidth,int& screenHeight)
 	int posX = 0;
 	int posY = 0;
 
-
 	if (FullScreenMode)
 	{
 		DEVMODE dmScreenSetting;
@@ -70,7 +63,6 @@ void WindowSystem::Initialize(int& screenWidth,int& screenHeight)
 		dmScreenSetting.dmPelsHeight = (unsigned long)screenHeight;
 		dmScreenSetting.dmBitsPerPel = 32;
 		dmScreenSetting.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
-
 		ChangeDisplaySettings(&dmScreenSetting, CDS_FULLSCREEN);
 	}
 	else
@@ -78,11 +70,14 @@ void WindowSystem::Initialize(int& screenWidth,int& screenHeight)
 		//posX = (GetSystemMetrics(SM_CXSCREEN)) - screenWidth / 2;
 		//posY = (GetSystemMetrics(SM_CYSCREEN)) - screenHeight / 2;
 	}
+
 	RECT rcClient = { 0, 0, screenWidth, screenHeight };
 	AdjustWindowRect(&rcClient, WS_OVERLAPPEDWINDOW, FALSE);
 	Screen::width = (rcClient.right - rcClient.left);
 	Screen::height = (rcClient.bottom - rcClient.top);
+
 	hWnd = CreateWindowEx(WS_EX_APPWINDOW, applicationName, applicationName, WS_OVERLAPPEDWINDOW, posX, posY, (rcClient.right - rcClient.left), (rcClient.bottom - rcClient.top), NULL, NULL, hInstance, NULL);
+	
 	ShowWindow(hWnd, SW_SHOW);
 	ShowCursor(false);
 	SetForegroundWindow(hWnd);
@@ -90,6 +85,7 @@ void WindowSystem::Initialize(int& screenWidth,int& screenHeight)
 	
 	DirectXModule* dxModule = DirectXModule::Instance();
 	Input* input = Input::Instance();
+
 	dxModule->Initialize(hWnd);
 	input->Initialize(hWnd);
 }

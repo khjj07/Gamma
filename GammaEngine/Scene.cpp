@@ -1,6 +1,5 @@
 #include "stdafx.h"
 
-
 Scene::Scene()
 {
 
@@ -8,6 +7,7 @@ Scene::Scene()
 
 Scene::~Scene()
 {
+
 }
 
 void Scene::Start()

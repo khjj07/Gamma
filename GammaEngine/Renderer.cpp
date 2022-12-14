@@ -10,35 +10,13 @@ Renderer::Renderer() : Component()
 }
 
 
-Renderer::Renderer(Transform* t) : Component(t)
+Renderer::Renderer(GameObject* t) : Component(t)
 {
 	DirectXModule* dxModule = DirectXModule::Instance();
 	renderTarget = dxModule->renderTarget;
 	dxModule->renderComponentList.push_back(this);
-	transform = t;
 	size = vector2();
 	offset = vector2();
-	renderTarget->CreateSolidColorBrush(ColorF(ColorF::Black, 1), (ID2D1SolidColorBrush**)&pen);
-}
-Renderer::Renderer(Transform* t, vector2 s): Component(t)
-{
-	DirectXModule* dxModule = DirectXModule::Instance();
-	renderTarget = dxModule->renderTarget;
-	dxModule->renderComponentList.push_back(this);
-	transform = t;
-	size = s;
-	offset = vector2();
-	renderTarget->CreateSolidColorBrush(ColorF(ColorF::Black, 1), (ID2D1SolidColorBrush**)&pen);
-}
-
-Renderer::Renderer(Transform* t, vector2 s, vector2 o) : Component(t)
-{
-	DirectXModule* dxModule = DirectXModule::Instance();
-	renderTarget = dxModule->renderTarget;
-	dxModule->renderComponentList.push_back(this);
-	transform = t;
-	size = s;
-	offset = o;
 	renderTarget->CreateSolidColorBrush(ColorF(ColorF::Black, 1), (ID2D1SolidColorBrush**)&pen);
 }
 

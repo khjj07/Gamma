@@ -1,9 +1,10 @@
 #pragma once
-#include <vector>
-#include <functional>
-using namespace std;
 
 class GameObject;
+
+/// <summary>
+/// ¾À¿¡ ´ëÇÑ class
+/// </summary>
 class Scene
 {
 public:
@@ -16,16 +17,11 @@ public:
 	void OnEnable();
 	void Enable();
 	void Disable();
-	void Add(GameObject*);
-	void Remove(GameObject*);
+	void Add(GameObject* gameObject);//¾À¿¡ Ãß°¡
+	void Remove(GameObject* gameObject);//¾À¿¡¼­ Á¦°Å
 public: 
 	template<typename T>
-	void Hold()
-	{
-		holdList.push_back([this]() {
-			Add(new T());
-			});
-	};
+	void Hold(); //GameObject¸¦ »ó¼Ó¹Þ´Â °³Ã¼¸¦ ¾ÀÀÇ ¹­¾îµÒ
 public:
 	vector<GameObject*> gameObjectList;
 	vector<GameObject*>::iterator gameObjectIter;
@@ -33,3 +29,10 @@ public:
 	vector<function<void()> >::iterator holdIter;
 };
 
+template<typename T>
+void Scene::Hold()
+{
+	holdList.push_back([this]() {
+		Add(new T());
+	});
+};

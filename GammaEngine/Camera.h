@@ -5,7 +5,7 @@ class Camera : public Component
 {
 public:
 	Camera();
-	Camera(Transform* t);
+	Camera(GameObject* t);
 	~Camera();
 public:
 	vector2 ScreenToWorldPoint(vector2);

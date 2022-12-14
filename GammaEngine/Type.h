@@ -1,4 +1,8 @@
 #pragma once
+
+/// <summary>
+/// 2방향 벡터 자료형
+/// </summary>
 struct vector2
 {
 	float x;
@@ -7,44 +11,50 @@ struct vector2
 	static vector2 Down;
 	static vector2 Left;
 	static vector2 Right;
+
 	vector2()
 	{
 		x = 0;
 		y = 0;
 	}
+
 	vector2(float a,float b)
 	{
 		x = a;
 		y = b;
 	}
+
 	vector2 operator -()
 	{
-
 		return vector2(-x, -y);
 	}
+
 	vector2 operator +(vector2 a)
 	{
 		return vector2(x + a.x, y + a.y);
 	}
+
 	vector2 operator -(vector2 a)
 	{
 		return vector2(x - a.x, y - a.y);
 	}
+
 	vector2 operator *(float a)
 	{
 		return vector2(x*a, y*a);
 	}
+
 	vector2 operator /(float a)
 	{
 		return vector2(x / a, y / a);
 	}
-
 
 	vector2& operator +=(vector2& a)
 	{
 		(*this) = (*this) + a;
 		return *this;
 	}
+
 	vector2& operator -=(vector2& a)
 	{
 		(*this) = (*this) - a;

@@ -5,7 +5,7 @@ Cam1Script::Cam1Script()
 {
 }
 
-Cam1Script::Cam1Script(Transform* t) :Component(t)
+Cam1Script::Cam1Script(GameObject* t) :Component(t)
 {
 }
 

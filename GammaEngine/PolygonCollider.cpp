@@ -4,7 +4,8 @@ PolygonCollider::PolygonCollider() :Collider()
 {
 
 }
-PolygonCollider::PolygonCollider(Transform* t) :Collider(t)
+
+PolygonCollider::PolygonCollider(GameObject* t) :Collider(t)
 {
 
 }
@@ -32,7 +33,7 @@ CollisionResponse PolygonCollider::Check(BoxCollider* other, bool collided)
 	result.state = Not;
 	result.other = other;
 
-	bool check;
+	bool check=false;
 	if (transform->rotation == 0 && other->transform->rotation == 0)
 	{
 		//check = AABB_to_AABB(this, other);
@@ -70,7 +71,7 @@ CollisionResponse PolygonCollider::Check(CircleCollider* other, bool collided)
 	CollisionResponse result;
 	result.state = Not;
 	result.other = other;
-	bool check;
+	bool check=false;
 	if (transform->rotation == 0)
 	{
 

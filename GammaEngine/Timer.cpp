@@ -5,10 +5,12 @@ vector<TimerHandler*>::iterator Timer::iter;
 
 Timer::Timer()
 {
+
 }
 
 Timer::~Timer()
 {
+
 }
 
 TimerHandler* Timer::Delay(float delay, bool loop, function<void()> callback)
@@ -17,7 +19,6 @@ TimerHandler* Timer::Delay(float delay, bool loop, function<void()> callback)
 	timerHandlerList.push_back(newHandler);
 	return newHandler;
 }
-
 
 void Timer::Cancel(TimerHandler* handler)
 {

@@ -3,21 +3,13 @@
 
 BitmapRenderer::BitmapRenderer() :Renderer()
 {
+
 }
-BitmapRenderer::BitmapRenderer(Transform* t) :Renderer(t)
+
+BitmapRenderer::BitmapRenderer(GameObject* t) :Renderer(t)
 {
 	
 }
-
-BitmapRenderer::BitmapRenderer(Transform* t, vector2 s) :Renderer(t, s)
-{
-
-}
-
-BitmapRenderer::BitmapRenderer(Transform* t, vector2 s, vector2 o) :Renderer(t, s, o)
-{
-}
-
 BitmapRenderer::~BitmapRenderer()
 {
 

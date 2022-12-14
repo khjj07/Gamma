@@ -3,21 +3,12 @@
 TextRenderer::TextRenderer()
 {
 }
-TextRenderer::TextRenderer(Transform* t) :Renderer(t)
+TextRenderer::TextRenderer(GameObject* t) :Renderer(t)
 {
 	size = vector2(100, 100);
 	text = string("");
 	DirectXModule* dxModule = DirectXModule::Instance();
 	textFormat = dxModule->textFormatList.at(0);
-}
-
-TextRenderer::TextRenderer(Transform* t, vector2 s) :Renderer(t, s)
-{
-
-}
-
-TextRenderer::TextRenderer(Transform* t, vector2 s, vector2 o) :Renderer(t, s, o)
-{
 }
 
 TextRenderer::~TextRenderer()

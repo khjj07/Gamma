@@ -3,24 +3,16 @@
 RectangleRenderer::RectangleRenderer() :Renderer()
 {
 }
-RectangleRenderer::RectangleRenderer(Transform* t) :Renderer(t)
+RectangleRenderer::RectangleRenderer(GameObject* t) :Renderer(t)
 {
 	size = vector2(100, 100);
-}
-
-RectangleRenderer::RectangleRenderer(Transform* t, vector2 s) :Renderer(t, s)
-{
-
-}
-
-RectangleRenderer::RectangleRenderer(Transform* t, vector2 s, vector2 o) :Renderer(t, s, o)
-{
 }
 
 RectangleRenderer::~RectangleRenderer()
 {
 
 }
+
 void RectangleRenderer::Render()
 {
 	if (pen||brush)

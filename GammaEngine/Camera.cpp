@@ -8,7 +8,7 @@ Camera::Camera() : Component()
 		main = this;
 	}
 }
-Camera::Camera(Transform* t) : Component(t)
+Camera::Camera(GameObject* t) : Component(t)
 {
 	if (main == nullptr)
 	{

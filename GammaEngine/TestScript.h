@@ -4,7 +4,7 @@ class TestScript : public Component
 {
 public:
 	TestScript();
-	TestScript(Transform *);
+	TestScript(GameObject*);
 	~TestScript();
 	virtual void Start();
 	virtual void LateUpdate();
