@@ -10,6 +10,8 @@ class Scene
 public:
 	Scene();
 	~Scene();
+
+public:
 	void Start();
 	void Frame();
 	void OnDestroy();
@@ -19,9 +21,11 @@ public:
 	void Disable();
 	void Add(GameObject* gameObject);//¾À¿¡ Ãß°¡
 	void Remove(GameObject* gameObject);//¾À¿¡¼­ Á¦°Å
+
 public: 
 	template<typename T>
 	void Hold(); //GameObject¸¦ »ó¼Ó¹Þ´Â °³Ã¼¸¦ ¾ÀÀÇ ¹­¾îµÒ
+
 public:
 	vector<GameObject*> gameObjectList;
 	vector<GameObject*>::iterator gameObjectIter;

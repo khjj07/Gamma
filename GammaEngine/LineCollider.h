@@ -4,12 +4,12 @@ class Transform;
 class BoxCollider;
 struct CollisionResponse;
 
-class CircleCollider :public Collider
+class LineCollider :public Collider
 {
 public:
-	CircleCollider();
-	CircleCollider(GameObject*);
-	~CircleCollider();
+	LineCollider();
+	LineCollider(GameObject*);
+	~LineCollider();
 
 public:
 	virtual bool InBound(vector2);
@@ -20,6 +20,7 @@ public:
 	virtual CollisionResponse Check(LineCollider* other, bool collided);
 
 public:
-	float radius;
+	vector2 startPoint;
+	vector2 endPoint;
 };
 

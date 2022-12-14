@@ -137,7 +137,9 @@
     <ClInclude Include="Cam1.h" />
     <ClInclude Include="Cam1Script.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Circle.h" />
     <ClInclude Include="CircleCollider.h" />
+    <ClInclude Include="CircleScript.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="CollisionSystem.h" />
     <ClInclude Include="Component.h" />
@@ -148,9 +150,9 @@
     <ClInclude Include="Engine.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="LineCollider.h" />
     <ClInclude Include="LineRenderer.h" />
     <ClInclude Include="Physics.h" />
-    <ClInclude Include="PolygonCollider.h" />
     <ClInclude Include="RectangleRenderer.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Scene.h" />
@@ -181,7 +183,9 @@
     <ClCompile Include="Cam1.cpp" />
     <ClCompile Include="Cam1Script.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Circle.cpp" />
     <ClCompile Include="CircleCollider.cpp" />
+    <ClCompile Include="CircleScript.cpp" />
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="CollisionSystem.cpp" />
     <ClCompile Include="Component.cpp" />
@@ -192,10 +196,10 @@
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="LineCollider.cpp" />
     <ClCompile Include="LineRenderer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Physics.cpp" />
-    <ClCompile Include="PolygonCollider.cpp" />
     <ClCompile Include="RectangleRenderer.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Scene.cpp" />

@@ -10,6 +10,8 @@ class GameObject
 public:
 	GameObject();
 	~GameObject();
+
+public:
 	void Start();
 	void Update();
 	void LateUpdate();

@@ -92,9 +92,11 @@ bool Input::GetMouseButtonUp(int k)
 
 vector2 Input::GetMousePosition()
 {
+	RECT rc;
 	POINT p;
+	GetWindowRect(hWnd, &rc);
 	GetCursorPos(&p);
 	ScreenToClient(hWnd, &p);
-	vector2 vec = vector2(p.x, p.y);
+	vector2 vec = vector2(-rc.left+p.x, -rc.top+p.y);
 	return vec;
 }

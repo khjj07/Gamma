@@ -4,12 +4,17 @@ class GameObject;
 class Transform;
 struct CollisionResponse;
 
+/// <summary>
+/// ÄÄÆ÷³ÍÆ® class
+/// </summary>
 class Component abstract
 {
 public:
 	Component();
 	Component(GameObject* g);
 	~Component();
+
+public:
 	virtual void Start();
 	virtual void Update();
 	virtual void LateUpdate();

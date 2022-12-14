@@ -9,7 +9,6 @@ Renderer::Renderer() : Component()
 	renderTarget->CreateSolidColorBrush(ColorF(ColorF::Black, 1), (ID2D1SolidColorBrush**)&pen);
 }
 
-
 Renderer::Renderer(GameObject* t) : Component(t)
 {
 	DirectXModule* dxModule = DirectXModule::Instance();
@@ -49,10 +48,6 @@ void Renderer::SetBrush<ID2D1LinearGradientBrush>(ID2D1GradientStopCollection* s
 	renderTarget->CreateLinearGradientBrush(LinearGradientBrushProperties(Point2F(pos.x+offset.x, pos.y + offset.y),
 	Point2F(pos.x + offset.x +size.x*scale.x, pos.y + offset.y + size.y * scale.y)),stops,(ID2D1LinearGradientBrush**) &brush);
 }
-
-
-
-
 
 template<>
 void Renderer::SetPen<ID2D1SolidColorBrush>(long color, float alpha)

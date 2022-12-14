@@ -10,22 +10,10 @@ CircleCollider::CircleCollider(GameObject* t) :Collider(t)
 
 }
 
-
 CollisionResponse CircleCollider::Collide(Collider* other, bool collided)
 {
-	BoxCollider* boxOther = dynamic_cast<BoxCollider*>(other);
-	CircleCollider* circleOther = dynamic_cast<CircleCollider*>(other);
-	if (boxOther)
-	{
-		return Check(boxOther, collided);
-	}
-	else if (circleOther)
-	{
-		return Check(circleOther, collided);
-	}
-
+	return other->Check(this, collided);
 }
-
 
 CollisionResponse CircleCollider::Check(BoxCollider* other, bool collided)
 {
@@ -33,6 +21,7 @@ CollisionResponse CircleCollider::Check(BoxCollider* other, bool collided)
 	result.state = Not;
 	result.other = other;
 	bool check;
+
 	if (other->transform->rotation == 0)
 	{
 		check = Circle_to_AABB(this, other);
@@ -70,11 +59,13 @@ CollisionResponse CircleCollider::Check(CircleCollider* other, bool collided)
 
 	vector2 centerA = transform->position;
 	float rangeA = (transform->scale.x + transform->scale.y) / 2 * radius;
+
 	vector2 centerB = other->transform->position;
 	float rangeB = (other->transform->scale.x + other->transform->scale.y) / 2 * other->radius;
-	bool check = Circle_to_Circle(centerA, rangeA, centerB, rangeB);
-	result.other = other;
 
+	bool check = Circle_to_Circle(centerA, rangeA, centerB, rangeB);
+
+	result.other = other;
 
 	if (!collided && check)
 	{
@@ -96,7 +87,33 @@ CollisionResponse CircleCollider::Check(CircleCollider* other, bool collided)
 	return result;
 }
 
+CollisionResponse CircleCollider::Check(LineCollider* other, bool collided)
+{
+	CollisionResponse result;
+	result.state = Not;
 
+	bool check = GetIntersectPoint(other->startPoint, other->endPoint, transform->position, radius);
+	result.other = other;
+
+	if (!collided && check)
+	{
+		result.state = Enter;
+	}
+	else if (collided && check)
+	{
+		result.state = Stay;
+	}
+	else if (!collided && !check)
+	{
+		result.state = Not;
+	}
+	else if (collided && !check)
+	{
+		result.state = Exit;
+	}
+
+	return result;
+}
 
 bool CircleCollider::InBound(vector2 v)
 {

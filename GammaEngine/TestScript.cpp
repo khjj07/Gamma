@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "TestScript.h"
 #include "Box.h"
+#include "Circle.h"
 TestScript::TestScript()
 {
 }
@@ -43,6 +44,12 @@ void TestScript::LateUpdate()
 	if (Input::GetMouseButtonDown(0))
 	{
 		GameObject* box = new Box();
+		box->transform->position = pos;
+		Instantiate(box);
+	}
+	if (Input::GetMouseButtonDown(1))
+	{
+		GameObject* box = new Circle();
 		box->transform->position = pos;
 		Instantiate(box);
 	}

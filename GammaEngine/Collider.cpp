@@ -22,6 +22,14 @@ bool Collider::GetIntersectPoint(vector2 AP1, vector2 AP2,
 
 	return true;
 }
+bool Collider::GetIntersectPoint(vector2 AP1, vector2 AP2,vector2 BP1, float r)
+{
+	float m = (AP2.y - AP1.y) / (AP2.x - AP1.x);
+	float c = -m * AP1.x + AP1.y;
+	float d = sqrt((m * BP1.x -BP1.y + c) * (m * BP1.x - BP1.y + c) / (m * m) + 1);
+	return d<=r;
+}
+
 
 bool Collider::AABB_to_AABB(BoxCollider* A, BoxCollider* B)
 {
@@ -82,6 +90,38 @@ bool Collider::OBB_to_OBB(BoxCollider* A, BoxCollider* B)
 	return true;
 }
 
+bool Collider::LineToOBB(LineCollider* A, BoxCollider* B)
+{
+	float thetaB = B->transform->rotation / 180 * PI;
+	vector2 upB = vector2(-sin(thetaB), cos(thetaB));
+	vector2 rightB = vector2(cos(thetaB), sin(thetaB));
+
+	vector2 leftUpB = B->transform->position + upB * B->bounds.y / 2 * B->transform->scale.y + rightB * -B->bounds.x / 2 * B->transform->scale.x;
+	vector2 rightUpB = B->transform->position + upB * B->bounds.y / 2 * B->transform->scale.y + rightB * B->bounds.x / 2 * B->transform->scale.x;
+	vector2 leftDownB = B->transform->position + upB * -B->bounds.y / 2 * B->transform->scale.y + rightB * -B->bounds.x / 2 * B->transform->scale.x;
+	vector2 rightDownB = B->transform->position + upB * -B->bounds.y / 2 * B->transform->scale.y + rightB * B->bounds.x / 2 * B->transform->scale.x;
+	vector2 tmp;
+
+	if (GetIntersectPoint(A->startPoint, A->endPoint, leftUpB, rightUpB, tmp))
+	{
+		return true;
+	}
+	if (GetIntersectPoint(A->startPoint, A->endPoint, rightUpB, rightDownB, tmp))
+	{
+		return true;
+	}
+	if (GetIntersectPoint(A->startPoint, A->endPoint, rightDownB, leftDownB, tmp))
+	{
+		return true;
+	}
+	if (GetIntersectPoint(A->startPoint, A->endPoint, leftDownB, leftUpB, tmp))
+	{
+		return true;
+	}
+
+	return false;
+}
+
 bool Collider::Circle_to_AABB(CircleCollider* A, BoxCollider* B)
 {
 	vector2 center = A->transform->position;
@@ -103,16 +143,19 @@ bool Collider::Circle_to_AABB(CircleCollider* A, BoxCollider* B)
 		return false;
 	}
 }
+
 bool Collider::Circle_to_OBB(BoxCollider* A, CircleCollider* B)
 {
 	float distance = vector2::Distance(A->transform->position, B->transform->position);
 	vector2 diffrence = A->transform->position - B->transform->position;
 	vector2 direction = (A->transform->position - B->transform->position).Normalize();
+
 	float thetaA = A->transform->rotation / 180 * PI;;
 	float scaleB = (B->transform->scale.x + B->transform->scale.y) / 2;
 	vector2 upA = vector2(-sin(thetaA), cos(thetaA)).Normalize();
 	vector2 rightA = vector2(cos(thetaA), sin(thetaA)).Normalize();
-	if (abs(vector2::Dot(upA, diffrence)- vector2::Dot(upA,direction*B->radius*scaleB)) <= A->bounds.y / 2 * A->transform->scale.y && abs(vector2::Dot(rightA, diffrence) - vector2::Dot(rightA, direction * B->radius * scaleB)) <= A->bounds.x / 2 * A->transform->scale.x)
+
+	if(abs(vector2::Dot(upA, diffrence)) <= A->bounds.y / 2 * A->transform->scale.y + B->radius* scaleB && abs(vector2::Dot(rightA, diffrence)) <= A->bounds.x / 2 * A->transform->scale.x + B->radius * scaleB)
 	{
 		return true;
 	}
@@ -134,7 +177,6 @@ vector2 Collider::GetContactPoint(BoxCollider* A, CircleCollider* B)
 
 vector2 Collider::GetContactPoint(BoxCollider* A, BoxCollider* B)
 {
-
 	float thetaA = A->transform->rotation / 180 * PI;
 	vector2 upA = vector2(-sin(thetaA), cos(thetaA));
 	vector2 rightA = vector2(cos(thetaA), sin(thetaA));

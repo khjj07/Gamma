@@ -49,11 +49,11 @@
     <Filter Include="Framework\System\Physics">
       <UniqueIdentifier>{129ac39d-ed30-4e89-8039-4c8b88d41bfb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Framework\System\Debug">
-      <UniqueIdentifier>{1fdbd7c9-c899-409b-88bf-d820ec0f000f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game\Scripts">
       <UniqueIdentifier>{34c46d23-9113-4391-a035-fb9c9065ffc0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Debug">
+      <UniqueIdentifier>{1fdbd7c9-c899-409b-88bf-d820ec0f000f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -147,9 +147,6 @@
     <ClInclude Include="Tween.h">
       <Filter>Framework\System\Tween</Filter>
     </ClInclude>
-    <ClInclude Include="Physics.h">
-      <Filter>Framework\System\Physics</Filter>
-    </ClInclude>
     <ClInclude Include="CollisionSystem.h">
       <Filter>Framework\System\Physics</Filter>
     </ClInclude>
@@ -157,7 +154,7 @@
       <Filter>Framework\Component\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Debug.h">
-      <Filter>Framework\System\Debug</Filter>
+      <Filter>Game\Debug</Filter>
     </ClInclude>
     <ClInclude Include="CircleCollider.h">
       <Filter>Framework\Component\Collider</Filter>
@@ -180,7 +177,16 @@
     <ClInclude Include="BoxScript.h">
       <Filter>Game\Scripts</Filter>
     </ClInclude>
-    <ClInclude Include="PolygonCollider.h">
+    <ClInclude Include="Physics.h">
+      <Filter>Framework\System\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Circle.h">
+      <Filter>Game\Prefab</Filter>
+    </ClInclude>
+    <ClInclude Include="CircleScript.h">
+      <Filter>Game\Scripts</Filter>
+    </ClInclude>
+    <ClInclude Include="LineCollider.h">
       <Filter>Framework\Component\Collider</Filter>
     </ClInclude>
   </ItemGroup>
@@ -273,7 +279,7 @@
       <Filter>Framework\Component\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="Debug.cpp">
-      <Filter>Framework\System\Debug</Filter>
+      <Filter>Game\Debug</Filter>
     </ClCompile>
     <ClCompile Include="CircleCollider.cpp">
       <Filter>Framework\Component\Collider</Filter>
@@ -299,7 +305,13 @@
     <ClCompile Include="Type.cpp">
       <Filter>Framework\Etc</Filter>
     </ClCompile>
-    <ClCompile Include="PolygonCollider.cpp">
+    <ClCompile Include="Circle.cpp">
+      <Filter>Game\Prefab</Filter>
+    </ClCompile>
+    <ClCompile Include="CircleScript.cpp">
+      <Filter>Game\Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="LineCollider.cpp">
       <Filter>Framework\Component\Collider</Filter>
     </ClCompile>
   </ItemGroup>

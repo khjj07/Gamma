@@ -1,33 +1,5 @@
 #include "stdafx.h"
 
-void GetRayCondition(vector2 from,vector2 v,Collider* col, float &objectRange,bool& OnDirection, bool& InRange)
-{
-	Transform* transform = col->transform;
-	BoxCollider* box = dynamic_cast<BoxCollider*>(col);
-	CircleCollider* circle = dynamic_cast<CircleCollider*>(col);
-	if (box)
-	{
-		vector2 bounds = box->bounds;
-
-		rect2D rect;
-		rect.min.x = -bounds.x / 2 * transform->scale.x + transform->position.x;
-		rect.min.y = -bounds.y / 2 * transform->scale.y + transform->position.y;
-		rect.max.x = bounds.x / 2 * transform->scale.x + transform->position.x;
-		rect.max.y = bounds.y / 2 * transform->scale.y + transform->position.y;
-
-		objectRange = vector2::Distance(rect.min, rect.max);
-		OnDirection = vector2::Dot(v, rect.min - from) >= 0 || vector2::Dot(v, rect.max - from) >= 0;
-		InRange = v.Length() >= vector2::Distance(transform->position, from) - objectRange;
-	}
-	else if (circle)
-	{
-		vector2 direction = (transform->position - from).Normalize();
-
-		objectRange = circle->radius * 2 * (transform->scale.x + transform->scale.y) / 2;
-		OnDirection = vector2::Dot(v, transform->position - from - direction * objectRange);
-		InRange = v.Length() >= vector2::Distance(transform->position, from) - objectRange;
-	}
-}
 
 Physics::Physics()
 {
@@ -145,4 +117,33 @@ RaycastResponse  Physics::Raycast(vector2 from, vector2 to, vector<string> tags)
 	}
 	
 	return result;
+}
+
+void Physics::GetRayCondition(vector2 from, vector2 v, Collider* col, float& objectRange, bool& OnDirection, bool& InRange)
+{
+	Transform* transform = col->transform;
+	BoxCollider* box = dynamic_cast<BoxCollider*>(col);
+	CircleCollider* circle = dynamic_cast<CircleCollider*>(col);
+	if (box)
+	{
+		vector2 bounds = box->bounds;
+
+		rect2D rect;
+		rect.min.x = -bounds.x / 2 * transform->scale.x + transform->position.x;
+		rect.min.y = -bounds.y / 2 * transform->scale.y + transform->position.y;
+		rect.max.x = bounds.x / 2 * transform->scale.x + transform->position.x;
+		rect.max.y = bounds.y / 2 * transform->scale.y + transform->position.y;
+
+		objectRange = vector2::Distance(rect.min, rect.max)* (transform->scale.x + transform->scale.y) / 2;
+		OnDirection = vector2::Dot(v, rect.min - from) >= 0 || vector2::Dot(v, rect.max - from) >= 0;
+		InRange = v.Length() >= vector2::Distance(transform->position, from) - objectRange;
+	}
+	else if (circle)
+	{
+		vector2 direction = (transform->position - from).Normalize();
+
+		objectRange = circle->radius * 2 * (transform->scale.x + transform->scale.y) / 2;
+		OnDirection = vector2::Dot(v, transform->position - from - direction * objectRange);
+		InRange = v.Length() >= vector2::Distance(transform->position, from) - objectRange;
+	}
 }

@@ -14,6 +14,7 @@ TCHAR* ToTCHAR(string& s)
 	}
 	t = new wchar_t[len];
 	if (NULL == t) throw std::bad_alloc();
+	setlocale(LC_ALL, "");
 	mbstowcs_s(&cn, t, len, all, len);
 	return (TCHAR*)t;
 }

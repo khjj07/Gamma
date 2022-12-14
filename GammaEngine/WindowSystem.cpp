@@ -12,6 +12,16 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
 
 	switch (umsg)
 	{
+	case WM_SIZE:
+		if (dxModule->renderTarget)
+		{
+			RECT rect;
+			GetWindowRect(WindowSystem::Instance()->hWnd, &rect);
+			dxModule->renderTarget->Resize(SizeU(rect.right - rect.left, rect.bottom - rect.top));
+			Screen::height = rect.bottom - rect.top;
+			Screen::width = rect.right - rect.left;
+		}
+		return 0;
 	case WM_MOUSEWHEEL:
 		Input::mouseScrollDelta = (SHORT)HIWORD(wparam);
 		break;
@@ -71,15 +81,9 @@ void WindowSystem::Initialize(int& screenWidth,int& screenHeight)
 		//posY = (GetSystemMetrics(SM_CYSCREEN)) - screenHeight / 2;
 	}
 
-	RECT rcClient = { 0, 0, screenWidth, screenHeight };
-	AdjustWindowRect(&rcClient, WS_OVERLAPPEDWINDOW, FALSE);
-	Screen::width = (rcClient.right - rcClient.left);
-	Screen::height = (rcClient.bottom - rcClient.top);
-
-	hWnd = CreateWindowEx(WS_EX_APPWINDOW, applicationName, applicationName, WS_OVERLAPPEDWINDOW, posX, posY, (rcClient.right - rcClient.left), (rcClient.bottom - rcClient.top), NULL, NULL, hInstance, NULL);
+	hWnd = CreateWindowEx(WS_EX_APPWINDOW, applicationName, applicationName, WS_OVERLAPPEDWINDOW, posX, posY, screenWidth, screenHeight, NULL, NULL, hInstance, NULL);
 	
 	ShowWindow(hWnd, SW_SHOW);
-	ShowCursor(false);
 	SetForegroundWindow(hWnd);
 	SetFocus(hWnd);
 	

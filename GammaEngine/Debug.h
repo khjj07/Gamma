@@ -21,9 +21,10 @@ public:
 	DebugScript();
 	DebugScript(GameObject*);
 	~DebugScript();
+
+public:
 	virtual void Update();
+
 public:
 	string fps;
-private:
-
 };

@@ -1,5 +1,8 @@
 #pragma once
 
+/// <summary>
+/// 위치 크기 회전 정보를 포함하는 컴포넌트
+/// </summary>
 class Transform : public Component
 {
 public:
