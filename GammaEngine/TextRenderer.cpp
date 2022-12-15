@@ -27,10 +27,10 @@ void TextRenderer::Render()
 		renderSize.x = renderSize.x * transform->scale.x;
 		renderSize.y = renderSize.y * transform->scale.y;
 		Renderer::Adjust(renderPos);
-		int len = text.size() - 1;
+		TCHAR *str = ToTCHAR(text);
 		renderTarget->DrawText(
-			ToTCHAR(text),
-			len,
+			str,
+			text.length()-1,
 			textFormat,
 			RectF(renderPos.x, renderPos.y, renderPos.x + renderSize.x, renderPos.y + renderSize.y),
 			pen

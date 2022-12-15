@@ -1,10 +1,10 @@
 #pragma once
 class GameObject;
-class Test: public GameObject
+class Cursor : public GameObject
 {
 public:
-	Test();
-	~Test();
+	Cursor();
+	~Cursor();
 
 private:
 

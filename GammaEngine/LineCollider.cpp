@@ -10,6 +10,11 @@ LineCollider::LineCollider(GameObject* t) :Collider(t)
 
 }
 
+LineCollider::~LineCollider()
+{
+
+}
+
 CollisionResponse LineCollider::Collide(Collider* other, bool collided)
 {
 	return other->Check(this, collided);
@@ -19,7 +24,7 @@ CollisionResponse LineCollider::Check(BoxCollider* other, bool collided)
 {
 	CollisionResponse result;
 	result.state = Not;
-	result.other = other;
+	result.other = this;
 	bool check;
 	
 	check = LineToOBB(this,other);
@@ -43,14 +48,13 @@ CollisionResponse LineCollider::Check(BoxCollider* other, bool collided)
 	return result;
 }
 
-
 CollisionResponse LineCollider::Check(CircleCollider* other, bool collided)
 {
 	CollisionResponse result;
 	result.state = Not;
 
 	bool check = GetIntersectPoint(startPoint, endPoint, other->transform->position, other->radius);
-	result.other = other;
+	result.other = this;
 
 	if (!collided && check)
 	{
@@ -78,7 +82,7 @@ CollisionResponse LineCollider::Check(LineCollider* other, bool collided)
 	result.state = Not;
 
 	 bool check= GetIntersectPoint(startPoint, endPoint, other->startPoint, other->endPoint, result.position);
-	 result.other = other;
+	 result.other = this;
 
 	 if (!collided && check)
 	 {
@@ -98,13 +102,6 @@ CollisionResponse LineCollider::Check(LineCollider* other, bool collided)
 	 }
 
 	return result;
-}
-
-bool LineCollider::InBound(vector2 v)
-{
-	vector2 center = transform->position;
-	float range = radius * (transform->scale.x + transform->scale.y) / 2;
-	return vector2::Distance(center, v) <= range;
 }
 
 vector2 LineCollider::GetNormalVector(vector2 v)

@@ -10,6 +10,11 @@ CircleCollider::CircleCollider(GameObject* t) :Collider(t)
 
 }
 
+CircleCollider::~CircleCollider()
+{
+
+}
+
 CollisionResponse CircleCollider::Collide(Collider* other, bool collided)
 {
 	return other->Check(this, collided);
@@ -19,7 +24,7 @@ CollisionResponse CircleCollider::Check(BoxCollider* other, bool collided)
 {
 	CollisionResponse result;
 	result.state = Not;
-	result.other = other;
+	result.other = this;
 	bool check;
 
 	if (other->transform->rotation == 0)
@@ -65,7 +70,7 @@ CollisionResponse CircleCollider::Check(CircleCollider* other, bool collided)
 
 	bool check = Circle_to_Circle(centerA, rangeA, centerB, rangeB);
 
-	result.other = other;
+	result.other = this;
 
 	if (!collided && check)
 	{
@@ -93,7 +98,7 @@ CollisionResponse CircleCollider::Check(LineCollider* other, bool collided)
 	result.state = Not;
 
 	bool check = GetIntersectPoint(other->startPoint, other->endPoint, transform->position, radius);
-	result.other = other;
+	result.other = this;
 
 	if (!collided && check)
 	{

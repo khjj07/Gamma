@@ -17,6 +17,7 @@ public:
 	~Renderer();
 
 public:
+	virtual void Render();
 	void Adjust(vector2& v);
 	void Adjust(vector2& pos, vector2& size);
 
@@ -32,7 +33,6 @@ public:
 
 	template<class T>
 	void SetPen(ID2D1GradientStopCollection* stops);
-
 public:
 	ID2D1HwndRenderTarget* renderTarget;
 	vector2 size;

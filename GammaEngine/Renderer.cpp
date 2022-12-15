@@ -21,7 +21,14 @@ Renderer::Renderer(GameObject* t) : Component(t)
 
 Renderer::~Renderer()
 {
-	brush->Release();
+	if (pen)
+	{
+		pen->Release();
+	}
+	if (brush)
+	{
+		brush->Release();
+	}
 	DirectXModule* dxModule = DirectXModule::Instance();
 	dxModule->renderComponentList.erase(remove_if(dxModule->renderComponentList.begin(), dxModule->renderComponentList.end(), [this](Component* x) { if (x == this) return true; else return false; }), dxModule->renderComponentList.end());
 }

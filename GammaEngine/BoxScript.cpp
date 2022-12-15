@@ -27,19 +27,12 @@ void BoxScript::Update()
 
 void BoxScript::OnCollisionEnter(CollisionResponse response)
 {
-	transform->GetComponent<RectangleRenderer>()->SetPen<ID2D1SolidColorBrush>(ColorF::Blue, 1);
+	
 }
 
 void BoxScript::OnCollisionStay(CollisionResponse response)
 {
-// 	vector2 comp = response.normal* response.distance;
-// 	correction = correction + comp;
-// 	transform->position += comp;
-// 	float proj = vector2::Dot(velocity, response.normal);
-// 	if (proj < 0)
-// 	{
-// 		velocity = velocity - response.normal * proj;
-// 	}
+	transform->GetComponent<RectangleRenderer>()->SetPen<ID2D1SolidColorBrush>(ColorF::Blue, 1);
 }
 
 

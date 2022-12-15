@@ -7,8 +7,13 @@ GameObject::GameObject()
 
 GameObject::~GameObject()
 {
+	for (componentIter = componentList.begin(); componentIter < componentList.end(); componentIter++)
+	{
+		delete	(*componentIter);
+	}
+	componentList.clear();
+	delete transform;
 }
-
 
 void GameObject::Start()
 {
@@ -44,9 +49,7 @@ void GameObject::OnDestroy()
 	for (componentIter = componentList.begin(); componentIter < componentList.end(); componentIter++)
 	{
 		(*componentIter)->OnDestroy();
-		delete(*componentIter);
 	}
-	delete transform;
 }
 
 void GameObject::OnDisable() 
@@ -112,7 +115,6 @@ bool GameObject::CompareTag(char* str)
 		return false;
 	}
 }
-
 
 bool GameObject::CompareTags(vector<string> strList)
 {

@@ -3,7 +3,11 @@ class Component;
 class GameObject;
 class BoxCollider;
 class CircleCollider;
+class LineCollider;
 
+/// <summary>
+/// 콜라이더 추상 class
+/// </summary>
 class Collider : public Component
 {
 public:
@@ -14,7 +18,7 @@ public:
 public:
 	static bool GetIntersectPoint(vector2 AP1, vector2 AP2,vector2 BP1, vector2 BP2, vector2& IP);
 	static bool GetIntersectPoint(vector2 AP1, vector2 AP2,vector2 BP1, float r);
-	static bool LineToOBB(LineCollider* A, BoxCollider* B);
+	static bool LineToOBB(LineCollider*, BoxCollider*);
 	static bool AABB_to_AABB(BoxCollider*, BoxCollider*);
 	static bool OBB_to_OBB(BoxCollider*,BoxCollider*);
 	static bool Circle_to_AABB(CircleCollider* A, BoxCollider* B);

@@ -4,12 +4,12 @@
 /// 레이케스팅의 결과에 대한 구조체
 /// </summary>
 struct RaycastResponse {
-	bool hit; 
-	float fraction;
-	vector2 position; 
-	vector2 normal;
-	Collider* collider;
-	GameObject* gameObject;
+	bool hit; //충돌여부
+	float fraction; //레이캐스트 비율
+	vector2 position; //충돌 위치
+	vector2 normal; //법선 벡터
+	Collider* collider; //충돌체
+	GameObject* gameObject; //충돌체의 오브젝트
 };
 
 /// <summary>

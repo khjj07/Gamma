@@ -108,7 +108,7 @@
     <ClInclude Include="Renderer.h">
       <Filter>Framework\Component\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="Test.h">
+    <ClInclude Include="Cursor.h">
       <Filter>Game\Prefab</Filter>
     </ClInclude>
     <ClInclude Include="Input.h">
@@ -168,7 +168,7 @@
     <ClInclude Include="Box2Script.h">
       <Filter>Game\Scripts</Filter>
     </ClInclude>
-    <ClInclude Include="TestScript.h">
+    <ClInclude Include="CursorSript.h">
       <Filter>Game\Scripts</Filter>
     </ClInclude>
     <ClInclude Include="BitmapRenderer.h">
@@ -230,7 +230,7 @@
     <ClCompile Include="Renderer.cpp">
       <Filter>Framework\Component\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="Test.cpp">
+    <ClCompile Include="Cursor.cpp">
       <Filter>Game\Prefab</Filter>
     </ClCompile>
     <ClCompile Include="Input.cpp">
@@ -290,7 +290,7 @@
     <ClCompile Include="Cam1Script.cpp">
       <Filter>Game\Scripts</Filter>
     </ClCompile>
-    <ClCompile Include="TestScript.cpp">
+    <ClCompile Include="CursorSript.cpp">
       <Filter>Game\Scripts</Filter>
     </ClCompile>
     <ClCompile Include="Box2Script.cpp">

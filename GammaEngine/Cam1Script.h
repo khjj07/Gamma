@@ -8,6 +8,6 @@ public:
 	~Cam1Script();
 	virtual void Update();
 private:
-
+	float speed = 300;
 };
 

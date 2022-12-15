@@ -4,6 +4,9 @@ class Transform;
 class BoxCollider;
 struct CollisionResponse;
 
+/// <summary>
+/// 원 콜라이더 class
+/// </summary>
 class CircleCollider :public Collider
 {
 public:

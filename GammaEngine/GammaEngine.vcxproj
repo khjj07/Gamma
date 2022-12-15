@@ -162,8 +162,8 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="Test.h" />
-    <ClInclude Include="TestScript.h" />
+    <ClInclude Include="Cursor.h" />
+    <ClInclude Include="CursorSript.h" />
     <ClInclude Include="TextRenderer.h" />
     <ClInclude Include="Time.h" />
     <ClInclude Include="Timer.h" />
@@ -205,8 +205,8 @@
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Scene1.cpp" />
     <ClCompile Include="Screen.cpp" />
-    <ClCompile Include="Test.cpp" />
-    <ClCompile Include="TestScript.cpp" />
+    <ClCompile Include="Cursor.cpp" />
+    <ClCompile Include="CursorSript.cpp" />
     <ClCompile Include="TextRenderer.cpp" />
     <ClCompile Include="Time.cpp" />
     <ClCompile Include="Timer.cpp" />

@@ -18,11 +18,11 @@ enum CollisionState
 /// </summary>
 struct CollisionResponse
 {
-	CollisionState state;
-	Collider* other;
-	vector2 normal;
-	vector2 position;
-	float distance;
+	CollisionState state; //상태
+	Collider* other; //다른 충돌체
+	vector2 normal; //법선벡터
+	vector2 position; //충돌 지점
+	float distance; //침투 거리
 };
 
 /// <summary>

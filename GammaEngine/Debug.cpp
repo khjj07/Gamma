@@ -5,7 +5,7 @@ Debug::Debug()
 {
 	AddComponent<TextRenderer>();
 	AddComponent<DebugScript>();
-	GetComponent<TextRenderer>()->size = vector2(500, 1000);
+	GetComponent<TextRenderer>()->size = vector2(500, 800);
 }
 
 Debug::~Debug()
@@ -37,8 +37,8 @@ void DebugScript::Update()
 	static double accum = 0;
 	if (accum >= 1)
 	{
-		char str[1024];
-		sprintf_s(str, sizeof(str), "fps = %d \n마우스 좌클릭 : box 생성\n마우스 우클릭 : circle 생성\n마우스 스크롤 : 줌인/줌아웃", frameCnt);
+		char str[300];
+		sprintf_s(str, sizeof(str), "fps = %d \n스페이스 : 도형 바꾸기(사각형,원)\n빈공간 좌클릭 : 도형 생성\n도형 좌클릭 : 도형 선택\nWASD : 선택된 도형 이동\nQE : 선택된 도형회전\n방향키 : 카메라 이동\n마우스 스크롤 : 카메라 줌인/줌아웃\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", frameCnt);
 		fps = string(str);
 		frameCnt = 0;
 		accum = 0;

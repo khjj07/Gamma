@@ -134,7 +134,7 @@ bool Collider::Circle_to_AABB(CircleCollider* A, BoxCollider* B)
 	b.max.y = B->bounds.y / 2 * B->transform->scale.y + B->transform->position.y;
 
 	vector2 dot = center+((b.min + b.max) / 2 - center).Normalize()*range;
-	if (Physics::InBound(b, dot))
+	if (A->InBound((b.min + b.max) / 2)|| Physics::InBound(b, dot))
 	{
 		return true;
 	}
@@ -285,6 +285,8 @@ Collider::Collider(GameObject* t) : Component(t)
 
 Collider::~Collider()
 {
+	CollisionSystem* coll = CollisionSystem::Instance();
+	coll->colliderList.erase(remove_if(coll->colliderList.begin(), coll->colliderList.end(), [this](Collider* x) { if (x == this) return true; else return false; }), coll->colliderList.end());
 }
 
 bool Collider::CompareTag(string str)

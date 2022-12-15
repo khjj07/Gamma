@@ -3,6 +3,10 @@ class Collider;
 class Transform;
 class CircleCollider;
 struct CollisionResponse;
+
+/// <summary>
+/// 박스 콜라이더 class
+/// </summary>
 class BoxCollider :public Collider
 {
 public:

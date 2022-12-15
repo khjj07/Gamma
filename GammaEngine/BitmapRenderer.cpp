@@ -10,6 +10,7 @@ BitmapRenderer::BitmapRenderer(GameObject* t) :Renderer(t)
 {
 	
 }
+
 BitmapRenderer::~BitmapRenderer()
 {
 

@@ -27,19 +27,12 @@ void CircleScript::Update()
 
 void CircleScript::OnCollisionEnter(CollisionResponse response)
 {
-	transform->GetComponent<EllipseRenderer>()->SetPen<ID2D1SolidColorBrush>(ColorF::Blue, 1);
+	
 }
 
 void CircleScript::OnCollisionStay(CollisionResponse response)
 {
-	// 	vector2 comp = response.normal* response.distance;
-	// 	correction = correction + comp;
-	// 	transform->position += comp;
-	// 	float proj = vector2::Dot(velocity, response.normal);
-	// 	if (proj < 0)
-	// 	{
-	// 		velocity = velocity - response.normal * proj;
-	// 	}
+	transform->GetComponent<EllipseRenderer>()->SetPen<ID2D1SolidColorBrush>(ColorF::Blue, 1);
 }
 
 

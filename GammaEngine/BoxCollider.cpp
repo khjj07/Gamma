@@ -10,6 +10,11 @@ BoxCollider::BoxCollider(GameObject* t):Collider(t)
 
 }
 
+BoxCollider::~BoxCollider()
+{
+
+}
+
 CollisionResponse BoxCollider::Collide(Collider* other, bool collided)
 {
 	return other->Check(this, collided);
@@ -20,7 +25,7 @@ CollisionResponse BoxCollider::Check(BoxCollider* other, bool collided)
 {
 	CollisionResponse result;
 	result.state = Not;
-	result.other = other;
+	result.other = this;
 
 	bool check;
 	if (transform->rotation == 0 && other->transform->rotation==0)
@@ -56,7 +61,7 @@ CollisionResponse BoxCollider::Check(CircleCollider* other, bool collided)
 {
 	CollisionResponse result;
 	result.state = Not;
-	result.other = other;
+	result.other = this;
 	bool check;
 	if (transform->rotation == 0)
 	{
@@ -95,7 +100,7 @@ CollisionResponse BoxCollider::Check(LineCollider* other, bool collided)
 {
 	CollisionResponse result;
 	result.state = Not;
-	result.other = other;
+	result.other = this;
 	bool check;
 
 	check = LineToOBB(other, this);

@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Scene1.h"
-#include "Test.h"
+#include "Cursor.h"
 #include "Cam1.h"
 #include "Box.h"
 #include "Box2.h"
@@ -8,8 +8,7 @@
 
 Scene1::Scene1()
 {
+	Hold<Cursor>();
 	Hold<Debug>();
 	Hold<Cam1>();
-	Hold<Test>();
-	Hold<Box2>();
 }

@@ -12,7 +12,7 @@ class Component abstract
 public:
 	Component();
 	Component(GameObject* g);
-	~Component();
+	virtual ~Component();
 
 public:
 	virtual void Start();
@@ -21,7 +21,6 @@ public:
 	virtual void OnDestroy();
 	virtual void OnDisable();
 	virtual void OnEnable();
-	virtual void Render();
 	virtual void OnCollisionEnter(CollisionResponse response);
 	virtual void OnCollisionStay(CollisionResponse response);
 	virtual void OnCollisionExit(CollisionResponse response);

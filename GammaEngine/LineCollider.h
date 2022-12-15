@@ -1,9 +1,13 @@
 #pragma once
+
 class Collider;
 class Transform;
 class BoxCollider;
 struct CollisionResponse;
 
+/// <summary>
+/// Line 콜라이더
+/// </summary>
 class LineCollider :public Collider
 {
 public:
@@ -12,7 +16,6 @@ public:
 	~LineCollider();
 
 public:
-	virtual bool InBound(vector2);
 	virtual CollisionResponse Collide(Collider*, bool);
 	virtual vector2 GetNormalVector(vector2);
 	virtual CollisionResponse Check(BoxCollider* other, bool collided);
