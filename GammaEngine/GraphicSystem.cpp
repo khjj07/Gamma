@@ -1,20 +1,19 @@
 #include "stdafx.h"
-#include "DirectXModule.h"
 #pragma comment (lib, "d3d9.lib")
 #pragma comment(lib, "D2D1.lib")
 #pragma comment(lib, "dwrite.lib")
 
-DirectXModule::DirectXModule()
+GraphicSystem::GraphicSystem()
 {
 
 }
 
-DirectXModule::~DirectXModule()
+GraphicSystem::~GraphicSystem()
 {
 	
 }
 
-HRESULT DirectXModule::Initialize(HWND hWnd)
+HRESULT GraphicSystem::Initialize(HWND hWnd)
 {
 	Screen* screen = Screen::Instance();
 	if (S_OK == D2D1CreateFactory(D2D1_FACTORY_TYPE_MULTI_THREADED, &factory))
@@ -31,13 +30,13 @@ HRESULT DirectXModule::Initialize(HWND hWnd)
 	return 0;
 }
 
-void DirectXModule::CreateTextFormat(string fontFamilyName, DWRITE_FONT_WEIGHT fontWeight, DWRITE_FONT_STYLE fontStyle, DWRITE_FONT_STRETCH fontStretch, int fontSize) {
+void GraphicSystem::CreateTextFormat(string fontFamilyName, DWRITE_FONT_WEIGHT fontWeight, DWRITE_FONT_STYLE fontStyle, DWRITE_FONT_STRETCH fontStretch, int fontSize) {
 	IDWriteTextFormat* result;
 	writeFactory->CreateTextFormat(ToTCHAR(fontFamilyName), NULL,fontWeight, fontStyle, fontStretch, fontSize, L"", &result);
 	textFormatList.push_back(result);
 }
 
-void  DirectXModule::Render()
+void  GraphicSystem::Render()
 {
 	renderTarget->BeginDraw();
 	renderTarget->Clear(ColorF(1, 1, 1));
@@ -57,7 +56,7 @@ void  DirectXModule::Render()
 	renderTarget->EndDraw();
 }
 
-void  DirectXModule::Release()
+void  GraphicSystem::Release()
 {
 	vector<IDWriteTextFormat*>::iterator iter;
 	for (iter = textFormatList.begin(); iter < textFormatList.end(); iter++)

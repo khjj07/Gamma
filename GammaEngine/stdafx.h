@@ -29,7 +29,7 @@
 #include "Singleton.h"
 #include "resource.h"
 #include "WindowSystem.h"
-#include "DirectXModule.h"
+#include "GraphicSystem.h"
 #include "Screen.h"
 #include "Input.h"
 #include "Time.h"

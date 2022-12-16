@@ -5,6 +5,8 @@ VisualStudioVersion = 17.3.32804.467
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GammaEngine", "GammaEngine\GammaEngine.vcxproj", "{AC2724B0-17C0-4BA9-BE13-FB25276BF081}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Direct2DModule", "Direct2DModule\Direct2DModule.vcxproj", "{3AF9BC5C-4D56-44DD-B41E-F207C681EF19}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,14 @@ Global
 		{AC2724B0-17C0-4BA9-BE13-FB25276BF081}.Release|x64.Build.0 = Release|x64
 		{AC2724B0-17C0-4BA9-BE13-FB25276BF081}.Release|x86.ActiveCfg = Release|Win32
 		{AC2724B0-17C0-4BA9-BE13-FB25276BF081}.Release|x86.Build.0 = Release|Win32
+		{3AF9BC5C-4D56-44DD-B41E-F207C681EF19}.Debug|x64.ActiveCfg = Debug|x64
+		{3AF9BC5C-4D56-44DD-B41E-F207C681EF19}.Debug|x64.Build.0 = Debug|x64
+		{3AF9BC5C-4D56-44DD-B41E-F207C681EF19}.Debug|x86.ActiveCfg = Debug|Win32
+		{3AF9BC5C-4D56-44DD-B41E-F207C681EF19}.Debug|x86.Build.0 = Debug|Win32
+		{3AF9BC5C-4D56-44DD-B41E-F207C681EF19}.Release|x64.ActiveCfg = Release|x64
+		{3AF9BC5C-4D56-44DD-B41E-F207C681EF19}.Release|x64.Build.0 = Release|x64
+		{3AF9BC5C-4D56-44DD-B41E-F207C681EF19}.Release|x86.ActiveCfg = Release|Win32
+		{3AF9BC5C-4D56-44DD-B41E-F207C681EF19}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

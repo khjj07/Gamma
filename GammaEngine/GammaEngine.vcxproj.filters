@@ -66,7 +66,7 @@
     <ClInclude Include="Singleton.h">
       <Filter>Framework\Etc</Filter>
     </ClInclude>
-    <ClInclude Include="DirectXModule.h">
+    <ClInclude Include="GraphicSystem.h">
       <Filter>Framework\System</Filter>
     </ClInclude>
     <ClInclude Include="Engine.h">
@@ -194,7 +194,7 @@
     <ClCompile Include="main.cpp">
       <Filter>main</Filter>
     </ClCompile>
-    <ClCompile Include="DirectXModule.cpp">
+    <ClCompile Include="GraphicSystem.cpp">
       <Filter>Framework\System</Filter>
     </ClCompile>
     <ClCompile Include="Engine.cpp">

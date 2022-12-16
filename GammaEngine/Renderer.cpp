@@ -3,17 +3,17 @@
 
 Renderer::Renderer() : Component()
 {
-	DirectXModule* dxModule = DirectXModule::Instance();
-	renderTarget = dxModule->renderTarget;
-	dxModule->renderComponentList.push_back(this);
+	GraphicSystem* graphic = GraphicSystem::Instance();
+	renderTarget = graphic->renderTarget;
+	graphic->renderComponentList.push_back(this);
 	renderTarget->CreateSolidColorBrush(ColorF(ColorF::Black, 1), (ID2D1SolidColorBrush**)&pen);
 }
 
 Renderer::Renderer(GameObject* t) : Component(t)
 {
-	DirectXModule* dxModule = DirectXModule::Instance();
-	renderTarget = dxModule->renderTarget;
-	dxModule->renderComponentList.push_back(this);
+	GraphicSystem* graphic = GraphicSystem::Instance();
+	renderTarget = graphic->renderTarget;
+	graphic->renderComponentList.push_back(this);
 	size = vector2();
 	offset = vector2();
 	renderTarget->CreateSolidColorBrush(ColorF(ColorF::Black, 1), (ID2D1SolidColorBrush**)&pen);
@@ -29,8 +29,8 @@ Renderer::~Renderer()
 	{
 		brush->Release();
 	}
-	DirectXModule* dxModule = DirectXModule::Instance();
-	dxModule->renderComponentList.erase(remove_if(dxModule->renderComponentList.begin(), dxModule->renderComponentList.end(), [this](Component* x) { if (x == this) return true; else return false; }), dxModule->renderComponentList.end());
+	GraphicSystem* graphic = GraphicSystem::Instance();
+	graphic->renderComponentList.erase(remove_if(graphic->renderComponentList.begin(), graphic->renderComponentList.end(), [this](Component* x) { if (x == this) return true; else return false; }), graphic->renderComponentList.end());
 }
 
 template<>

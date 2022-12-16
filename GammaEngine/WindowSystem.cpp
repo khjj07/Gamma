@@ -8,16 +8,16 @@ WindowSystem::WindowSystem()
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
 {
-	DirectXModule* dxModule = DirectXModule::Instance();
+	GraphicSystem* graphic = GraphicSystem::Instance();
 
 	switch (umsg)
 	{
 	case WM_SIZE:
-		if (dxModule->renderTarget)
+		if (graphic->renderTarget)
 		{
 			RECT rect;
 			GetWindowRect(WindowSystem::Instance()->hWnd, &rect);
-			dxModule->renderTarget->Resize(SizeU(rect.right - rect.left, rect.bottom - rect.top));
+			graphic->renderTarget->Resize(SizeU(rect.right - rect.left, rect.bottom - rect.top));
 			Screen::height = rect.bottom - rect.top;
 			Screen::width = rect.right - rect.left;
 		}
@@ -26,11 +26,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
 		Input::mouseScrollDelta = (SHORT)HIWORD(wparam);
 		break;
 	case WM_DESTROY:
-		dxModule->Release();
+		graphic->Release();
 		PostQuitMessage(0);
 		return 0;
 	case WM_CLOSE:
-		dxModule->Release();
+		graphic->Release();
 		PostQuitMessage(0);
 		return 0;
 	default:
@@ -87,10 +87,10 @@ void WindowSystem::Initialize(int& screenWidth,int& screenHeight)
 	SetForegroundWindow(hWnd);
 	SetFocus(hWnd);
 	
-	DirectXModule* dxModule = DirectXModule::Instance();
+	GraphicSystem* graphic = GraphicSystem::Instance();
 	Input* input = Input::Instance();
 
-	dxModule->Initialize(hWnd);
+	graphic->Initialize(hWnd);
 	input->Initialize(hWnd);
 }
 
