@@ -4,6 +4,7 @@ Renderer::Renderer() : Component()
 {
 	GraphicSystem* graphic = GraphicSystem::Instance();
 	graphic->renderComponentList.push_back(this);
+	meterial = new Meterial();
 }
 
 Renderer::Renderer(GameObject* t) : Component(t)
@@ -12,6 +13,7 @@ Renderer::Renderer(GameObject* t) : Component(t)
 	graphic->renderComponentList.push_back(this);
 	size = vector2();
 	offset = vector2();
+	meterial = new Meterial();
 }
 
 Renderer::~Renderer()
@@ -24,7 +26,11 @@ void Renderer::SetBrush(vector4 color)
 {
 	meterial->brush = color;
 }
-void Renderer::SetPen(vector4);
+
+void Renderer::SetPen(vector4 color)
+{
+	meterial->pen = color;
+}
 
 
 void Renderer::Adjust(vector2& v)

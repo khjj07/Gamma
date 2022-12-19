@@ -109,6 +109,23 @@ struct vector4
 	float y;
 	float z;
 	float w;
+
+	vector4()
+	{
+		x = 0;
+		y = 0;
+		z = 0;
+		w = 0;
+	}
+
+	vector4(float a, float b,float c,float d)
+	{
+		x = a;
+		y = b;
+		z = c;
+		w = d;
+	}
+
 };
 
 struct rect2D {

@@ -13,11 +13,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
 	switch (umsg)
 	{
 	case WM_SIZE:
-		if (graphic->renderTarget)
+		if (graphic->render)
 		{
 			RECT rect;
 			GetWindowRect(WindowSystem::Instance()->hWnd, &rect);
-			graphic->renderTarget->Resize(SizeU(rect.right - rect.left, rect.bottom - rect.top));
+			graphic->Resize(rect.right - rect.left, rect.bottom - rect.top);
 			Screen::height = rect.bottom - rect.top;
 			Screen::width = rect.right - rect.left;
 		}
