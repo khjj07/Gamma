@@ -1,4 +1,5 @@
 #pragma once
+#include <math.h>
 
 /// <summary>
 /// 2방향 벡터 자료형

@@ -15,7 +15,6 @@ public:
 	virtual void Render();
 public:
 	string text=string("");
-	IDWriteTextFormat* textFormat;
 private:
 
 };

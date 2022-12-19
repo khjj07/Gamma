@@ -9,8 +9,6 @@ TextRenderer::TextRenderer(GameObject* t) :Renderer(t)
 {
 	size = vector2(100, 100);
 	text = string("");
-	DirectXModule* dxModule = DirectXModule::Instance();
-	textFormat = dxModule->textFormatList.at(0);
 }
 
 TextRenderer::~TextRenderer()
@@ -27,14 +25,7 @@ void TextRenderer::Render()
 		renderSize.x = renderSize.x * transform->scale.x;
 		renderSize.y = renderSize.y * transform->scale.y;
 		Renderer::Adjust(renderPos);
-		TCHAR *str = ToTCHAR(text);
-		renderTarget->DrawText(
-			str,
-			text.length()-1,
-			textFormat,
-			RectF(renderPos.x, renderPos.y, renderPos.x + renderSize.x, renderPos.y + renderSize.y),
-			pen
-		);
+		GraphicSystem::DrawTextBox(renderPos, renderSize, text,meterial);
 	}
 	
 }

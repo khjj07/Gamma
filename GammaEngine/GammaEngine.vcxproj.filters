@@ -63,9 +63,6 @@
     <ClInclude Include="targetver.h">
       <Filter>Framework\Etc</Filter>
     </ClInclude>
-    <ClInclude Include="Singleton.h">
-      <Filter>Framework\Etc</Filter>
-    </ClInclude>
     <ClInclude Include="GraphicSystem.h">
       <Filter>Framework\System</Filter>
     </ClInclude>
@@ -91,9 +88,6 @@
       <Filter>Framework\Component</Filter>
     </ClInclude>
     <ClInclude Include="stdafx.h">
-      <Filter>Framework\Etc</Filter>
-    </ClInclude>
-    <ClInclude Include="Type.h">
       <Filter>Framework\Etc</Filter>
     </ClInclude>
     <ClInclude Include="Scene.h">
@@ -134,9 +128,6 @@
     </ClInclude>
     <ClInclude Include="TextRenderer.h">
       <Filter>Framework\Component\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Util.h">
-      <Filter>Framework\Etc</Filter>
     </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>Framework\System\Timer</Filter>
@@ -257,9 +248,6 @@
     <ClCompile Include="TextRenderer.cpp">
       <Filter>Framework\Component\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="Util.cpp">
-      <Filter>Framework\Etc</Filter>
-    </ClCompile>
     <ClCompile Include="Timer.cpp">
       <Filter>Framework\System\Timer</Filter>
     </ClCompile>
@@ -301,9 +289,6 @@
     </ClCompile>
     <ClCompile Include="BoxScript.cpp">
       <Filter>Game\Scripts</Filter>
-    </ClCompile>
-    <ClCompile Include="Type.cpp">
-      <Filter>Framework\Etc</Filter>
     </ClCompile>
     <ClCompile Include="Circle.cpp">
       <Filter>Game\Prefab</Filter>

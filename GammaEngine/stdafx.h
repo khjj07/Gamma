@@ -38,6 +38,7 @@
 #include "Camera.h"
 
 //render
+#include "Render.h"
 #include "Renderer.h"
 #include "EllipseRenderer.h"
 #include "RectangleRenderer.h"

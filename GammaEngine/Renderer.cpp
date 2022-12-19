@@ -1,11 +1,9 @@
 #include "stdafx.h"
 
-
 Renderer::Renderer() : Component()
 {
 	GraphicSystem* graphic = GraphicSystem::Instance();
 	graphic->renderComponentList.push_back(this);
-	renderTarget->CreateSolidColorBrush(ColorF(ColorF::Black, 1), (ID2D1SolidColorBrush**)&pen);
 }
 
 Renderer::Renderer(GameObject* t) : Component(t)
@@ -14,22 +12,20 @@ Renderer::Renderer(GameObject* t) : Component(t)
 	graphic->renderComponentList.push_back(this);
 	size = vector2();
 	offset = vector2();
-	renderTarget->CreateSolidColorBrush(ColorF(ColorF::Black, 1), (ID2D1SolidColorBrush**)&pen);
 }
 
 Renderer::~Renderer()
 {
-	if (pen)
-	{
-		pen->Release();
-	}
-	if (brush)
-	{
-		brush->Release();
-	}
 	GraphicSystem* graphic = GraphicSystem::Instance();
 	graphic->renderComponentList.erase(remove_if(graphic->renderComponentList.begin(), graphic->renderComponentList.end(), [this](Component* x) { if (x == this) return true; else return false; }), graphic->renderComponentList.end());
 }
+
+void Renderer::SetBrush(vector4 color)
+{
+	meterial->brush = color;
+}
+void Renderer::SetPen(vector4);
+
 
 void Renderer::Adjust(vector2& v)
 {

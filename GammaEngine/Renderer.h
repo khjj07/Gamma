@@ -22,22 +22,13 @@ public:
 	void Adjust(vector2& pos, vector2& size);
 
 public:
-	template<class T>
-	void SetBrush(long color, float alpha);
+	void SetBrush(vector4);
+	void SetPen(vector4);
 
-	template<class T>
-	void SetBrush(ID2D1GradientStopCollection* stops);
-
-	template<class T>
-	void SetPen(long color, float alpha);
-
-	template<class T>
-	void SetPen(ID2D1GradientStopCollection* stops);
 public:
-	ID2D1HwndRenderTarget* renderTarget;
 	vector2 size;
 	vector2 offset;
-	Metrerial* meterial;
+	Meterial* meterial;
 	int order = 0;
 };
 

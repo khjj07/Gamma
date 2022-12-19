@@ -15,6 +15,8 @@
 using namespace std;
 using namespace D2D1;
 
+ID2D1HwndRenderTarget* Direct2DModule::renderTarget = 0;
+
 Direct2DModule::Direct2DModule()
 {
 
@@ -52,8 +54,6 @@ void Direct2DModule::BeginDraw()
 
 void Direct2DModule::EndDraw()
 {
-	D2D1_POINT_2F center = { 0,0 };
-	renderTarget->SetTransform(Matrix3x2F::Rotation(0, center));
 	renderTarget->EndDraw();
 }
 
@@ -78,23 +78,81 @@ void  Direct2DModule::Release()
 	factory->Release();
 }
 
-void Direct2DModule::DrawRectangle(vector2 pos, vector2 size,float rotation, Metrerial* meterial)
+void Direct2DModule::Resize(int width, int height)
+{
+	renderTarget->Resize(SizeU(width, height));
+}
+
+void Direct2DModule::DrawRectangle(vector2 pos, vector2 size, float rotation, Meterial* meterial)
 {
 	ID2D1SolidColorBrush* brush;
 	ID2D1SolidColorBrush* pen;
 	D2D1_RECT_F rectangle;
 	D2D1_POINT_2F center = { pos.x,  size.y };
+
 	rectangle.left = pos.x - size.x / 2;
 	rectangle.top = pos.y - size.y / 2;
 	rectangle.right = pos.x + size.x / 2;
 	rectangle.bottom = pos.y + size.y / 2;
+
 	renderTarget->SetTransform(Matrix3x2F::Rotation(rotation, center));
-
-
 	renderTarget->CreateSolidColorBrush(ColorF(meterial->pen.x, meterial->pen.y, meterial->pen.z, meterial->pen.w), (ID2D1SolidColorBrush**)&pen);
 	renderTarget->CreateSolidColorBrush(ColorF(meterial->brush.x, meterial->brush.y, meterial->brush.z, meterial->brush.w), (ID2D1SolidColorBrush**)&brush);
-
 	renderTarget->DrawRectangle(rectangle, pen);
 	renderTarget->FillRectangle(rectangle, brush);
-	
+
+	D2D1_POINT_2F center = { 0,0 };
+	renderTarget->SetTransform(Matrix3x2F::Rotation(0, center));
+}
+
+void Direct2DModule::DrawEllipse(vector2 pos, vector2 size, float rotation, Meterial* meterial)
+{
+	ID2D1SolidColorBrush* brush;
+	ID2D1SolidColorBrush* pen;
+	D2D1_ELLIPSE ellipse;
+
+	ellipse.radiusX = size.x / 2;
+	ellipse.radiusY = size.y / 2;
+	ellipse.point.x = pos.x;
+	ellipse.point.y = pos.y;
+
+	D2D1_POINT_2F center = { pos.x,  pos.y };
+	renderTarget->SetTransform(Matrix3x2F::Rotation(rotation, center));
+	renderTarget->CreateSolidColorBrush(ColorF(meterial->pen.x, meterial->pen.y, meterial->pen.z, meterial->pen.w), (ID2D1SolidColorBrush**)&pen);
+	renderTarget->CreateSolidColorBrush(ColorF(meterial->brush.x, meterial->brush.y, meterial->brush.z, meterial->brush.w), (ID2D1SolidColorBrush**)&brush);
+	renderTarget->DrawEllipse(ellipse, pen);
+	renderTarget->FillEllipse(ellipse, brush);
+
+	D2D1_POINT_2F center = { 0,0 };
+	renderTarget->SetTransform(Matrix3x2F::Rotation(0, center));
+}
+
+void Direct2DModule::DrawLine(vector2 start, vector2 end, float thickness, Meterial* meterial)
+{
+	ID2D1SolidColorBrush* pen;
+	renderTarget->CreateSolidColorBrush(ColorF(meterial->pen.x, meterial->pen.y, meterial->pen.z, meterial->pen.w), (ID2D1SolidColorBrush**)&pen);
+
+	renderTarget->DrawLine(
+		Point2F(start.x, start.y),
+		Point2F(end.x, end.y),
+		pen,
+		thickness,
+		nullptr
+	);
+}
+
+void Direct2DModule::DrawTextBox(vector2 pos, vector2 size, string text, Meterial* meterial)
+{
+	TCHAR* str = ToTCHAR(text);
+
+	ID2D1SolidColorBrush* pen;
+	renderTarget->CreateSolidColorBrush(ColorF(meterial->pen.x, meterial->pen.y, meterial->pen.z, meterial->pen.w), (ID2D1SolidColorBrush**)&pen);
+
+	renderTarget->DrawText(
+		str,
+		text.length() - 1,
+		textFormatList.at(0),
+		RectF(pos.x, pos.y, pos.x + size.x, pos.y + size.y),
+		pen
+	);
 }

@@ -19,5 +19,5 @@ public:
 public:
 	vector2 src;
 	vector2 dst;
-	ID2D1StrokeStyle* style=nullptr;
+	float thickness = 0.5f;
 };
