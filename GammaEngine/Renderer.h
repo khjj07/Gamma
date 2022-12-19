@@ -17,7 +17,7 @@ public:
 	~Renderer();
 
 public:
-	virtual void Render();
+	virtual void Render() abstract;
 	void Adjust(vector2& v);
 	void Adjust(vector2& pos, vector2& size);
 
@@ -37,8 +37,7 @@ public:
 	ID2D1HwndRenderTarget* renderTarget;
 	vector2 size;
 	vector2 offset;
-	ID2D1Brush* pen = 0;
-	ID2D1Brush* brush = 0;
-	int order=0;
+	Metrerial* meterial;
+	int order = 0;
 };
 

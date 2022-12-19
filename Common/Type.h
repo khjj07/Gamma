@@ -102,6 +102,13 @@ struct vector2
 	
 };
 
+struct vector4
+{
+	float x;
+	float y;
+	float z;
+	float w;
+};
 
 struct rect2D {
 	vector2 min;

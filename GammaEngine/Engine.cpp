@@ -19,7 +19,7 @@ void Engine::Initialize(Scene* scene)
 bool Engine::Frame()
 {
 	CollisionSystem* collisionSystem = CollisionSystem::Instance();
-	DirectXModule* dxModule = DirectXModule::Instance();
+	GraphicSystem* graphic = GraphicSystem::Instance();
 	Timer* timer = Timer::Instance();
 	Input* input = Input::Instance();
 
@@ -54,7 +54,7 @@ bool Engine::Frame()
 	currentScene->Start();
 	currentScene->Frame();
 	input->Frame();
-	dxModule->Render();
+	graphic->Frame();
 	return true;
 }
 
@@ -68,4 +68,57 @@ void Destroy(GameObject* obj)
 {
 	Engine* engine = Engine::Instance();
 	engine->removeBuffer.push_back(obj);
+}
+
+
+bool CompareTag(GameObject* obj, string str)
+{
+	if (obj->tag == str)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+
+bool CompareTag(GameObject* obj, char* str)
+{
+	if (strcmp(obj->tag.c_str(), str) == 0)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool CompareTags(GameObject* obj, vector<string> strList)
+{
+	vector<string>::iterator iter;
+	for (iter = strList.begin(); iter < strList.end(); iter++)
+	{
+		if (CompareTag(obj, (*iter)))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+
+bool CompareTags(GameObject* obj, vector<char*> strList)
+{
+	vector<char*>::iterator iter;
+	for (iter = strList.begin(); iter < strList.end(); iter++)
+	{
+		if (CompareTag(obj, (*iter)))
+		{
+			return true;
+		}
+	}
+	return false;
 }

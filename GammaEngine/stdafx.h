@@ -15,11 +15,6 @@
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
-#include <d3d9.h>
-#include <d2d1_1.h>
-#include <d2d1.h>
-#include <dwrite.h>
-#include <wincodec.h>
 #include <vector>
 #include <functional>
 #include  <algorithm>
@@ -37,8 +32,11 @@
 #include "Timer.h"
 #include "Tween.h"
 
+//component
 #include "Component.h"
+#include "Transform.h"
 #include "Camera.h"
+
 //render
 #include "Renderer.h"
 #include "EllipseRenderer.h"
@@ -46,6 +44,7 @@
 #include "BitmapRenderer.h"
 #include "LineRenderer.h"
 #include "TextRenderer.h"
+
 //collision
 #include "Collider.h"
 #include "BoxCollider.h"
@@ -54,14 +53,12 @@
 #include "CollisionSystem.h"
 #include "Physics.h"
 
-
-#include "Transform.h"
-
+//Entity
 #include "GameObject.h"
 #include "Scene.h"
+
 #include "Engine.h"
 
 
 
 using namespace std;
-using namespace D2D1;

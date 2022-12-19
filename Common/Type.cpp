@@ -1,4 +1,5 @@
-#include "stdafx.h"
+#include <math.h>
+#include "type.h"
 
 vector2 vector2::Up = vector2(0, -1);
 vector2 vector2::Down = vector2(0, 1);
