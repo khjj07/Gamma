@@ -32,11 +32,11 @@ void CircleScript::OnCollisionEnter(CollisionResponse response)
 
 void CircleScript::OnCollisionStay(CollisionResponse response)
 {
-	transform->GetComponent<EllipseRenderer>()->SetPen<ID2D1SolidColorBrush>(ColorF::Blue, 1);
+
 }
 
 
 void CircleScript::OnCollisionExit(CollisionResponse response)
 {
-	transform->GetComponent<EllipseRenderer>()->SetPen<ID2D1SolidColorBrush>(ColorF::Black, 1);
+	
 }

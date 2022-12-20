@@ -1,8 +1,4 @@
-#include <d3d9.h>
-#include <d2d1_1.h>
-#include <d2d1.h>
-#include <dwrite.h>
-#include <wincodec.h>
+
 #include <vector>
 #include "Render.h"
 #include "Util.h"
@@ -19,7 +15,9 @@ ID2D1HwndRenderTarget* Direct2DModule::renderTarget = 0;
 
 Direct2DModule::Direct2DModule()
 {
-
+	factory=0;
+	writeFactory=0;
+	imageFactory=0;
 }
 
 Direct2DModule::~Direct2DModule()
@@ -83,6 +81,89 @@ void Direct2DModule::Resize(int width, int height)
 	renderTarget->Resize(SizeU(width, height));
 }
 
+string Direct2DModule::LoadBitmapImage(string filename)
+{
+	HRESULT hr;
+	ID2D1Bitmap* bitmap;
+	// 디코더 생성
+
+	IWICBitmapDecoder* decoder = 0;
+
+	hr = imageFactory->CreateDecoderFromFilename(ToTCHAR(filename), 0, GENERIC_READ, WICDecodeMetadataCacheOnDemand, &decoder);
+
+	if (FAILED(hr))
+		return nullptr;
+
+
+
+	// 프레임 얻기
+
+	IWICBitmapFrameDecode* frameDecode = 0;
+
+	// 0번 프레임을 읽어들임.
+
+	hr = decoder->GetFrame(0, &frameDecode);
+
+	if (FAILED(hr))
+
+	{
+
+		decoder->Release();
+
+		return nullptr;
+
+	}
+
+
+
+	// 컨버터 생성
+
+	IWICFormatConverter* converter = 0;
+
+	hr = imageFactory->CreateFormatConverter(&converter);
+
+	if (FAILED(hr))
+	{
+		decoder->Release();
+		return nullptr;
+	}
+
+	// 컨버터 초기화
+	hr = converter->Initialize(
+		frameDecode,
+		GUID_WICPixelFormat32bppPBGRA,
+		WICBitmapDitherTypeNone,
+		0, 0.0, WICBitmapPaletteTypeCustom
+	);
+
+	if (FAILED(hr))
+	{
+		decoder->Release();
+		frameDecode->Release();
+		converter->Release();
+		return nullptr;
+	}
+
+
+	// WIC 비트맵으로부터 D2D 비트맵 생성
+	hr = renderTarget->CreateBitmapFromWicBitmap(converter, 0, &bitmap);
+	bitmapDictionary.insert({ filename, bitmap });
+	// 자원 해제
+	decoder->Release();
+	frameDecode->Release();
+	converter->Release();
+
+	return filename;
+}
+
+
+vector2 Direct2DModule::GetBitmapSize(string filename)
+{
+	D2D1_SIZE_F size = bitmapDictionary.at(filename)->GetSize();
+	return vector2(size.width, size.height);
+}
+
+
 void Direct2DModule::DrawRectangle(vector2 pos, vector2 size, float rotation, Meterial* meterial)
 {
 	ID2D1SolidColorBrush* brush;
@@ -101,8 +182,8 @@ void Direct2DModule::DrawRectangle(vector2 pos, vector2 size, float rotation, Me
 	renderTarget->DrawRectangle(rectangle, pen);
 	renderTarget->FillRectangle(rectangle, brush);
 
-	D2D1_POINT_2F center = { 0,0 };
-	renderTarget->SetTransform(Matrix3x2F::Rotation(0, center));
+	D2D1_POINT_2F centerz = { 0,0 };
+	renderTarget->SetTransform(Matrix3x2F::Rotation(0, centerz));
 }
 
 void Direct2DModule::DrawEllipse(vector2 pos, vector2 size, float rotation, Meterial* meterial)
@@ -123,8 +204,8 @@ void Direct2DModule::DrawEllipse(vector2 pos, vector2 size, float rotation, Mete
 	renderTarget->DrawEllipse(ellipse, pen);
 	renderTarget->FillEllipse(ellipse, brush);
 
-	D2D1_POINT_2F center = { 0,0 };
-	renderTarget->SetTransform(Matrix3x2F::Rotation(0, center));
+	D2D1_POINT_2F centerz = { 0,0 };
+	renderTarget->SetTransform(Matrix3x2F::Rotation(0, centerz));
 }
 
 void Direct2DModule::DrawLine(vector2 start, vector2 end, float thickness, Meterial* meterial)
@@ -155,4 +236,16 @@ void Direct2DModule::DrawTextBox(vector2 pos, vector2 size, string text, Meteria
 		RectF(pos.x, pos.y, pos.x + size.x, pos.y + size.y),
 		pen
 	);
+}
+
+void Direct2DModule::DrawBitmap(string bitmap,vector2 pos, vector2 size, float rotation, Meterial* meterial)
+{
+	D2D1_RECT_F rectangle;
+	D2D1_POINT_2F center = { pos.x,  size.y };
+	rectangle.left = pos.x - size.x / 2;
+	rectangle.top = pos.y - size.y / 2;
+	rectangle.right = pos.x + size.x / 2;
+	rectangle.bottom = pos.y + size.y / 2;
+	renderTarget->SetTransform(Matrix3x2F::Rotation(rotation, center));
+	renderTarget->DrawBitmap(bitmapDictionary.at(bitmap), rectangle, 1.0f, D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR);
 }

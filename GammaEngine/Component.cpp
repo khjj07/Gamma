@@ -46,11 +46,6 @@ void Component::OnEnable()
 
 }
 
-void Component::Render()
-{
-
-}
-
 void Component::OnCollisionEnter(CollisionResponse response)
 {
 

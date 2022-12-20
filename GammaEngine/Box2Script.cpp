@@ -50,16 +50,10 @@ void Box2Script::LateUpdate()
 
 void Box2Script::OnCollisionEnter(CollisionResponse response)
 {
-	if (response.other->CompareTag(string("box")))
-	{
-		transform->GetComponent<RectangleRenderer>()->SetPen<ID2D1SolidColorBrush>(ColorF::Blue, 1);
-	}
+	
 }
 
 void Box2Script::OnCollisionExit(CollisionResponse response)
 {
-	if (response.other->CompareTag(string("box")))
-	{
-		transform->GetComponent<RectangleRenderer>()->SetPen<ID2D1SolidColorBrush>(ColorF::Black, 1);
-	}
+	
 }

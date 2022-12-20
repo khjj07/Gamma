@@ -6,7 +6,7 @@ static enum KeyState {
 	pressed,
 	released,
 	pressing,
-	not
+	none
 };
 
 /// <summary>

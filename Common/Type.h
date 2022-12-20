@@ -56,7 +56,19 @@ struct vector2
 		return *this;
 	}
 
+	vector2& operator +=(vector2 a)
+	{
+		(*this) = (*this) + a;
+		return *this;
+	}
+
 	vector2& operator -=(vector2& a)
+	{
+		(*this) = (*this) - a;
+		return *this;
+	}
+
+	vector2& operator -=(vector2 a)
 	{
 		(*this) = (*this) - a;
 		return *this;

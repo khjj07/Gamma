@@ -59,3 +59,18 @@ void GraphicSystem::DrawTextBox(vector2 pos, vector2 size, string text, Meterial
 {
 	render->DrawTextBox(pos, size, text, meterial);
 }
+
+void GraphicSystem::DrawBitmap(string bitmap, vector2 pos, vector2 size, float rotation, Meterial* meterial)
+{
+	render->DrawBitmap(bitmap,pos, size, rotation, meterial);
+}
+
+string GraphicSystem::LoadBitmapImage(string filename)
+{
+	return render->LoadBitmapImage(filename);
+}
+
+vector2 GraphicSystem::GetBitmapSize(string bitmap)
+{
+	return render->GetBitmapSize(bitmap);
+}

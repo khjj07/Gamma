@@ -1,6 +1,12 @@
 #pragma once
 #include <string>
+#include <d3d9.h>
+#include <d2d1_1.h>
+#include <d2d1.h>
+#include <dwrite.h>
+#include <wincodec.h>
 using namespace std;
+using namespace D2D1;
 class RenderModule;
 
 class Direct2DModule : public RenderModule
@@ -20,10 +26,16 @@ public:
 	virtual void DrawEllipse(vector2 pos, vector2 size, float rotation, Meterial* meterial);
 	virtual void DrawLine(vector2 start, vector2 end, float thickness, Meterial* meterial);
 	virtual void DrawTextBox(vector2 pos, vector2 size, string text, Meterial* meterial);
+	virtual void DrawBitmap(string bitmap, vector2 pos, vector2 size, float rotation, Meterial* meterial);
+	virtual string LoadBitmapImage(string filename);
+	virtual vector2 GetBitmapSize(string filename);
 public:
-	ID2D1Factory* factory = 0;
+	ID2D1Factory* factory;
+	IDWriteFactory* writeFactory;
+	IWICImagingFactory* imageFactory;
 	static ID2D1HwndRenderTarget* renderTarget;
-	IDWriteFactory* writeFactory = 0;
+public:
 	vector<IDWriteTextFormat*> textFormatList;
+	unordered_map<string, ID2D1Bitmap*> bitmapDictionary;
 };
 

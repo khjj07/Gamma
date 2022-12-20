@@ -14,12 +14,11 @@ public:
 	~BitmapRenderer();
 
 public:
-	virtual void Render();
+	virtual void Render() abstract;
 
 public:
-	int LoadBitmapImage(string filename);
+	void LoadBitmapImage(string filename);
 
 public:
-	IWICImagingFactory* factory;
-	ID2D1Bitmap* bitmap;
+	string bitmap;
 };

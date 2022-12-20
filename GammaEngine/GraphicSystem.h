@@ -1,6 +1,5 @@
 #pragma once
 #include <vector>
-
 using namespace std;
 
 class RenderModule;
@@ -28,12 +27,15 @@ public:
 	static void DrawEllipse(vector2 pos, vector2 size, float rotation, Meterial* meterial);
 	static void DrawLine(vector2 start, vector2 end, float thickness, Meterial* meterial);
 	static void DrawTextBox(vector2 pos, vector2 size, string text, Meterial* meterial);
+	static void DrawBitmap(string bitmap, vector2 pos, vector2 size, float rotation, Meterial* meterial);
+	static string LoadBitmapImage(string filename);
+	static vector2 GetBitmapSize(string bitmap);
+
 public:
 	static RenderModule* render;
 
 public:
 	vector<Renderer*> renderComponentList;
 	vector<Renderer*>::iterator renderComponentIter;
-	
 };
 

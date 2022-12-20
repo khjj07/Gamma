@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 int Input::mouse[3] = {1,2,4};
-KeyState Input::key[256] = { KeyState::not, };
+KeyState Input::key[256] = { KeyState::none, };
 HWND Input::hWnd = NULL;
 short Input::mouseScrollDelta = 0;
 
@@ -25,14 +25,14 @@ void Input::Frame()
 	mouseScrollDelta = (short)0;
 	for (int i = 0; i < 256; i++)
 	{
-		if (GetAsyncKeyState(i) && key[i] == KeyState::not)
+		if (GetAsyncKeyState(i) && key[i] == KeyState::none)
 			key[i] = KeyState::pressed;
 		else if(GetAsyncKeyState(i) && key[i]==KeyState::pressed)
 			key[i] = KeyState::pressing;
 		else if(!GetAsyncKeyState(i) && key[i] == KeyState::pressing)
 			key[i] = KeyState::released;
 		else if(!GetAsyncKeyState(i) && key[i] == KeyState::released)
-			key[i] = KeyState::not;
+			key[i] = KeyState::none;
 	}
 }
 

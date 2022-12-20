@@ -1,6 +1,7 @@
 #pragma once
 #include "Component.h"
-struct vector2;
+#include "Type.h"
+
 class BoxScript : public Component
 {
 public:
@@ -14,7 +15,7 @@ public:
 	virtual void OnCollisionExit(CollisionResponse);
 public:
 	vector2 velocity;
-	vector2 gravity=vector2::Down*10;
+	vector2 gravity = vector2::Down*10;
 	vector2 correction;
 private:
 

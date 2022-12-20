@@ -1,6 +1,6 @@
 #pragma once
 #include "Component.h"
-struct vector2;
+#include "Type.h"
 
 class CircleScript : public Component
 {

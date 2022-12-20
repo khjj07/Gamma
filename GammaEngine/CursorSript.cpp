@@ -50,26 +50,7 @@ void CursorSript::Update()
 
 	if (hover && Input::GetMouseButtonDown(0))
 	{
-		if (target)
-		{
-			if (target->GetComponent<RectangleRenderer>())
-			{
-				target->GetComponent<RectangleRenderer>()->SetBrush<ID2D1SolidColorBrush>(ColorF::OrangeRed, 0);
-			}
-			else if (target->GetComponent<EllipseRenderer>())
-			{
-				target->GetComponent<EllipseRenderer>()->SetBrush<ID2D1SolidColorBrush>(ColorF::OrangeRed, 0);
-			}
-		}
-		target = hover;
-		if (target->GetComponent<RectangleRenderer>())
-		{
-			target->GetComponent<RectangleRenderer>()->SetBrush<ID2D1SolidColorBrush>(ColorF::OrangeRed,0.5);
-		}
-		else if(target->GetComponent<EllipseRenderer>())
-		{
-			target->GetComponent<EllipseRenderer>()->SetBrush<ID2D1SolidColorBrush>(ColorF::OrangeRed, 0.5);
-		}
+
 	}
 	if (hover && Input::GetMouseButtonDown(1))
 	{
