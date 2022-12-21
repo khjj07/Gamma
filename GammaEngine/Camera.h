@@ -8,7 +8,6 @@ class Transform;
 class Camera : public Component
 {
 public:
-	Camera();
 	Camera(GameObject* t);
 	~Camera();
 

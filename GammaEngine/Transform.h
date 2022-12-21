@@ -6,7 +6,6 @@
 class Transform : public Component
 {
 public:
-	Transform();
 	Transform(GameObject* t);
 	~Transform();
 

@@ -11,7 +11,6 @@ struct CollisionResponse;
 class LineCollider :public Collider
 {
 public:
-	LineCollider();
 	LineCollider(GameObject*);
 	~LineCollider();
 

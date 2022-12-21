@@ -1,10 +1,5 @@
 #include "stdafx.h"
 
-BoxCollider::BoxCollider() :Collider()
-{
-
-}
-
 BoxCollider::BoxCollider(GameObject* t):Collider(t)
 {
 

@@ -13,11 +13,6 @@ Debug::~Debug()
 
 }
 
-DebugScript::DebugScript() :Component()
-{
-
-}
-
 DebugScript::DebugScript(GameObject* t) :Component(t)
 {
 

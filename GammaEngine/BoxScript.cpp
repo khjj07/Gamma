@@ -1,10 +1,6 @@
 #include "stdafx.h"
 #include "BoxScript.h"
 
-BoxScript::BoxScript()
-{
-}
-
 BoxScript::BoxScript(GameObject* t) :Component(t)
 {
 }

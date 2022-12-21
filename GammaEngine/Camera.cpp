@@ -1,13 +1,6 @@
 #include "stdafx.h"
 
 Camera* Camera::main = nullptr;
-Camera::Camera() : Component()
-{
-	if (main == nullptr)
-	{
-		main = this;
-	}
-}
 Camera::Camera(GameObject* t) : Component(t)
 {
 	if (main == nullptr)

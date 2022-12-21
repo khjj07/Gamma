@@ -1,11 +1,6 @@
 #include "stdafx.h"
 #pragma comment (lib, "windowscodecs.lib")
 
-BitmapRenderer::BitmapRenderer() :Renderer()
-{
-
-}
-
 BitmapRenderer::BitmapRenderer(GameObject* t) :Renderer(t)
 {
 	

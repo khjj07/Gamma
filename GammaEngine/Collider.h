@@ -11,7 +11,6 @@ class LineCollider;
 class Collider : public Component
 {
 public:
-	Collider();
 	Collider(GameObject*);
 	~Collider();
 

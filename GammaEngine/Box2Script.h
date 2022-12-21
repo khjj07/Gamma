@@ -3,7 +3,6 @@
 class Box2Script : public Component
 {
 public:
-	Box2Script();
 	Box2Script(GameObject*);
 	~Box2Script();
 	virtual void Start();

@@ -4,6 +4,10 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.3.32804.467
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GammaEngine", "GammaEngine\GammaEngine.vcxproj", "{AC2724B0-17C0-4BA9-BE13-FB25276BF081}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3AF9BC5C-4D56-44DD-B41E-F207C681EF19} = {3AF9BC5C-4D56-44DD-B41E-F207C681EF19}
+		{B9A23F42-3915-486A-AA0A-D9F8C268E858} = {B9A23F42-3915-486A-AA0A-D9F8C268E858}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Direct2DModule", "Direct2DModule\Direct2DModule.vcxproj", "{3AF9BC5C-4D56-44DD-B41E-F207C681EF19}"
 EndProject

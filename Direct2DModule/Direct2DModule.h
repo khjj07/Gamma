@@ -5,11 +5,18 @@
 #include <d2d1.h>
 #include <dwrite.h>
 #include <wincodec.h>
+
+#if Direct2DModuleAPI_Exporting
+#define Direct2DModuleAPI __declspec(dllexport)
+#else
+#define Direct2DModuleAPI __declspec(dllimport)
+#endif
+
 using namespace std;
 using namespace D2D1;
 class RenderModule;
 
-class Direct2DModule : public RenderModule
+class Direct2DModuleAPI Direct2DModule : public RenderModule
 {
 public:
 	Direct2DModule();

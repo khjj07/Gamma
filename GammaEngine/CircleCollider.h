@@ -10,7 +10,6 @@ struct CollisionResponse;
 class CircleCollider :public Collider
 {
 public:
-	CircleCollider();
 	CircleCollider(GameObject*);
 	~CircleCollider();
 

@@ -1,10 +1,6 @@
 #include "stdafx.h"
 #include "Cam1Script.h"
 
-Cam1Script::Cam1Script()
-{
-}
-
 Cam1Script::Cam1Script(GameObject* t) :Component(t)
 {
 }

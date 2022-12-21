@@ -32,7 +32,7 @@ public:
 	bool isStarted = false;
 	bool isEnabled = true;
 
-private:
+public:
 	vector<Component*> componentList;
 	vector<Component*>::iterator componentIter;
 

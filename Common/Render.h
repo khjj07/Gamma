@@ -10,8 +10,8 @@ class Meterial {
 // 	ID2D1Brush* pen = 0;
 // 	ID2D1Brush* brush = 0;
 public:
-	vector4 pen;
-	vector4 brush;
+	vector4 pen = vector4(0,0,0,1);
+	vector4 brush = vector4(0, 0, 0, 0);
 };
 
 

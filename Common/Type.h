@@ -8,11 +8,12 @@ struct vector2
 {
 	float x;
 	float y;
-	static vector2 Up;
-	static vector2 Down;
-	static vector2 Left;
-	static vector2 Right;
-
+	const static vector2 Zero;
+	const static vector2 Up;
+	const static vector2 Down;
+	const static vector2 Left;
+	const static vector2 Right;
+	
 	vector2()
 	{
 		x = 0;
@@ -30,22 +31,22 @@ struct vector2
 		return vector2(-x, -y);
 	}
 
-	vector2 operator +(vector2 a)
+	vector2 operator +(vector2 a) const
 	{
 		return vector2(x + a.x, y + a.y);
 	}
 
-	vector2 operator -(vector2 a)
+	vector2 operator -(vector2 a) const
 	{
 		return vector2(x - a.x, y - a.y);
 	}
 
-	vector2 operator *(float a)
+	vector2 operator *(float a) const
 	{
 		return vector2(x*a, y*a);
 	}
 
-	vector2 operator /(float a)
+	vector2 operator /(float a) const
 	{
 		return vector2(x / a, y / a);
 	}
@@ -73,7 +74,7 @@ struct vector2
 		(*this) = (*this) - a;
 		return *this;
 	}
-	
+
 	static float Dot(vector2 v1, vector2 v2)
 	{
 		float result = v1.x * v2.x + v1.y * v2.y;

@@ -5,7 +5,6 @@
 class CircleScript : public Component
 {
 public:
-	CircleScript();
 	CircleScript(GameObject*);
 	~CircleScript();
 	virtual void Start();

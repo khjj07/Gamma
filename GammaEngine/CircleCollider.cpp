@@ -1,10 +1,5 @@
 #include "stdafx.h"
 
-CircleCollider::CircleCollider() :Collider()
-{
-
-}
-
 CircleCollider::CircleCollider(GameObject* t) :Collider(t)
 {
 

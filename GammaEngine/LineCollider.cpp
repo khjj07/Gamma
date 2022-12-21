@@ -1,10 +1,4 @@
 #include "stdafx.h"
-
-LineCollider::LineCollider() :Collider()
-{
-
-}
-
 LineCollider::LineCollider(GameObject* t) :Collider(t)
 {
 

@@ -270,12 +270,6 @@ bool Collider::Circle_to_Circle(vector2 centerA, float rangeA, vector2 centerB, 
 	return vector2::Distance(centerA, centerB) <= rangeA + rangeB;
 }
 
-Collider::Collider() : Component()
-{
-	CollisionSystem::Instance()->colliderList.push_back(this);
-	CollisionSystem::Instance()->collidedList.push_back(Collided(this));
-}
-
 Collider::Collider(GameObject* t) : Component(t)
 {
 	CollisionSystem::Instance()->colliderList.push_back(this);

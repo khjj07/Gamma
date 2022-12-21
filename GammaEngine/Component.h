@@ -1,5 +1,4 @@
 #pragma once
-
 class GameObject;
 class Transform;
 struct CollisionResponse;
@@ -10,7 +9,6 @@ struct CollisionResponse;
 class Component abstract
 {
 public:
-	Component();
 	Component(GameObject* g);
 	virtual ~Component();
 
@@ -24,6 +22,8 @@ public:
 	virtual void OnCollisionEnter(CollisionResponse response);
 	virtual void OnCollisionStay(CollisionResponse response);
 	virtual void OnCollisionExit(CollisionResponse response);
+private:
+	vector<Component*>& componentList;
 
 public:
 	template<typename T>
@@ -39,11 +39,18 @@ public:
 template<typename T>
 T* Component::GetComponent()
 {
-	return gameObject->GetComponent<T>();
+	vector<Component*>::iterator iter;
+	for (iter = componentList.begin(); iter < componentList.end(); iter++)
+	{
+		if (typeid(T).name() == typeid(**iter).name())
+			return (T*)*iter;
+	}
+	return nullptr;
 }
 
 template<typename T>
 void Component::AddComponent()
 {
-	gameObject->AddComponent<T>();
+	T* newComponent = new T(this);
+	componentList.push_back(newComponent);
 }

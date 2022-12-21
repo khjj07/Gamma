@@ -18,7 +18,6 @@ private:
 class DebugScript : public Component
 {
 public:
-	DebugScript();
 	DebugScript(GameObject*);
 	~DebugScript();
 

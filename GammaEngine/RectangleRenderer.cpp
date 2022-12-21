@@ -1,8 +1,5 @@
 #include "stdafx.h"
 
-RectangleRenderer::RectangleRenderer() :Renderer()
-{
-}
 RectangleRenderer::RectangleRenderer(GameObject* t) :Renderer(t)
 {
 	size = vector2(100, 100);

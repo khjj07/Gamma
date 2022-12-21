@@ -10,7 +10,6 @@ struct CollisionResponse;
 class BoxCollider :public Collider
 {
 public:
-	BoxCollider();
 	BoxCollider(GameObject*);
 	~BoxCollider();
 public:

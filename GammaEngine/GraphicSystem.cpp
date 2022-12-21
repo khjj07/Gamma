@@ -2,6 +2,7 @@
 #include "Direct2DModule.h"
 #include "Render.h"
 
+RenderModule* GraphicSystem::render = nullptr;
 GraphicSystem::GraphicSystem()
 {
 
@@ -15,8 +16,13 @@ GraphicSystem::~GraphicSystem()
 void GraphicSystem::Initialize(HWND hWnd)
 {
 	Screen* screen = Screen::Instance();
-	render = (RenderModule*)new Direct2DModule();
+	render = new Direct2DModule();
 	render->Initialize(hWnd);
+}
+
+void GraphicSystem::Release()
+{
+	render->Release();
 }
 
 void  GraphicSystem::Frame()

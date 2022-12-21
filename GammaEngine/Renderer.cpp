@@ -1,12 +1,5 @@
 #include "stdafx.h"
 
-Renderer::Renderer() : Component()
-{
-	GraphicSystem* graphic = GraphicSystem::Instance();
-	graphic->renderComponentList.push_back(this);
-	meterial = new Meterial();
-}
-
 Renderer::Renderer(GameObject* t) : Component(t)
 {
 	GraphicSystem* graphic = GraphicSystem::Instance();

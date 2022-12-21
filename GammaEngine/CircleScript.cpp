@@ -1,10 +1,6 @@
 #include "stdafx.h"
 #include "CircleScript.h"
 
-CircleScript::CircleScript()
-{
-}
-
 CircleScript::CircleScript(GameObject* t) :Component(t)
 {
 }

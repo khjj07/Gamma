@@ -9,7 +9,6 @@ enum CreateMode
 class CursorSript : public Component
 {
 public:
-	CursorSript();
 	CursorSript(GameObject*);
 	~CursorSript();
 	virtual void Start();

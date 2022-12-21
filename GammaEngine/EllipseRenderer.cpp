@@ -1,10 +1,5 @@
 #include "stdafx.h"
 
-EllipseRenderer::EllipseRenderer() :Renderer()
-{
-
-}
-
 EllipseRenderer::EllipseRenderer(GameObject* t) :Renderer(t)
 {
 	size = vector2(100, 100);

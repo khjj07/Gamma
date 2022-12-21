@@ -12,7 +12,6 @@ class Component;
 class Renderer : public Component
 {
 public:
-	Renderer();
 	Renderer(GameObject* g);
 	~Renderer();
 

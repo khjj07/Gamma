@@ -9,7 +9,6 @@ class Transform;
 class LineRenderer : public Renderer
 {
 public:
-	LineRenderer();
 	LineRenderer(GameObject* t);
 	~LineRenderer();
 

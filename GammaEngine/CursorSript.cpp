@@ -3,10 +3,6 @@
 #include "Box.h"
 #include "Circle.h"
 
-CursorSript::CursorSript()
-{
-}
-
 CursorSript::CursorSript(GameObject* t):Component(t)
 {
 

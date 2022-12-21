@@ -1,9 +1,5 @@
 #include "stdafx.h"
 
-LineRenderer::LineRenderer() :Renderer()
-{
-}
-
 LineRenderer::LineRenderer(GameObject* t) :Renderer(t)
 {
 

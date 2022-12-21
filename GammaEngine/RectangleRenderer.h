@@ -9,7 +9,6 @@ class Transform;
 class RectangleRenderer : public Renderer
 {
 public:
-	RectangleRenderer();
 	RectangleRenderer(GameObject* g);
 	~RectangleRenderer();
 

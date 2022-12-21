@@ -1,11 +1,6 @@
 #include "stdafx.h"
 #include "Box2Script.h"
-
-Box2Script::Box2Script()
-{
-}
-
-Box2Script::Box2Script(GameObject* t):Component(t)
+Box2Script::Box2Script(GameObject* t) :Component(t)
 {
 }
 
@@ -15,7 +10,7 @@ Box2Script::~Box2Script()
 
 void Box2Script::Start()
 {
-	Tween::Animate(transform->rotation, PLAYBACK::LOOP_FORWARD, 360,EASING::LINEAR,10);
+	Tween::Animate(transform->rotation, PLAYBACK::LOOP_FORWARD, 360, EASING::LINEAR, 10);
 	transform->rotation = 40;
 	
 }

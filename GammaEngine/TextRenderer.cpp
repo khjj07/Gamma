@@ -1,10 +1,5 @@
 #include "stdafx.h"
 
-TextRenderer::TextRenderer()
-{
-
-}
-
 TextRenderer::TextRenderer(GameObject* t) :Renderer(t)
 {
 	size = vector2(100, 100);

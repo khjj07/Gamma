@@ -15,3 +15,8 @@ Box2::Box2()
 	transform->position.y = 300;
 	tag = string("box");
 }
+
+Box2::~Box2()
+{
+
+}

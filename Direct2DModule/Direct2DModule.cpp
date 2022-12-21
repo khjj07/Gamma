@@ -63,7 +63,7 @@ void Direct2DModule::CreateTextFormat(string fontFamilyName, DWRITE_FONT_WEIGHT 
 
 
 
-void  Direct2DModule::Release()
+void Direct2DModule::Release()
 {
 	vector<IDWriteTextFormat*>::iterator iter;
 	for (iter = textFormatList.begin(); iter < textFormatList.end(); iter++)

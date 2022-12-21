@@ -9,7 +9,6 @@ class Transform;
 class EllipseRenderer : public Renderer
 {
 public:
-	EllipseRenderer();
 	EllipseRenderer(GameObject* t);
 	~EllipseRenderer();
 

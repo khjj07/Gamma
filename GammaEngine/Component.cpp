@@ -1,11 +1,6 @@
 #include "stdafx.h"
 
-Component::Component()
-{
-
-}
-
-Component::Component(GameObject* g)
+Component::Component(GameObject* g):componentList(g->componentList)
 {
 	gameObject = g;
 	transform = g->transform;
