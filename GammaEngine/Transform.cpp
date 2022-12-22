@@ -1,12 +1,12 @@
 #include "stdafx.h"
+using namespace GammaEngine;
 
-
-Transform::Transform(GameObject* t):Component(t)
+GammaEngine::Transform::Transform(GameObject* t):Component(t)
 {
 
 }
 
-Transform::~Transform()
+GammaEngine::Transform::~Transform()
 {
 
 }

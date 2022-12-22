@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
-Renderer::Renderer(GameObject* t) : Component(t)
+using namespace GammaEngine;
+GammaEngine::Renderer::Renderer(GameObject* t) : Component(t)
 {
 	GraphicSystem* graphic = GraphicSystem::Instance();
 	graphic->renderComponentList.push_back(this);
@@ -9,24 +10,24 @@ Renderer::Renderer(GameObject* t) : Component(t)
 	meterial = new Meterial();
 }
 
-Renderer::~Renderer()
+GammaEngine::Renderer::~Renderer()
 {
 	GraphicSystem* graphic = GraphicSystem::Instance();
 	graphic->renderComponentList.erase(remove_if(graphic->renderComponentList.begin(), graphic->renderComponentList.end(), [this](Component* x) { if (x == this) return true; else return false; }), graphic->renderComponentList.end());
 }
 
-void Renderer::SetBrush(vector4 color)
+void GammaEngine::Renderer::SetBrush(vector4 color)
 {
 	meterial->brush = color;
 }
 
-void Renderer::SetPen(vector4 color)
+void GammaEngine::Renderer::SetPen(vector4 color)
 {
 	meterial->pen = color;
 }
 
 
-void Renderer::Adjust(vector2& v)
+void GammaEngine::Renderer::Adjust(vector2& v)
 {
 	if (Camera::main)
 	{
@@ -40,7 +41,7 @@ void Renderer::Adjust(vector2& v)
 	}
 }
 
-void Renderer::Adjust(vector2& pos,vector2& size)
+void GammaEngine::Renderer::Adjust(vector2& pos,vector2& size)
 {
 	if (Camera::main)
 	{

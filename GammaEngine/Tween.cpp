@@ -1,6 +1,6 @@
 #include "stdafx.h"
-
-function<void(TweenDataF*)> Tween::stepF[6] = {
+using namespace GammaEngine;
+function<void(TweenDataF*)> GammaEngine::Tween::stepF[6] = {
 	StepOnceForwardF,
 	StepOnceBackwardF,
 	StepOncePingpongF,
@@ -9,7 +9,7 @@ function<void(TweenDataF*)> Tween::stepF[6] = {
 	StepLoopPingpongF
 };
 
-function<void(TweenDataV*)> Tween::stepV[6] = {
+function<void(TweenDataV*)> GammaEngine::Tween::stepV[6] = {
 	StepOnceForwardV,
 	StepOnceBackwardV,
 	StepOncePingpongV,
@@ -18,7 +18,7 @@ function<void(TweenDataV*)> Tween::stepV[6] = {
 	StepLoopPingpongV
 };
 
-function<float(float)> Tween::easingFuction[31] = {
+function<float(float)> GammaEngine::Tween::easingFuction[31] = {
 easeLinear,
 easeInBack,
 easeOutBack,
@@ -52,23 +52,23 @@ easeOutQuint,
 easeInOutQuint
 };
 
-Tween::Tween()
+GammaEngine::Tween::Tween()
 {
 }
 
-Tween::~Tween()
+GammaEngine::Tween::~Tween()
 {
 
 }
 
-void Tween::CancelAnimate(TweenData* data)
+void GammaEngine::Tween::CancelAnimate(TweenData* data)
 {
 	Timer::Cancel(data->handler);
 	data->handler = nullptr;
 	delete data;
 }
 
-TweenData* Tween::Animate(float& src, PLAYBACK playback, float dst, EASING ease, float duration, float delay, function<void()> callback)
+TweenData* GammaEngine::Tween::Animate(float& src, PLAYBACK playback, float dst, EASING ease, float duration, float delay, function<void()> callback)
 {
 	function<float(float)> easingFunc = easingFuction[ease];
 	function<void(TweenDataF*)> stepFunc = stepF[playback];
@@ -86,7 +86,7 @@ TweenData* Tween::Animate(float& src, PLAYBACK playback, float dst, EASING ease,
 	return data;
 }
 
-TweenData* Tween::Animate(vector2& src, PLAYBACK playback, vector2 dst, EASING ease, float duration, float delay, function<void()> callback)
+TweenData* GammaEngine::Tween::Animate(vector2& src, PLAYBACK playback, vector2 dst, EASING ease, float duration, float delay, function<void()> callback)
 {
 	function<float(float)> easingFunc = easingFuction[ease];
 	function<void(TweenDataV*)> stepFunc = stepV[playback];
@@ -104,7 +104,7 @@ TweenData* Tween::Animate(vector2& src, PLAYBACK playback, vector2 dst, EASING e
 	return data;
 }
 
-void StepOnceForwardF(TweenDataF* data)
+void GammaEngine::StepOnceForwardF(TweenDataF* data)
 {
 	data->handler=Timer::Delay(TWEEN_STEP, true, [data]() {
 		data->src = data->original + data->difference*data->easingFunc(data->accumulation / data->duration);
@@ -119,7 +119,7 @@ void StepOnceForwardF(TweenDataF* data)
 	});
 }
 
-void StepOnceForwardV(TweenDataV* data)
+void GammaEngine::StepOnceForwardV(TweenDataV* data)
 {
 	data->handler = Timer::Delay(TWEEN_STEP, true, [data]() {
 		data->src = data->original + data->difference * data->easingFunc(data->accumulation / data->duration);
@@ -134,7 +134,7 @@ void StepOnceForwardV(TweenDataV* data)
 	});
 }
 
-void StepOnceBackwardF(TweenDataF* data)
+void GammaEngine::StepOnceBackwardF(TweenDataF* data)
 {
 	data->src = data->dst;
 	data->handler = Timer::Delay(TWEEN_STEP, true, [data]() {
@@ -150,7 +150,7 @@ void StepOnceBackwardF(TweenDataF* data)
 	});
 }
 
-void StepOnceBackwardV(TweenDataV* data)
+void GammaEngine::StepOnceBackwardV(TweenDataV* data)
 {
 	data->src = data->dst;
 	data->handler = Timer::Delay(TWEEN_STEP, true, [data]() {
@@ -166,7 +166,7 @@ void StepOnceBackwardV(TweenDataV* data)
 	});
 }
 
-void StepOncePingpongF(TweenDataF* data)
+void GammaEngine::StepOncePingpongF(TweenDataF* data)
 {
 	data->handler = Timer::Delay(TWEEN_STEP, true, [data]() {
 		if (data->accumulation < (data->duration / 2))
@@ -188,7 +188,7 @@ void StepOncePingpongF(TweenDataF* data)
 	});
 }
 
-void StepOncePingpongV(TweenDataV* data)
+void GammaEngine::StepOncePingpongV(TweenDataV* data)
 {
 	data->handler = Timer::Delay(TWEEN_STEP, true, [data]() {
 		if (data->accumulation < (data->duration / 2))
@@ -210,7 +210,7 @@ void StepOncePingpongV(TweenDataV* data)
 	});
 }
 
-void StepLoopForwardF(TweenDataF* data)
+void GammaEngine::StepLoopForwardF(TweenDataF* data)
 {
 	data->handler = Timer::Delay(TWEEN_STEP, true, [data]() {
 		data->src = data->original + data->difference * data->easingFunc(data->accumulation / data->duration) ;
@@ -226,7 +226,7 @@ void StepLoopForwardF(TweenDataF* data)
 }
 
 
-void StepLoopForwardV(TweenDataV* data)
+void GammaEngine::StepLoopForwardV(TweenDataV* data)
 {
 	data->handler = Timer::Delay(TWEEN_STEP, true, [data]() {
 		data->src = data->original + data->difference * data->easingFunc(data->accumulation / data->duration);
@@ -242,7 +242,7 @@ void StepLoopForwardV(TweenDataV* data)
 }
 
 
-void StepLoopBackwardF(TweenDataF* data)
+void GammaEngine::StepLoopBackwardF(TweenDataF* data)
 {
 	data->src = data->dst;
 	data->handler = Timer::Delay(TWEEN_STEP, true, [data]() {
@@ -258,7 +258,7 @@ void StepLoopBackwardF(TweenDataF* data)
 	});
 }
 
-void StepLoopBackwardV(TweenDataV* data)
+void GammaEngine::StepLoopBackwardV(TweenDataV* data)
 {
 	data->src = data->dst;
 	data->handler = Timer::Delay(TWEEN_STEP, true, [data]() {
@@ -274,7 +274,7 @@ void StepLoopBackwardV(TweenDataV* data)
 	});
 }
 
-void StepLoopPingpongF(TweenDataF* data)
+void GammaEngine::StepLoopPingpongF(TweenDataF* data)
 {
 	data->handler = Timer::Delay(TWEEN_STEP, true, [data]() {
 		if (data->accumulation < (data->duration / 2))
@@ -296,7 +296,7 @@ void StepLoopPingpongF(TweenDataF* data)
 	});
 }
 
-void StepLoopPingpongV(TweenDataV* data)
+void GammaEngine::StepLoopPingpongV(TweenDataV* data)
 {
 	data->handler = Timer::Delay(TWEEN_STEP, true, [data]() {
 		if (data->accumulation < (data->duration / 2))
@@ -318,153 +318,153 @@ void StepLoopPingpongV(TweenDataV* data)
 	});
 }
 
-float easeInSine(float x)
+float GammaEngine::easeInSine(float x)
 {
 	return (float)(1 - cos((x * PI) / 2));
 }
 
-float easeOutSine(float x)
+float GammaEngine::easeOutSine(float x)
 {
 	return (float)(sin((x * PI) / 2));
 }
 
-float easeInOutSine(float x)
+float GammaEngine::easeInOutSine(float x)
 {
 	return (float)(-(cos(PI * x) - 1) / 2);
 }
 
-float easeInCubic(float x)
+float GammaEngine::easeInCubic(float x)
 {
 	return x * x * x;
 }
 
-float easeOutCubic(float x)
+float GammaEngine::easeOutCubic(float x)
 {
 	return (float)(1 - pow(1 - x, 3));
 }
 
-float easeInOutCubic(float x)
+float GammaEngine::easeInOutCubic(float x)
 {
 	return x < 0.5 ? 4 * x * x * x : (float)(1 - pow(-2 * x + 2, 3) / 2);
 }
 
-float easeInQuint(float x)
+float GammaEngine::easeInQuint(float x)
 {
 	return x * x * x * x * x;
 }
 
-float easeOutQuint(float x)
+float GammaEngine::easeOutQuint(float x)
 {
 	return (float)(1 - pow(1 - x, 5));
 }
 
-float easeInOutQuint(float x)
+float GammaEngine::easeInOutQuint(float x)
 {
 	return x < 0.5 ? 16 * x * x * x * x * x : (float)(1 - pow(-2 * x + 2, 5) / 2);
 }
 
-float easeInCirc(float x)
+float GammaEngine::easeInCirc(float x)
 {
 	return (float)(1 - sqrt(1 - pow(x, 2)));
 }
 
-float easeOutCirc(float x)
+float GammaEngine::easeOutCirc(float x)
 {
 	return (float)(sqrt(1 - pow(x - 1, 2)));
 }
 
-float easeInOutCirc(float x)
+float GammaEngine::easeInOutCirc(float x)
 {
 	return x < 0.5 ? (float)(1 - sqrt(1 - pow(2 * x, 2))) / 2 : (float)(sqrt(1 - pow(-2 * x + 2, 2)) + 1) / 2;
 }
 
 
-float easeInElastic(float x)
+float GammaEngine::easeInElastic(float x)
 {
 	const float c4 = (float)((2 * PI) / 3);
 	return x == 0 ? 0 : x == 1 ? 1 : (float)(-pow(2, 10 * x - 10) * sin((x * 10 - 10.75) * c4));
 }
 
 
-float easeOutElastic(float x)
+float GammaEngine::easeOutElastic(float x)
 {
 	const float c4 = (float)((2 * PI) / 3);
 	return x == 0 ? 0 : x == 1 ? 1 : (float)(pow(2, -10 * x) * sin((x * 10 - 0.75) * c4) + 1);
 }
 
-float easeInOutElastic(float x)
+float GammaEngine::easeInOutElastic(float x)
 {
 	const float c5 = (float)((2 * PI) / 4.5);
 	return x == 0 ? 0 : x == 1 ? 1 : x < 0.5 ? (float)(-(pow(2, 20 * x - 10) * sin((20 * x - 11.125) * c5)) / 2) : (float)((pow(2, -20 * x + 10) * sin((20 * x - 11.125) * c5)) / 2 + 1);
 }
 
-float easeInQuad(float x)
+float GammaEngine::easeInQuad(float x)
 {
 	return x * x;
 }
 
-float easeOutQuad(float x)
+float GammaEngine::easeOutQuad(float x)
 {
 	return 1 - (1 - x) * (1 - x);
 }
 
-float easeInOutQuad(float x)
+float GammaEngine::easeInOutQuad(float x)
 {
 	return x < 0.5 ? 2 * x * x : (float)(1 - pow(-2 * x + 2, 2) / 2);
 }
 
-float easeInQuart(float x)
+float GammaEngine::easeInQuart(float x)
 {
 	return x * x * x * x;
 }
 
-float easeOutQuart(float x)
+float GammaEngine::easeOutQuart(float x)
 {
 	return (float)(1 - pow(1 - x, 4));
 }
 
-float easeInOutQuart(float x)
+float GammaEngine::easeInOutQuart(float x)
 {
 	return x < 0.5 ? 8 * x * x * x * x : (float)(1 - pow(-2 * x + 2, 4) / 2);
 }
 
-float easeInExpo(float x)
+float GammaEngine::easeInExpo(float x)
 {
 	return x == 0 ? 0 : (float)pow(2, 10 * x - 10);
 }
 
-float easeOutExpo(float x)
+float GammaEngine::easeOutExpo(float x)
 {
 	return x == 1 ? 1 : (float)(1 - pow(2, -10 * x));
 }
 
-float easeInOutExpo(float x)
+float GammaEngine::easeInOutExpo(float x)
 {
 	return x == 0 ? 0 : x == 1 ? 1 : x < 0.5 ? (float)(pow(2, 20 * x - 10) / 2) : (float)((2 - pow(2, -20 * x + 10)) / 2);
 }
 
-float easeInBack(float x)
+float GammaEngine::easeInBack(float x)
 {
 	const float c1 = 1.70158f;
 	const float c3 = c1 + 1;
 	return c3 * x * x * x - c1 * x * x;
 }
 
-float easeOutBack(float x)
+float GammaEngine::easeOutBack(float x)
 {
 	const float c1 = 1.70158f;
 	const float c3 = c1 + 1;
 	return (float)(1 + c3 * pow(x - 1, 3) + c1 * pow(x - 1, 2));
 }
 
-float easeInOutBack(float x)
+float GammaEngine::easeInOutBack(float x)
 {
 	const float c1 = 1.70158f;
 	const float c2 = c1 * 1.525f;
 	return x < 0.5 ? (float)((pow(2 * x, 2) * ((c2 + 1) * 2 * x - c2)) / 2) : (float)((pow(2 * x - 2, 2) * ((c2 + 1) * (x * 2 - 2) + c2) + 2) / 2);
 }
 
-float easeOutBounce(float x)
+float GammaEngine::easeOutBounce(float x)
 {
 	const float n1 = 7.5625;
 	const float d1 = 2.75;
@@ -483,17 +483,17 @@ float easeOutBounce(float x)
 	}
 }
 
-float easeInBounce(float x)
+float GammaEngine::easeInBounce(float x)
 {
 	return 1 - easeOutBounce(1 - x);
 }
 
-float easeInOutBounce(float x)
+float GammaEngine::easeInOutBounce(float x)
 {
 	return x < 0.5 ? (1 - easeOutBounce(1 - 2 * x)) / 2 : (1 + easeOutBounce(2 * x - 1)) / 2;
 }
 
-float easeLinear(float x)
+float GammaEngine::easeLinear(float x)
 {
 	return x;
 }

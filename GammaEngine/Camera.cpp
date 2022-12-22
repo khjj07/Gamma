@@ -1,7 +1,9 @@
 #include "stdafx.h"
 
+using namespace GammaEngine;
+
 Camera* Camera::main = nullptr;
-Camera::Camera(GameObject* t) : Component(t)
+GammaEngine::Camera::Camera(GameObject* t) : Component(t)
 {
 	if (main == nullptr)
 	{
@@ -9,11 +11,11 @@ Camera::Camera(GameObject* t) : Component(t)
 	}
 }
 
-Camera::~Camera()
+GammaEngine::Camera::~Camera()
 {
 }
 
-vector2 Camera::ScreenToWorldPoint(vector2 p)
+vector2 GammaEngine::Camera::ScreenToWorldPoint(vector2 p)
 {
 	POINT center = { Screen::width / 2 - transform->position.x, Screen::height / 2 -transform->position.y} ;
 	ScreenToClient(Input::hWnd, &center);
@@ -22,7 +24,7 @@ vector2 Camera::ScreenToWorldPoint(vector2 p)
 	return point;
 }
 
-vector2 Camera::WorldToScreenPoint(vector2 p)
+vector2 GammaEngine::Camera::WorldToScreenPoint(vector2 p)
 {
 	POINT center = { Screen::width / 2 - transform->position.x, Screen::height / 2 - transform->position.y };
 	ScreenToClient(Input::hWnd, &center);
@@ -31,7 +33,7 @@ vector2 Camera::WorldToScreenPoint(vector2 p)
 	return point;
 }
 
-vector2 Camera::ScreenToWorldScale(vector2 s)
+vector2 GammaEngine::Camera::ScreenToWorldScale(vector2 s)
 {
 	return s * orthoScale;
 }

@@ -1,26 +1,26 @@
 #include "stdafx.h"
 #include "Screen.h"
-
+using namespace GammaEngine;
 int Screen::width = 1920;
 int Screen::height = 1080;
 
-Screen::Screen()
+GammaEngine::Screen::Screen()
 {
 
 }
 
-Screen::Screen(int w, int h)
+GammaEngine::Screen::Screen(int w, int h)
 {
 	width = w;
 	height = h;
 }
 
-Screen::~Screen()
+GammaEngine::Screen::~Screen()
 {
 
 }
 
-void Screen::SetSize(int w, int h)
+void GammaEngine::Screen::SetSize(int w, int h)
 {
 	width = w;
 	height = h;

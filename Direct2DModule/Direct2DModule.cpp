@@ -156,6 +156,46 @@ string Direct2DModule::LoadBitmapImage(string filename)
 	return filename;
 }
 
+void Direct2DModule::AddPen(vector4 color)
+{
+	ID2D1SolidColorBrush* pen;
+	renderTarget->CreateSolidColorBrush(ColorF(color.x, color.y, color.z, color.w), (ID2D1SolidColorBrush**)&pen);
+	
+	if (penDictionary.find(color) != penDictionary.end())
+	{
+		penDictionary.insert({ color,pen });
+	}
+}
+
+ID2D1SolidColorBrush* Direct2DModule::UsePen(vector4 color)
+{
+	if (penDictionary.find(color) != penDictionary.end())
+	{
+		AddPen(color);
+	}
+	return brushDictionary.at(color);
+}
+
+void Direct2DModule::AddBrush(vector4 color)
+{
+	ID2D1SolidColorBrush* brush;
+	renderTarget->CreateSolidColorBrush(ColorF(color.x, color.y, color.z, color.w), (ID2D1SolidColorBrush**)&brush);
+
+	if (brushDictionary.find(color) != brushDictionary.end())
+	{
+		brushDictionary.insert({ color,brush });
+	}
+}
+
+ID2D1SolidColorBrush* Direct2DModule::UseBrush(vector4 color)
+{
+	if (brushDictionary.find(color) != penDictionary.end())
+	{
+		AddPen(color);
+	}
+	return brushDictionary.at(color);
+}
+
 
 vector2 Direct2DModule::GetBitmapSize(string filename)
 {
@@ -177,8 +217,7 @@ void Direct2DModule::DrawRectangle(vector2 pos, vector2 size, float rotation, Me
 	rectangle.bottom = pos.y + size.y / 2;
 
 	renderTarget->SetTransform(Matrix3x2F::Rotation(rotation, center));
-	renderTarget->CreateSolidColorBrush(ColorF(meterial->pen.x, meterial->pen.y, meterial->pen.z, meterial->pen.w), (ID2D1SolidColorBrush**)&pen);
-	renderTarget->CreateSolidColorBrush(ColorF(meterial->brush.x, meterial->brush.y, meterial->brush.z, meterial->brush.w), (ID2D1SolidColorBrush**)&brush);
+	
 	renderTarget->DrawRectangle(rectangle, pen);
 	renderTarget->FillRectangle(rectangle, brush);
 

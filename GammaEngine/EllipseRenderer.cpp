@@ -1,15 +1,15 @@
 #include "stdafx.h"
 
-EllipseRenderer::EllipseRenderer(GameObject* t) :Renderer(t)
+GammaEngine::EllipseRenderer::EllipseRenderer(GameObject* t) :Renderer(t)
 {
 	size = vector2(100, 100);
 }
 
-EllipseRenderer::~EllipseRenderer()
+GammaEngine::EllipseRenderer::~EllipseRenderer()
 {
 
 }
-void EllipseRenderer::Render()
+void GammaEngine::EllipseRenderer::Render()
 {
 	vector2 renderPos = transform->position + offset;
 	vector2 renderSize = size;

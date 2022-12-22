@@ -1,15 +1,15 @@
 #include "stdafx.h"
-
-LineRenderer::LineRenderer(GameObject* t) :Renderer(t)
+using namespace GammaEngine;
+GammaEngine::LineRenderer::LineRenderer(GameObject* t) :Renderer(t)
 {
 
 }
 
-LineRenderer::~LineRenderer()
+GammaEngine::LineRenderer::~LineRenderer()
 {
 
 }
-void LineRenderer::Render()
+void GammaEngine::LineRenderer::Render()
 {
     vector2 s = src;
     vector2 d = dst;

@@ -1,22 +1,22 @@
 #include "stdafx.h"
 
-
-Physics::Physics()
+using namespace GammaEngine;
+GammaEngine::Physics::Physics()
 {
 
 }
 
-Physics::~Physics()
+GammaEngine::Physics::~Physics()
 {
 
 }
 
-bool Physics::InBound(rect2D rect, vector2 v)
+bool GammaEngine::Physics::InBound(rect2D rect, vector2 v)
 {
 	return (rect.min.x <= v.x && rect.min.y <= v.y && rect.max.x >= v.x && rect.max.y >= v.y);
 }
 
-RaycastResponse  Physics::Raycast(vector2 from, vector2 to, string tag)
+RaycastResponse GammaEngine::Physics::Raycast(vector2 from, vector2 to, string tag)
 {
 	CollisionSystem* system = CollisionSystem::Instance();
 	RaycastResponse result;
@@ -67,7 +67,7 @@ RaycastResponse  Physics::Raycast(vector2 from, vector2 to, string tag)
 	return result;
 }
 
-RaycastResponse  Physics::Raycast(vector2 from, vector2 to, vector<string> tags)
+RaycastResponse GammaEngine::Physics::Raycast(vector2 from, vector2 to, vector<string> tags)
 {
 	CollisionSystem* system = CollisionSystem::Instance();
 	RaycastResponse result;
@@ -119,7 +119,7 @@ RaycastResponse  Physics::Raycast(vector2 from, vector2 to, vector<string> tags)
 	return result;
 }
 
-void Physics::GetRayCondition(vector2 from, vector2 v, Collider* col, float& objectRange, bool& OnDirection, bool& InRange)
+void GammaEngine::Physics::GetRayCondition(vector2 from, vector2 v, Collider* col, float& objectRange, bool& OnDirection, bool& InRange)
 {
 	Transform* transform = col->transform;
 	BoxCollider* box = dynamic_cast<BoxCollider*>(col);

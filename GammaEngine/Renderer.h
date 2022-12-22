@@ -1,33 +1,41 @@
 #pragma once
 #include <d2d1.h>
 #include "Type.h"
+#ifdef GammaEngineAPI_Exporting
+#define GammaEngineAPI __declspec(dllexport)
+#else
+#define GammaEngineAPI __declspec(dllimport)
+#endif
 
 using namespace D2D1;
-class Transform;
-class Component;
 
-/// <summary>
-/// ·»´õ·¯ ÄÄÆ÷³ÍÆ®
-/// </summary>
-class Renderer : public Component
+namespace GammaEngine
 {
-public:
-	Renderer(GameObject* g);
-	~Renderer();
+	class Transform;
+	class Component;
 
-public:
-	virtual void Render() abstract;
-	void Adjust(vector2& v);
-	void Adjust(vector2& pos, vector2& size);
+	/// <summary>
+	/// ·»´õ·¯ ÄÄÆ÷³ÍÆ®
+	/// </summary>
+	class GammaEngineAPI Renderer : public Component
+	{
+	public:
+		Renderer(GameObject* g);
+		~Renderer();
 
-public:
-	void SetBrush(vector4);
-	void SetPen(vector4);
+	public:
+		virtual void Render() abstract;
+		void Adjust(vector2& v);
+		void Adjust(vector2& pos, vector2& size);
 
-public:
-	vector2 size;
-	vector2 offset;
-	Meterial* meterial;
-	int order = 0;
-};
+	public:
+		void SetBrush(vector4);
+		void SetPen(vector4);
 
+	public:
+		vector2 size;
+		vector2 offset;
+		Meterial* meterial;
+		int order = 0;
+	};
+}

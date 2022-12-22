@@ -1,21 +1,22 @@
 #include "stdafx.h"
+using namespace GammaEngine;
 
-CircleCollider::CircleCollider(GameObject* t) :Collider(t)
+GammaEngine::CircleCollider::CircleCollider(GameObject* t) :Collider(t)
 {
 
 }
 
-CircleCollider::~CircleCollider()
+GammaEngine::CircleCollider::~CircleCollider()
 {
 
 }
 
-CollisionResponse CircleCollider::Collide(Collider* other, bool collided)
+GammaEngine::CollisionResponse CircleCollider::Collide(Collider* other, bool collided)
 {
 	return other->Check(this, collided);
 }
 
-CollisionResponse CircleCollider::Check(BoxCollider* other, bool collided)
+GammaEngine::CollisionResponse CircleCollider::Check(BoxCollider* other, bool collided)
 {
 	CollisionResponse result;
 	result.state = Not;
@@ -52,7 +53,7 @@ CollisionResponse CircleCollider::Check(BoxCollider* other, bool collided)
 }
 
 
-CollisionResponse CircleCollider::Check(CircleCollider* other, bool collided)
+CollisionResponse GammaEngine::CircleCollider::Check(CircleCollider* other, bool collided)
 {
 	CollisionResponse result;
 	result.state = Not;
@@ -87,7 +88,7 @@ CollisionResponse CircleCollider::Check(CircleCollider* other, bool collided)
 	return result;
 }
 
-CollisionResponse CircleCollider::Check(LineCollider* other, bool collided)
+CollisionResponse GammaEngine::CircleCollider::Check(LineCollider* other, bool collided)
 {
 	CollisionResponse result;
 	result.state = Not;
@@ -115,14 +116,14 @@ CollisionResponse CircleCollider::Check(LineCollider* other, bool collided)
 	return result;
 }
 
-bool CircleCollider::InBound(vector2 v)
+bool GammaEngine::CircleCollider::InBound(vector2 v)
 {
 	vector2 center = transform->position;
 	float range = radius*(transform->scale.x+ transform->scale.y)/2;
 	return vector2::Distance(center, v) <= range;
 }
 
- vector2 CircleCollider::GetNormalVector(vector2 v)
+ vector2 GammaEngine::CircleCollider::GetNormalVector(vector2 v)
 {
 	 return vector2::Normalize(v - transform->position);
 }

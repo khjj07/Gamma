@@ -1,20 +1,23 @@
 #include "stdafx.h"
-LineCollider::LineCollider(GameObject* t) :Collider(t)
+
+using namespace GammaEngine;
+
+GammaEngine::LineCollider::LineCollider(GameObject* t) :Collider(t)
 {
 
 }
 
-LineCollider::~LineCollider()
+GammaEngine::LineCollider::~LineCollider()
 {
 
 }
 
-CollisionResponse LineCollider::Collide(Collider* other, bool collided)
+CollisionResponse GammaEngine::LineCollider::Collide(Collider* other, bool collided)
 {
 	return other->Check(this, collided);
 }
 
-CollisionResponse LineCollider::Check(BoxCollider* other, bool collided)
+CollisionResponse GammaEngine::LineCollider::Check(BoxCollider* other, bool collided)
 {
 	CollisionResponse result;
 	result.state = Not;
@@ -42,7 +45,7 @@ CollisionResponse LineCollider::Check(BoxCollider* other, bool collided)
 	return result;
 }
 
-CollisionResponse LineCollider::Check(CircleCollider* other, bool collided)
+CollisionResponse GammaEngine::LineCollider::Check(CircleCollider* other, bool collided)
 {
 	CollisionResponse result;
 	result.state = Not;
@@ -70,7 +73,7 @@ CollisionResponse LineCollider::Check(CircleCollider* other, bool collided)
 	return result;
 }
 
-CollisionResponse LineCollider::Check(LineCollider* other, bool collided)
+CollisionResponse GammaEngine::LineCollider::Check(LineCollider* other, bool collided)
 {
 	CollisionResponse result;
 	result.state = Not;
@@ -98,7 +101,7 @@ CollisionResponse LineCollider::Check(LineCollider* other, bool collided)
 	return result;
 }
 
-vector2 LineCollider::GetNormalVector(vector2 v)
+vector2 GammaEngine::LineCollider::GetNormalVector(vector2 v)
 {
 	return vector2::Normalize(v - transform->position);
 }

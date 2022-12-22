@@ -1,22 +1,30 @@
 #pragma once
 #include "Type.h"
-class Renderer;
-class Transform;
-
-/// <summary>
-/// ∂Û¿Œ ∑ª¥ı∑Ø
-/// </summary>
-class LineRenderer : public Renderer
+#ifdef GammaEngineAPI_Exporting
+#define GammaEngineAPI __declspec(dllexport)
+#else
+#define GammaEngineAPI __declspec(dllimport)
+#endif
+namespace GammaEngine
 {
-public:
-	LineRenderer(GameObject* t);
-	~LineRenderer();
+	class Renderer;
+	class Transform;
 
-public:
-	virtual void Render();
+	/// <summary>
+	/// ∂Û¿Œ ∑ª¥ı∑Ø
+	/// </summary>
+	class GammaEngineAPI LineRenderer : public Renderer
+	{
+	public:
+		LineRenderer(GameObject* t);
+		~LineRenderer();
 
-public:
-	vector2 src;
-	vector2 dst;
-	float thickness = 0.5f;
-};
+	public:
+		virtual void Render();
+
+	public:
+		vector2 src;
+		vector2 dst;
+		float thickness = 0.5f;
+	};
+}

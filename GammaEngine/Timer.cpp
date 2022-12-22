@@ -1,31 +1,31 @@
 #include "stdafx.h"
-
+using namespace GammaEngine;
 vector<TimerHandler*> Timer::timerHandlerList;
 vector<TimerHandler*>::iterator Timer::iter;
 
-Timer::Timer()
+GammaEngine::Timer::Timer()
 {
 
 }
 
-Timer::~Timer()
+GammaEngine::Timer::~Timer()
 {
 
 }
 
-TimerHandler* Timer::Delay(float delay, bool loop, function<void()> callback)
+TimerHandler* GammaEngine::Timer::Delay(float delay, bool loop, function<void()> callback)
 {
 	TimerHandler* newHandler =new TimerHandler(delay, loop, callback);
 	timerHandlerList.push_back(newHandler);
 	return newHandler;
 }
 
-void Timer::Cancel(TimerHandler* handler)
+void GammaEngine::Timer::Cancel(TimerHandler* handler)
 {
 	handler->timeOut = true;
 }
 
-void Timer::Frame()
+void GammaEngine::Timer::Frame()
 {
 	timerHandlerList.erase(remove_if(timerHandlerList.begin(), timerHandlerList.end(), [](TimerHandler* x) {
 	if (x->timeOut)

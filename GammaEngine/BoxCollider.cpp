@@ -1,22 +1,22 @@
 #include "stdafx.h"
-
-BoxCollider::BoxCollider(GameObject* t):Collider(t)
+using namespace GammaEngine;
+GammaEngine::BoxCollider::BoxCollider(GameObject* t):Collider(t)
 {
 
 }
 
-BoxCollider::~BoxCollider()
+GammaEngine::BoxCollider::~BoxCollider()
 {
 
 }
 
-CollisionResponse BoxCollider::Collide(Collider* other, bool collided)
+CollisionResponse GammaEngine::BoxCollider::Collide(Collider* other, bool collided)
 {
 	return other->Check(this, collided);
 }
 
 
-CollisionResponse BoxCollider::Check(BoxCollider* other, bool collided)
+CollisionResponse GammaEngine::BoxCollider::Check(BoxCollider* other, bool collided)
 {
 	CollisionResponse result;
 	result.state = Not;
@@ -52,7 +52,7 @@ CollisionResponse BoxCollider::Check(BoxCollider* other, bool collided)
 	return result;
 }
 
-CollisionResponse BoxCollider::Check(CircleCollider* other, bool collided)
+CollisionResponse GammaEngine::BoxCollider::Check(CircleCollider* other, bool collided)
 {
 	CollisionResponse result;
 	result.state = Not;
@@ -91,7 +91,7 @@ CollisionResponse BoxCollider::Check(CircleCollider* other, bool collided)
 	return result;
 }
 
-CollisionResponse BoxCollider::Check(LineCollider* other, bool collided)
+CollisionResponse GammaEngine::BoxCollider::Check(LineCollider* other, bool collided)
 {
 	CollisionResponse result;
 	result.state = Not;
@@ -119,7 +119,7 @@ CollisionResponse BoxCollider::Check(LineCollider* other, bool collided)
 	return result;
 }
 
-bool BoxCollider::InBound(vector2 v)
+bool GammaEngine::BoxCollider::InBound(vector2 v)
 {
 	if (transform->rotation == 0)
 	{
@@ -146,7 +146,7 @@ bool BoxCollider::InBound(vector2 v)
 
 }
 
-vector2 BoxCollider::GetNormalVector(vector2 v)
+vector2 GammaEngine::BoxCollider::GetNormalVector(vector2 v)
 {
 	v = v - transform->position;
 	float thetaA = transform->rotation / 180 * PI;

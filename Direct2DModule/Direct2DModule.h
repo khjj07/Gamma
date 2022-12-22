@@ -6,7 +6,7 @@
 #include <dwrite.h>
 #include <wincodec.h>
 
-#if Direct2DModuleAPI_Exporting
+#ifdef Direct2DModuleAPI_Exporting
 #define Direct2DModuleAPI __declspec(dllexport)
 #else
 #define Direct2DModuleAPI __declspec(dllimport)
@@ -36,6 +36,9 @@ public:
 	virtual void DrawBitmap(string bitmap, vector2 pos, vector2 size, float rotation, Meterial* meterial);
 	virtual string LoadBitmapImage(string filename);
 	virtual vector2 GetBitmapSize(string filename);
+	virtual void AddPen(vector4);
+	virtual void AddBrush(vector4);
+
 public:
 	ID2D1Factory* factory;
 	IDWriteFactory* writeFactory;
@@ -44,5 +47,7 @@ public:
 public:
 	vector<IDWriteTextFormat*> textFormatList;
 	unordered_map<string, ID2D1Bitmap*> bitmapDictionary;
+	unordered_map<vector4, ID2D1SolidColorBrush*> penDictionary;
+	unordered_map<vector4, ID2D1SolidColorBrush*> brushDictionary;
 };
 

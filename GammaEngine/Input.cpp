@@ -1,26 +1,27 @@
 #include "stdafx.h"
+using namespace GammaEngine;
 
-int Input::mouse[3] = {1,2,4};
-KeyState Input::key[256] = { KeyState::none, };
-HWND Input::hWnd = NULL;
-short Input::mouseScrollDelta = 0;
+int GammaEngine::Input::mouse[3] = {1,2,4};
+KeyState GammaEngine::Input::key[256] = { KeyState::none, };
+HWND GammaEngine::Input::hWnd = NULL;
+short GammaEngine::Input::mouseScrollDelta = 0;
 
-Input::Input()
+GammaEngine::Input::Input()
 {
 	
 }
 
-Input::~Input()
+GammaEngine::Input::~Input()
 {
 
 }
 
-void Input::Initialize(HWND hwnd)
+void GammaEngine::Input::Initialize(HWND hwnd)
 {
 	hWnd = hwnd;
 }
 
-void Input::Frame()
+void GammaEngine::Input::Frame()
 {
 	mouseScrollDelta = (short)0;
 	for (int i = 0; i < 256; i++)
@@ -36,7 +37,7 @@ void Input::Frame()
 	}
 }
 
-bool Input::GetKey(int k)
+bool GammaEngine::Input::GetKey(int k)
 {
 	if (GetAsyncKeyState(k) && key[k] == KeyState::pressing)
 	{
@@ -45,7 +46,7 @@ bool Input::GetKey(int k)
 	return false;
 }
 
-bool Input::GetKeyDown(int k)
+bool GammaEngine::Input::GetKeyDown(int k)
 {
 	if (GetAsyncKeyState(k) && key[k] == KeyState::pressed)
 	{
@@ -54,7 +55,7 @@ bool Input::GetKeyDown(int k)
 	return false;
 }
 
-bool Input::GetKeyUp(int k)
+bool GammaEngine::Input::GetKeyUp(int k)
 {
 	if (key[k] == KeyState::released)
 	{
@@ -63,7 +64,7 @@ bool Input::GetKeyUp(int k)
 	return false;
 }
 
-bool Input::GetMouseButton(int k)
+bool GammaEngine::Input::GetMouseButton(int k)
 {
 	if (GetAsyncKeyState(mouse[k]) && key[mouse[k]] == KeyState::pressing)
 	{
@@ -72,7 +73,7 @@ bool Input::GetMouseButton(int k)
 	return false;
 }
 
-bool Input::GetMouseButtonDown(int k)
+bool GammaEngine::Input::GetMouseButtonDown(int k)
 {
 	if (GetAsyncKeyState(mouse[k]) && key[mouse[k]] == KeyState::pressed)
 	{
@@ -81,7 +82,7 @@ bool Input::GetMouseButtonDown(int k)
 	return false;
 }
 
-bool Input::GetMouseButtonUp(int k)
+bool GammaEngine::Input::GetMouseButtonUp(int k)
 {
 	if (key[mouse[k]] == KeyState::released)
 	{
@@ -90,7 +91,7 @@ bool Input::GetMouseButtonUp(int k)
 	return false;
 }
 
-vector2 Input::GetMousePosition()
+vector2 GammaEngine::Input::GetMousePosition()
 {
 	RECT rc;
 	POINT p;

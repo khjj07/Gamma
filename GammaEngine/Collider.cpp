@@ -1,6 +1,7 @@
 #include "stdafx.h"
+using namespace GammaEngine;
 
-bool Collider::GetIntersectPoint(vector2 AP1, vector2 AP2,
+bool GammaEngine::Collider::GetIntersectPoint(vector2 AP1, vector2 AP2,
 	vector2 BP1, vector2 BP2, vector2& IP)
 {
 	double t;
@@ -22,7 +23,7 @@ bool Collider::GetIntersectPoint(vector2 AP1, vector2 AP2,
 
 	return true;
 }
-bool Collider::GetIntersectPoint(vector2 AP1, vector2 AP2,vector2 BP1, float r)
+bool GammaEngine::Collider::GetIntersectPoint(vector2 AP1, vector2 AP2,vector2 BP1, float r)
 {
 	float m = (AP2.y - AP1.y) / (AP2.x - AP1.x);
 	float c = -m * AP1.x + AP1.y;
@@ -31,7 +32,7 @@ bool Collider::GetIntersectPoint(vector2 AP1, vector2 AP2,vector2 BP1, float r)
 }
 
 
-bool Collider::AABB_to_AABB(BoxCollider* A, BoxCollider* B)
+bool GammaEngine::Collider::AABB_to_AABB(BoxCollider* A, BoxCollider* B)
 {
 	rect2D a, b;
 	a.min.x = -A->bounds.x / 2 * A->transform->scale.x + A->transform->position.x;
@@ -48,7 +49,7 @@ bool Collider::AABB_to_AABB(BoxCollider* A, BoxCollider* B)
 	if (a.max.y < b.min.y || a.min.y > b.max.y) return false;
 	return true;
 }
-bool Collider::OBB_to_OBB(BoxCollider* A, BoxCollider* B)
+bool GammaEngine::Collider::OBB_to_OBB(BoxCollider* A, BoxCollider* B)
 {
 	vector2 diffrence = A->transform->position - B->transform->position;
 	float thetaA = A->transform->rotation / 180 * PI;
@@ -90,7 +91,7 @@ bool Collider::OBB_to_OBB(BoxCollider* A, BoxCollider* B)
 	return true;
 }
 
-bool Collider::LineToOBB(LineCollider* A, BoxCollider* B)
+bool GammaEngine::Collider::LineToOBB(LineCollider* A, BoxCollider* B)
 {
 	float thetaB = B->transform->rotation / 180 * PI;
 	vector2 upB = vector2(-sin(thetaB), cos(thetaB));
@@ -122,7 +123,7 @@ bool Collider::LineToOBB(LineCollider* A, BoxCollider* B)
 	return false;
 }
 
-bool Collider::Circle_to_AABB(CircleCollider* A, BoxCollider* B)
+bool GammaEngine::Collider::Circle_to_AABB(CircleCollider* A, BoxCollider* B)
 {
 	vector2 center = A->transform->position;
 	float range = (A->transform->scale.x + A->transform->scale.y) / 2 * A->radius;
@@ -144,7 +145,7 @@ bool Collider::Circle_to_AABB(CircleCollider* A, BoxCollider* B)
 	}
 }
 
-bool Collider::Circle_to_OBB(BoxCollider* A, CircleCollider* B)
+bool GammaEngine::Collider::Circle_to_OBB(BoxCollider* A, CircleCollider* B)
 {
 	float distance = vector2::Distance(A->transform->position, B->transform->position);
 	vector2 diffrence = A->transform->position - B->transform->position;
@@ -162,7 +163,7 @@ bool Collider::Circle_to_OBB(BoxCollider* A, CircleCollider* B)
 	return false;
 }
 
-vector2 Collider::GetContactPoint(BoxCollider* A, CircleCollider* B)
+vector2 GammaEngine::Collider::GetContactPoint(BoxCollider* A, CircleCollider* B)
 {
 	float distance = vector2::Distance(A->transform->position, B->transform->position);
 	vector2 diffrence = A->transform->position - B->transform->position;
@@ -175,7 +176,7 @@ vector2 Collider::GetContactPoint(BoxCollider* A, CircleCollider* B)
 	return point;
 }
 
-vector2 Collider::GetContactPoint(BoxCollider* A, BoxCollider* B)
+vector2 GammaEngine::Collider::GetContactPoint(BoxCollider* A, BoxCollider* B)
 {
 	float thetaA = A->transform->rotation / 180 * PI;
 	vector2 upA = vector2(-sin(thetaA), cos(thetaA));
@@ -265,35 +266,35 @@ vector2 Collider::GetContactPoint(BoxCollider* A, BoxCollider* B)
 	}
 }
 
-bool Collider::Circle_to_Circle(vector2 centerA, float rangeA, vector2 centerB, float rangeB)
+bool GammaEngine::Collider::Circle_to_Circle(vector2 centerA, float rangeA, vector2 centerB, float rangeB)
 {
 	return vector2::Distance(centerA, centerB) <= rangeA + rangeB;
 }
 
-Collider::Collider(GameObject* t) : Component(t)
+GammaEngine::Collider::Collider(GameObject* t) : Component(t)
 {
 	CollisionSystem::Instance()->colliderList.push_back(this);
 	CollisionSystem::Instance()->collidedList.push_back(Collided(this));
 }
 
 
-Collider::~Collider()
+GammaEngine::Collider::~Collider()
 {
 	CollisionSystem* coll = CollisionSystem::Instance();
 	coll->colliderList.erase(remove_if(coll->colliderList.begin(), coll->colliderList.end(), [this](Collider* x) { if (x == this) return true; else return false; }), coll->colliderList.end());
 }
 
-bool Collider::CompareTag(string str)
+bool GammaEngine::Collider::CompareTag(string str)
 {
 	return this->gameObject->CompareTag(str);
 }
 
-bool Collider::CompareTag(char* str)
+bool GammaEngine::Collider::CompareTag(char* str)
 {
 	return this->gameObject->CompareTag(str);
 }
 
-bool Collider::CompareTags(vector<string> strList)
+bool GammaEngine::Collider::CompareTags(vector<string> strList)
 {
 	vector<string>::iterator iter;
 	for (iter = strList.begin(); iter < strList.end(); iter++)
@@ -306,7 +307,7 @@ bool Collider::CompareTags(vector<string> strList)
 	return false;
 }
 
-bool Collider::CompareTags(vector<char*> strList)
+bool GammaEngine::Collider::CompareTags(vector<char*> strList)
 {
 	vector<char*>::iterator iter;
 	for (iter = strList.begin(); iter < strList.end(); iter++)
@@ -319,12 +320,12 @@ bool Collider::CompareTags(vector<char*> strList)
 	return false;
 }
 
-vector2 Collider::GetNormalVector(vector2 v)
+vector2 GammaEngine::Collider::GetNormalVector(vector2 v)
 {
 	return vector2();
 }
 
-bool Collider::InBound(vector2 v)
+bool GammaEngine::Collider::InBound(vector2 v)
 {
 	return false;	
 }

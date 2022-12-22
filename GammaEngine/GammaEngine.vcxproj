@@ -46,7 +46,7 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -134,7 +134,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;GammaEngineAPI_Exporting;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)Common;$(SolutionDir)Direct2DModule;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -148,21 +148,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Box.h" />
-    <ClInclude Include="Box2.h" />
-    <ClInclude Include="Box2Script.h" />
     <ClInclude Include="BoxCollider.h" />
-    <ClInclude Include="BoxScript.h" />
-    <ClInclude Include="Cam1.h" />
-    <ClInclude Include="Cam1Script.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="Circle.h" />
     <ClInclude Include="CircleCollider.h" />
-    <ClInclude Include="CircleScript.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="CollisionSystem.h" />
     <ClInclude Include="Component.h" />
-    <ClInclude Include="Debug.h" />
+    <ClInclude Include="GammaEngine.h" />
     <ClInclude Include="GraphicSystem.h" />
     <ClInclude Include="BitmapRenderer.h" />
     <ClInclude Include="EllipseRenderer.h" />
@@ -175,15 +167,12 @@
     <ClInclude Include="RectangleRenderer.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Scene.h" />
-    <ClInclude Include="Scene1.h" />
     <ClInclude Include="Screen.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="Cursor.h" />
-    <ClInclude Include="CursorSript.h" />
     <ClInclude Include="TextRenderer.h" />
-    <ClInclude Include="Time.h" />
+    <ClInclude Include="EngineTime.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="TimerHandler.h" />
     <ClInclude Include="Transform.h" />
@@ -191,21 +180,12 @@
     <ClInclude Include="WindowSystem.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Box.cpp" />
-    <ClCompile Include="BoxScript.cpp" />
-    <ClCompile Include="Box2.cpp" />
-    <ClCompile Include="Box2Script.cpp" />
     <ClCompile Include="BoxCollider.cpp" />
-    <ClCompile Include="Cam1.cpp" />
-    <ClCompile Include="Cam1Script.cpp" />
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Circle.cpp" />
     <ClCompile Include="CircleCollider.cpp" />
-    <ClCompile Include="CircleScript.cpp" />
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="CollisionSystem.cpp" />
     <ClCompile Include="Component.cpp" />
-    <ClCompile Include="Debug.cpp" />
     <ClCompile Include="GraphicSystem.cpp" />
     <ClCompile Include="BitmapRenderer.cpp" />
     <ClCompile Include="EllipseRenderer.cpp" />
@@ -214,17 +194,13 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="LineCollider.cpp" />
     <ClCompile Include="LineRenderer.cpp" />
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="RectangleRenderer.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Scene.cpp" />
-    <ClCompile Include="Scene1.cpp" />
     <ClCompile Include="Screen.cpp" />
-    <ClCompile Include="Cursor.cpp" />
-    <ClCompile Include="CursorSript.cpp" />
     <ClCompile Include="TextRenderer.cpp" />
-    <ClCompile Include="Time.cpp" />
+    <ClCompile Include="EngineTime.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="TimerHandler.cpp" />
     <ClCompile Include="Transform.cpp" />

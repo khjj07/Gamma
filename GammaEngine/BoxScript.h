@@ -1,8 +1,6 @@
 #pragma once
-#include "Component.h"
-#include "Type.h"
-
-class BoxScript : public Component
+using namespace GammaEngine;
+class BoxScript : public GammaEngine::Component
 {
 public:
 	BoxScript(GameObject*);

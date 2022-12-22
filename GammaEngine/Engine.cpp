@@ -1,22 +1,23 @@
 #include "stdafx.h"
 
-Engine::Engine()
+using namespace GammaEngine;
+GammaEngine::Engine::Engine()
 {
 	
 }
 
-Engine::~Engine()
+GammaEngine::Engine::~Engine()
 {
 
 }
 
-void Engine::Initialize(Scene* scene)
+void GammaEngine::Engine::Initialize(Scene* scene)
 {
 	currentScene = scene;
 	currentScene->Enable();
 }
 
-bool Engine::Frame()
+bool GammaEngine::Engine::Frame()
 {
 	CollisionSystem* collisionSystem = CollisionSystem::Instance();
 	GraphicSystem* graphic = GraphicSystem::Instance();
@@ -58,20 +59,20 @@ bool Engine::Frame()
 	return true;
 }
 
-void Instantiate(GameObject* obj)
+void GammaEngine::Instantiate(GameObject* obj)
 {
 	Engine* engine = Engine::Instance();
 	engine->addBuffer.push_back(obj);
 }
 
-void Destroy(GameObject* obj)
+void GammaEngine::Destroy(GameObject* obj)
 {
 	Engine* engine = Engine::Instance();
 	engine->removeBuffer.push_back(obj);
 }
 
 
-bool CompareTag(GameObject* obj, string str)
+bool GammaEngine::CompareTag(GameObject* obj, string str)
 {
 	if (obj->tag == str)
 	{
@@ -84,7 +85,7 @@ bool CompareTag(GameObject* obj, string str)
 }
 
 
-bool CompareTag(GameObject* obj, char* str)
+bool GammaEngine::CompareTag(GameObject* obj, char* str)
 {
 	if (strcmp(obj->tag.c_str(), str) == 0)
 	{

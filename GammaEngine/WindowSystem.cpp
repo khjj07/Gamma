@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "WindowSystem.h"
-
-WindowSystem::WindowSystem()
+using namespace GammaEngine;
+GammaEngine::WindowSystem::WindowSystem()
 {
 
 }
@@ -38,7 +38,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
 	}
 }
 
-void WindowSystem::Initialize(int& screenWidth,int& screenHeight)
+void GammaEngine::WindowSystem::Initialize(int& screenWidth,int& screenHeight)
 {
 	ApplicationHandler = this;
 	hInstance = GetModuleHandle(NULL);
@@ -94,7 +94,7 @@ void WindowSystem::Initialize(int& screenWidth,int& screenHeight)
 	input->Initialize(hWnd);
 }
 
-void WindowSystem::Run(Engine* engine)
+void GammaEngine::WindowSystem::Run(Engine* engine)
 {
 	Time* time = Time::Instance();
 	
@@ -119,7 +119,7 @@ void WindowSystem::Run(Engine* engine)
 	}
 }
 
-void WindowSystem::ShutDown()
+void GammaEngine::WindowSystem::ShutDown()
 {
 	if (FullScreenMode)
 	{

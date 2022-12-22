@@ -1,16 +1,16 @@
 #include "stdafx.h"
-
-Scene::Scene()
+using namespace GammaEngine;
+GammaEngine::Scene::Scene()
 {
 
 }
 
-Scene::~Scene()
+GammaEngine::Scene::~Scene()
 {
 
 }
 
-void Scene::Start()
+void GammaEngine::Scene::Start()
 {
 	for (gameObjectIter = gameObjectList.begin(); gameObjectIter < gameObjectList.end(); gameObjectIter++)
 	{
@@ -19,7 +19,7 @@ void Scene::Start()
 	}
 }
 
-void Scene::Frame()
+void GammaEngine::Scene::Frame()
 {
 	for (gameObjectIter = gameObjectList.begin(); gameObjectIter < gameObjectList.end(); gameObjectIter++)
 	{
@@ -33,7 +33,7 @@ void Scene::Frame()
 	}
 }
 
-void Scene::OnDestroy()
+void GammaEngine::Scene::OnDestroy()
 {
 	for (gameObjectIter = gameObjectList.begin(); gameObjectIter < gameObjectList.end(); gameObjectIter++)
 	{
@@ -41,7 +41,7 @@ void Scene::OnDestroy()
 	}
 }
 
-void Scene::OnDisable()
+void GammaEngine::Scene::OnDisable()
 {
 	for (gameObjectIter = gameObjectList.begin(); gameObjectIter < gameObjectList.end(); gameObjectIter++)
 	{
@@ -50,7 +50,7 @@ void Scene::OnDisable()
 	}
 }
 
-void Scene::OnEnable()
+void GammaEngine::Scene::OnEnable()
 {
 	for (gameObjectIter = gameObjectList.begin(); gameObjectIter < gameObjectList.end(); gameObjectIter++)
 	{
@@ -59,7 +59,7 @@ void Scene::OnEnable()
 	}
 }
 
-void Scene::Enable()
+void GammaEngine::Scene::Enable()
 {
 	for (holdIter=holdList.begin(); holdIter < holdList.end(); holdIter++)
 	{
@@ -68,7 +68,7 @@ void Scene::Enable()
 	OnEnable();
 }
 
-void Scene::Disable()
+void GammaEngine::Scene::Disable()
 {
 	OnDisable();
 	OnDestroy();
@@ -78,14 +78,14 @@ void Scene::Disable()
 	}
 }
 
-void Scene::Add(GameObject* obj)
+void GammaEngine::Scene::Add(GameObject* obj)
 {
 	gameObjectList.push_back(obj);
 	obj->isEnabled = true;
 	obj->OnEnable();
 }
 
-void Scene::Remove(GameObject* obj)
+void GammaEngine::Scene::Remove(GameObject* obj)
 {
 	gameObjectList.erase(remove_if(gameObjectList.begin(), gameObjectList.end(), [obj](GameObject* x) { if (x == obj) return true; else return false; }), gameObjectList.end());
 	obj->OnDisable();

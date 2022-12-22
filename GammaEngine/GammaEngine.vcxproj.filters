@@ -9,9 +9,6 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="main">
-      <UniqueIdentifier>{e8004330-286b-44d2-bd9b-1a5788bd3641}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Framework\System">
       <UniqueIdentifier>{16d3d0f0-1477-423a-a612-cae4ce9e5722}</UniqueIdentifier>
     </Filter>
@@ -21,21 +18,12 @@
     <Filter Include="Framework\Entity">
       <UniqueIdentifier>{4ea0e090-ffcf-41c8-9ada-25fd1b02719c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game">
-      <UniqueIdentifier>{e10d3a01-f42e-49cc-b403-197dfe29967d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game\Scene">
-      <UniqueIdentifier>{4c118b75-d24f-4286-9a89-6b9023668513}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Framework\Component\Renderer">
       <UniqueIdentifier>{cc990b32-3e02-4163-bb24-b6e027ba9d60}</UniqueIdentifier>
     </Filter>
     <Filter Include="Framework\Etc">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Game\Prefab">
-      <UniqueIdentifier>{f01c642d-d02f-4631-943e-f05b30f4c887}</UniqueIdentifier>
     </Filter>
     <Filter Include="Framework\Component\Collider">
       <UniqueIdentifier>{b7a4ab52-90ee-4dda-bb5d-a2024c14b611}</UniqueIdentifier>
@@ -48,12 +36,6 @@
     </Filter>
     <Filter Include="Framework\System\Physics">
       <UniqueIdentifier>{129ac39d-ed30-4e89-8039-4c8b88d41bfb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game\Scripts">
-      <UniqueIdentifier>{34c46d23-9113-4391-a035-fb9c9065ffc0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game\Debug">
-      <UniqueIdentifier>{1fdbd7c9-c899-409b-88bf-d820ec0f000f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -72,7 +54,7 @@
     <ClInclude Include="Screen.h">
       <Filter>Framework\System</Filter>
     </ClInclude>
-    <ClInclude Include="Time.h">
+    <ClInclude Include="EngineTime.h">
       <Filter>Framework\System</Filter>
     </ClInclude>
     <ClInclude Include="WindowSystem.h">
@@ -93,17 +75,11 @@
     <ClInclude Include="Scene.h">
       <Filter>Framework\Entity</Filter>
     </ClInclude>
-    <ClInclude Include="Scene1.h">
-      <Filter>Game\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="EllipseRenderer.h">
       <Filter>Framework\Component\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Renderer.h">
       <Filter>Framework\Component\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Cursor.h">
-      <Filter>Game\Prefab</Filter>
     </ClInclude>
     <ClInclude Include="Input.h">
       <Filter>Framework\System</Filter>
@@ -111,17 +87,11 @@
     <ClInclude Include="Camera.h">
       <Filter>Framework\Component</Filter>
     </ClInclude>
-    <ClInclude Include="Cam1.h">
-      <Filter>Game\Prefab</Filter>
-    </ClInclude>
     <ClInclude Include="BoxCollider.h">
       <Filter>Framework\Component\Collider</Filter>
     </ClInclude>
     <ClInclude Include="Collider.h">
       <Filter>Framework\Component\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="Box.h">
-      <Filter>Game\Prefab</Filter>
     </ClInclude>
     <ClInclude Include="RectangleRenderer.h">
       <Filter>Framework\Component\Renderer</Filter>
@@ -144,47 +114,21 @@
     <ClInclude Include="LineRenderer.h">
       <Filter>Framework\Component\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="Debug.h">
-      <Filter>Game\Debug</Filter>
-    </ClInclude>
     <ClInclude Include="CircleCollider.h">
       <Filter>Framework\Component\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="Box2.h">
-      <Filter>Game\Prefab</Filter>
-    </ClInclude>
-    <ClInclude Include="Cam1Script.h">
-      <Filter>Game\Scripts</Filter>
-    </ClInclude>
-    <ClInclude Include="Box2Script.h">
-      <Filter>Game\Scripts</Filter>
-    </ClInclude>
-    <ClInclude Include="CursorSript.h">
-      <Filter>Game\Scripts</Filter>
     </ClInclude>
     <ClInclude Include="BitmapRenderer.h">
       <Filter>Framework\Component\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="BoxScript.h">
-      <Filter>Game\Scripts</Filter>
-    </ClInclude>
     <ClInclude Include="Physics.h">
       <Filter>Framework\System\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="Circle.h">
-      <Filter>Game\Prefab</Filter>
-    </ClInclude>
-    <ClInclude Include="CircleScript.h">
-      <Filter>Game\Scripts</Filter>
     </ClInclude>
     <ClInclude Include="LineCollider.h">
       <Filter>Framework\Component\Collider</Filter>
     </ClInclude>
+    <ClInclude Include="GammaEngine.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>main</Filter>
-    </ClCompile>
     <ClCompile Include="GraphicSystem.cpp">
       <Filter>Framework\System</Filter>
     </ClCompile>
@@ -194,7 +138,7 @@
     <ClCompile Include="Screen.cpp">
       <Filter>Framework\System</Filter>
     </ClCompile>
-    <ClCompile Include="Time.cpp">
+    <ClCompile Include="EngineTime.cpp">
       <Filter>Framework\System</Filter>
     </ClCompile>
     <ClCompile Include="WindowSystem.cpp">
@@ -212,17 +156,11 @@
     <ClCompile Include="Scene.cpp">
       <Filter>Framework\Entity</Filter>
     </ClCompile>
-    <ClCompile Include="Scene1.cpp">
-      <Filter>Game\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="EllipseRenderer.cpp">
       <Filter>Framework\Component\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="Renderer.cpp">
       <Filter>Framework\Component\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Cursor.cpp">
-      <Filter>Game\Prefab</Filter>
     </ClCompile>
     <ClCompile Include="Input.cpp">
       <Filter>Framework\System</Filter>
@@ -230,17 +168,11 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Framework\Component</Filter>
     </ClCompile>
-    <ClCompile Include="Cam1.cpp">
-      <Filter>Game\Prefab</Filter>
-    </ClCompile>
     <ClCompile Include="BoxCollider.cpp">
       <Filter>Framework\Component\Collider</Filter>
     </ClCompile>
     <ClCompile Include="Collider.cpp">
       <Filter>Framework\Component\Collider</Filter>
-    </ClCompile>
-    <ClCompile Include="Box.cpp">
-      <Filter>Game\Prefab</Filter>
     </ClCompile>
     <ClCompile Include="RectangleRenderer.cpp">
       <Filter>Framework\Component\Renderer</Filter>
@@ -266,35 +198,11 @@
     <ClCompile Include="LineRenderer.cpp">
       <Filter>Framework\Component\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="Debug.cpp">
-      <Filter>Game\Debug</Filter>
-    </ClCompile>
     <ClCompile Include="CircleCollider.cpp">
       <Filter>Framework\Component\Collider</Filter>
     </ClCompile>
-    <ClCompile Include="Box2.cpp">
-      <Filter>Game\Prefab</Filter>
-    </ClCompile>
-    <ClCompile Include="Cam1Script.cpp">
-      <Filter>Game\Scripts</Filter>
-    </ClCompile>
-    <ClCompile Include="CursorSript.cpp">
-      <Filter>Game\Scripts</Filter>
-    </ClCompile>
-    <ClCompile Include="Box2Script.cpp">
-      <Filter>Game\Scripts</Filter>
-    </ClCompile>
     <ClCompile Include="BitmapRenderer.cpp">
       <Filter>Framework\Component\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="BoxScript.cpp">
-      <Filter>Game\Scripts</Filter>
-    </ClCompile>
-    <ClCompile Include="Circle.cpp">
-      <Filter>Game\Prefab</Filter>
-    </ClCompile>
-    <ClCompile Include="CircleScript.cpp">
-      <Filter>Game\Scripts</Filter>
     </ClCompile>
     <ClCompile Include="LineCollider.cpp">
       <Filter>Framework\Component\Collider</Filter>

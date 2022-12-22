@@ -1,32 +1,39 @@
 #pragma once
 #include <Windows.h>
+#ifdef GammaEngineAPI_Exporting
+#define GammaEngineAPI __declspec(dllexport)
+#else
+#define GammaEngineAPI __declspec(dllimport)
+#endif
 
-class Engine;
-
-/// <summary>
-/// winapi의 기본 구성을 포함하는 class
-/// </summary>
-class WindowSystem : public Singleton<WindowSystem>
+namespace GammaEngine
 {
-public:
-	WindowSystem();
-	~WindowSystem();
+	class Engine;
 
-public:
-	LRESULT CALLBACK MessageHandler(HWND, UINT, WPARAM, LPARAM);
-	void Initialize(int&, int&);
-	void ShutDown();
-	void Run(Engine* engine);
+	/// <summary>
+	/// winapi의 기본 구성을 포함하는 class
+	/// </summary>
+	class GammaEngineAPI WindowSystem : public Singleton<WindowSystem>
+	{
+	public:
+		WindowSystem();
+		~WindowSystem();
 
-public:
-	HWND hWnd;
+	public:
+		LRESULT CALLBACK MessageHandler(HWND, UINT, WPARAM, LPARAM);
+		void Initialize(int&, int&);
+		void ShutDown();
+		void Run(Engine* engine);
 
-private:
-	LPCWSTR applicationName;
-	HINSTANCE hInstance;
-	bool FullScreenMode = false;//전체화면 조절 변수 
-};
+	public:
+		HWND hWnd;
 
-static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM);
+	private:
+		LPCWSTR applicationName;
+		HINSTANCE hInstance;
+		bool FullScreenMode = false;//전체화면 조절 변수 
+	};
 
-static WindowSystem* ApplicationHandler = 0;
+	static WindowSystem* ApplicationHandler = 0;
+}
+	static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM);

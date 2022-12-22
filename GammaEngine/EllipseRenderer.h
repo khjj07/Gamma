@@ -1,17 +1,25 @@
 #pragma once
 #include "Type.h"
-class Renderer;
-class Transform;
-
-/// <summary>
-/// Å¸¿ø ·»´õ·¯
-/// </summary>
-class EllipseRenderer : public Renderer
+#ifdef GammaEngineAPI_Exporting
+#define GammaEngineAPI __declspec(dllexport)
+#else
+#define GammaEngineAPI __declspec(dllimport)
+#endif
+namespace GammaEngine
 {
-public:
-	EllipseRenderer(GameObject* t);
-	~EllipseRenderer();
+	class Renderer;
+	class Transform;
 
-public:
-	virtual void Render();
-};
+	/// <summary>
+	/// Å¸¿ø ·»´õ·¯
+	/// </summary>
+	class GammaEngineAPI EllipseRenderer : public Renderer
+	{
+	public:
+		EllipseRenderer(GameObject* t);
+		~EllipseRenderer();
+
+	public:
+		virtual void Render();
+	};
+}

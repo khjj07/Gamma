@@ -1,23 +1,23 @@
 #include "stdafx.h"
-
-TimerHandler::TimerHandler()
+using namespace GammaEngine;
+GammaEngine::TimerHandler::TimerHandler()
 {
 
 }
 
-TimerHandler::~TimerHandler()
+GammaEngine::TimerHandler::~TimerHandler()
 {
 
 }
 
-TimerHandler::TimerHandler(float d, bool l, function<void()> c)
+GammaEngine::TimerHandler::TimerHandler(float d, bool l, function<void()> c)
 {
 	delay = d;
 	loop = l;
 	callback = c;
 }
 
-void TimerHandler::Frame()
+void GammaEngine::TimerHandler::Frame()
 {
 	accumulation += Time::deltaTime;
 	if (!timeOut && delay <= accumulation)

@@ -1,11 +1,13 @@
 #include "stdafx.h"
 
-GameObject::GameObject()
+using namespace GammaEngine;
+
+GammaEngine::GameObject::GameObject()
 {
 	transform = new Transform(this);
 }
 
-GameObject::~GameObject()
+GammaEngine::GameObject::~GameObject()
 {
 	for (componentIter = componentList.begin(); componentIter < componentList.end(); componentIter++)
 	{
@@ -15,7 +17,7 @@ GameObject::~GameObject()
 	delete transform;
 }
 
-void GameObject::Start()
+void GammaEngine::GameObject::Start()
 {
 	if (!isStarted)
 	{
@@ -27,7 +29,7 @@ void GameObject::Start()
 	}
 }
 
-void GameObject::Update()
+void GammaEngine::GameObject::Update()
 {
 	for (componentIter = componentList.begin(); componentIter < componentList.end(); componentIter++)
 	{
@@ -35,7 +37,7 @@ void GameObject::Update()
 	}
 }
 
-void GameObject::LateUpdate()
+void GammaEngine::GameObject::LateUpdate()
 {
 	for (componentIter = componentList.begin(); componentIter < componentList.end(); componentIter++)
 	{
@@ -44,7 +46,7 @@ void GameObject::LateUpdate()
 }
 
 
-void GameObject::OnDestroy()
+void GammaEngine::GameObject::OnDestroy()
 {
 	for (componentIter = componentList.begin(); componentIter < componentList.end(); componentIter++)
 	{
@@ -52,7 +54,7 @@ void GameObject::OnDestroy()
 	}
 }
 
-void GameObject::OnDisable() 
+void GammaEngine::GameObject::OnDisable()
 {
 	for (componentIter = componentList.begin(); componentIter < componentList.end(); componentIter++)
 	{
@@ -60,7 +62,7 @@ void GameObject::OnDisable()
 	}
 }
 
-void GameObject::OnEnable()
+void GammaEngine::GameObject::OnEnable()
 {
 	for (componentIter = componentList.begin(); componentIter < componentList.end(); componentIter++)
 	{
@@ -68,7 +70,7 @@ void GameObject::OnEnable()
 	}
 }
 
-void GameObject::OnCollisionEnter(CollisionResponse response)
+void GammaEngine::GameObject::OnCollisionEnter(CollisionResponse response)
 {
 	for (componentIter = componentList.begin(); componentIter < componentList.end(); componentIter++)
 	{
@@ -76,7 +78,7 @@ void GameObject::OnCollisionEnter(CollisionResponse response)
 	}
 }
 
-void GameObject::OnCollisionStay(CollisionResponse response)
+void GammaEngine::GameObject::OnCollisionStay(CollisionResponse response)
 {
 	for (componentIter = componentList.begin(); componentIter < componentList.end(); componentIter++)
 	{
@@ -84,7 +86,7 @@ void GameObject::OnCollisionStay(CollisionResponse response)
 	}
 }
 
-void GameObject::OnCollisionExit(CollisionResponse response)
+void GammaEngine::GameObject::OnCollisionExit(CollisionResponse response)
 {
 	for (componentIter = componentList.begin(); componentIter < componentList.end(); componentIter++)
 	{
@@ -92,7 +94,7 @@ void GameObject::OnCollisionExit(CollisionResponse response)
 	}
 }
 
-bool GameObject::CompareTag(string str)
+bool GammaEngine::GameObject::CompareTag(string str)
 {
 	if (this->tag == str)
 	{
@@ -104,7 +106,7 @@ bool GameObject::CompareTag(string str)
 	}
 }
 
-bool GameObject::CompareTag(char* str)
+bool GammaEngine::GameObject::CompareTag(char* str)
 {
 	if (strcmp(this->tag.c_str(), str)==0)
 	{
@@ -116,7 +118,7 @@ bool GameObject::CompareTag(char* str)
 	}
 }
 
-bool GameObject::CompareTags(vector<string> strList)
+bool GammaEngine::GameObject::CompareTags(vector<string> strList)
 {
 	vector<string>::iterator iter;
 	for (iter = strList.begin(); iter < strList.end(); iter++)
@@ -129,7 +131,7 @@ bool GameObject::CompareTags(vector<string> strList)
 	return false;
 }
 
-bool GameObject::CompareTags(vector<char*> strList)
+bool GammaEngine::GameObject::CompareTags(vector<char*> strList)
 {
 	vector<char*>::iterator iter;
 	for (iter = strList.begin(); iter < strList.end(); iter++)

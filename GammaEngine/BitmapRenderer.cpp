@@ -1,28 +1,28 @@
 #include "stdafx.h"
 #pragma comment (lib, "windowscodecs.lib")
-
-BitmapRenderer::BitmapRenderer(GameObject* t) :Renderer(t)
-{
-	
-}
-
-BitmapRenderer::~BitmapRenderer()
+using namespace GammaEngine;
+GammaEngine::BitmapRenderer::BitmapRenderer(GameObject* t) :Renderer(t)
 {
 
 }
 
-void BitmapRenderer::LoadBitmapImage(string filename)
+GammaEngine::BitmapRenderer::~BitmapRenderer()
 {
-    bitmap = GraphicSystem::LoadBitmapImage(filename);
-    size = GraphicSystem::GetBitmapSize(bitmap);
+
 }
 
-void BitmapRenderer::Render()
+void GammaEngine::BitmapRenderer::LoadBitmapImage(string filename)
 {
-    vector2 renderPos = transform->position + offset;
-    vector2 renderSize = size;
-    renderSize.x = renderSize.x * transform->scale.x;
-    renderSize.y = renderSize.y * transform->scale.y;
-    Renderer::Adjust(renderPos, renderSize);
-    GraphicSystem::DrawBitmap(bitmap, renderPos, renderSize, transform->rotation, meterial);
+	bitmap = GraphicSystem::LoadBitmapImage(filename);
+	size = GraphicSystem::GetBitmapSize(bitmap);
+}
+
+void GammaEngine::BitmapRenderer::Render()
+{
+	vector2 renderPos = transform->position + offset;
+	vector2 renderSize = size;
+	renderSize.x = renderSize.x * transform->scale.x;
+	renderSize.y = renderSize.y * transform->scale.y;
+	Renderer::Adjust(renderPos, renderSize);
+	GraphicSystem::DrawBitmap(bitmap, renderPos, renderSize, transform->rotation, meterial);
 }

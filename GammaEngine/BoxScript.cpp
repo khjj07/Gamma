@@ -1,12 +1,15 @@
-#include "stdafx.h"
+#include "GammaEngine.h"
 #include "BoxScript.h"
+using namespace GammaEngine;
 
 BoxScript::BoxScript(GameObject* t) :Component(t)
 {
+
 }
 
 BoxScript::~BoxScript()
 {
+
 }
 
 void BoxScript::Start()

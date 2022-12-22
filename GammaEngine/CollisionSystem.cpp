@@ -1,15 +1,15 @@
 #include "stdafx.h"
+using namespace GammaEngine;
 
-
-CollisionSystem::CollisionSystem()
+GammaEngine::CollisionSystem::CollisionSystem()
 {
 }
 
-CollisionSystem::~CollisionSystem()
+GammaEngine::CollisionSystem::~CollisionSystem()
 {
 }
 
-void CollisionSystem::Frame()
+void GammaEngine::CollisionSystem::Frame()
 {
 	vector<Collider*>::iterator iter1,iter2;
 	vector<Collided>::iterator collidedIter;

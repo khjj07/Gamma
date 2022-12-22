@@ -1,17 +1,18 @@
 #include "stdafx.h"
+using namespace GammaEngine;
 
-TextRenderer::TextRenderer(GameObject* t) :Renderer(t)
+GammaEngine::TextRenderer::TextRenderer(GameObject* t) :Renderer(t)
 {
 	size = vector2(100, 100);
 	text = string("");
 }
 
-TextRenderer::~TextRenderer()
+GammaEngine::TextRenderer::~TextRenderer()
 {
 
 }
 
-void TextRenderer::Render()
+void GammaEngine::TextRenderer::Render()
 {
 	if (text.length() > 0)
 	{

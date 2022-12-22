@@ -1,16 +1,16 @@
 #include "stdafx.h"
-
-RectangleRenderer::RectangleRenderer(GameObject* t) :Renderer(t)
+using namespace GammaEngine;
+GammaEngine::RectangleRenderer::RectangleRenderer(GameObject* t) :Renderer(t)
 {
 	size = vector2(100, 100);
 }
 
-RectangleRenderer::~RectangleRenderer()
+GammaEngine::RectangleRenderer::~RectangleRenderer()
 {
 
 }
 
-void RectangleRenderer::Render()
+void GammaEngine::RectangleRenderer::Render()
 {
 	vector2 renderPos = transform->position + offset;
 	vector2 renderSize = size;

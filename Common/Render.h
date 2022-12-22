@@ -7,8 +7,6 @@
 using namespace std;
 
 class Meterial {
-// 	ID2D1Brush* pen = 0;
-// 	ID2D1Brush* brush = 0;
 public:
 	vector4 pen = vector4(0,0,0,1);
 	vector4 brush = vector4(0, 0, 0, 0);
@@ -31,4 +29,6 @@ public:
 	virtual void DrawBitmap(string bitmap, vector2 pos, vector2 size, float rotation, Meterial* meterial)abstract;
 	virtual string LoadBitmapImage(string) abstract;
 	virtual vector2 GetBitmapSize(string) abstract;
+	virtual void AddPen(vector4);
+	virtual void AddBrush(vector4);
 };

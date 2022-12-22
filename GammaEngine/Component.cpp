@@ -1,57 +1,58 @@
 #include "stdafx.h"
+using namespace GammaEngine;
 
-Component::Component(GameObject* g):componentList(g->componentList)
+GammaEngine::Component::Component(GameObject* g):componentList(g->componentList)
 {
 	gameObject = g;
 	transform = g->transform;
 }
 
-Component::~Component()
+GammaEngine::Component::~Component()
 {
 
 }
 
 
-void Component::Start()
-{
-	
-}
-
-void Component::Update()
-{
-	
-}
-void Component::LateUpdate()
-{
-
-}
-
-void Component::OnDestroy()
+void GammaEngine::Component::Start()
 {
 	
 }
 
-void Component::OnDisable()
+void GammaEngine::Component::Update()
+{
+	
+}
+void GammaEngine::Component::LateUpdate()
+{
+
+}
+
+void GammaEngine::Component::OnDestroy()
 {
 	
 }
 
-void Component::OnEnable()
+void GammaEngine::Component::OnDisable()
+{
+	
+}
+
+void GammaEngine::Component::OnEnable()
 {
 
 }
 
-void Component::OnCollisionEnter(CollisionResponse response)
+void GammaEngine::Component::OnCollisionEnter(CollisionResponse response)
 {
 
 }
 
-void Component::OnCollisionStay(CollisionResponse response)
+void GammaEngine::Component::OnCollisionStay(CollisionResponse response)
 {
 
 }
 
-void Component::OnCollisionExit(CollisionResponse response)
+void GammaEngine::Component::OnCollisionExit(CollisionResponse response)
 {
 
 }

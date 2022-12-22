@@ -1,5 +1,7 @@
 #pragma once
-class GameObject;
+#include "GammaEngine.h"
+using namespace GammaEngine;
+
 class Box : public GameObject
 {
 public:

@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Direct2DModule", "Direct2DM
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Common", "Common\Common.vcxproj", "{B9A23F42-3915-486A-AA0A-D9F8C268E858}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestGame", "TestGame\TestGame.vcxproj", "{A2BE1549-2598-4B37-AE71-8417AE85A3DC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -45,6 +47,14 @@ Global
 		{B9A23F42-3915-486A-AA0A-D9F8C268E858}.Release|x64.Build.0 = Release|x64
 		{B9A23F42-3915-486A-AA0A-D9F8C268E858}.Release|x86.ActiveCfg = Release|Win32
 		{B9A23F42-3915-486A-AA0A-D9F8C268E858}.Release|x86.Build.0 = Release|Win32
+		{A2BE1549-2598-4B37-AE71-8417AE85A3DC}.Debug|x64.ActiveCfg = Debug|x64
+		{A2BE1549-2598-4B37-AE71-8417AE85A3DC}.Debug|x64.Build.0 = Debug|x64
+		{A2BE1549-2598-4B37-AE71-8417AE85A3DC}.Debug|x86.ActiveCfg = Debug|Win32
+		{A2BE1549-2598-4B37-AE71-8417AE85A3DC}.Debug|x86.Build.0 = Debug|Win32
+		{A2BE1549-2598-4B37-AE71-8417AE85A3DC}.Release|x64.ActiveCfg = Release|x64
+		{A2BE1549-2598-4B37-AE71-8417AE85A3DC}.Release|x64.Build.0 = Release|x64
+		{A2BE1549-2598-4B37-AE71-8417AE85A3DC}.Release|x86.ActiveCfg = Release|Win32
+		{A2BE1549-2598-4B37-AE71-8417AE85A3DC}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
