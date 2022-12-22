@@ -38,6 +38,8 @@ public:
 	virtual vector2 GetBitmapSize(string filename);
 	virtual void AddPen(vector4);
 	virtual void AddBrush(vector4);
+	ID2D1SolidColorBrush* UsePen(vector4);
+	ID2D1SolidColorBrush* UseBrush(vector4);
 
 public:
 	ID2D1Factory* factory;
