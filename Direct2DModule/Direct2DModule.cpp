@@ -58,19 +58,31 @@ void Direct2DModule::EndDraw()
 void Direct2DModule::CreateTextFormat(string fontFamilyName, DWRITE_FONT_WEIGHT fontWeight, DWRITE_FONT_STYLE fontStyle, DWRITE_FONT_STRETCH fontStretch, int fontSize) {
 	IDWriteTextFormat* result;
 	writeFactory->CreateTextFormat(ToTCHAR(fontFamilyName), NULL, fontWeight, fontStyle, fontStretch, fontSize, L"", &result);
-	textFormatList.push_back(result);
+	textFormatDictionary.insert(make_pair(fontFamilyName,result));
 }
 
 
 
 void Direct2DModule::Release()
 {
-	vector<IDWriteTextFormat*>::iterator iter;
-	for (iter = textFormatList.begin(); iter < textFormatList.end(); iter++)
+	
+	for (pair<string, IDWriteTextFormat*> textFormat : textFormatDictionary)
 	{
-		(*iter)->Release();
+		textFormat.second->Release();
 	}
 
+	for (pair<string, ID2D1Bitmap*> bitmap : bitmapDictionary)
+	{
+		bitmap.second->Release();
+	}
+
+	for (pair<vector4, ID2D1SolidColorBrush*> brush : brushDictionary)
+	{
+		brush.second->Release();
+	}
+	textFormatDictionary.clear();
+	brushDictionary.clear();
+	bitmapDictionary.clear();
 	renderTarget->Release();
 	writeFactory->Release();
 	factory->Release();
@@ -85,27 +97,17 @@ string Direct2DModule::LoadBitmapImage(string filename)
 {
 	HRESULT hr;
 	ID2D1Bitmap* bitmap;
-	// 디코더 생성
-
 	IWICBitmapDecoder* decoder = 0;
 
 	hr = imageFactory->CreateDecoderFromFilename(ToTCHAR(filename), 0, GENERIC_READ, WICDecodeMetadataCacheOnDemand, &decoder);
 
 	if (FAILED(hr))
 		return nullptr;
-
-
-
-	// 프레임 얻기
-
 	IWICBitmapFrameDecode* frameDecode = 0;
-
-	// 0번 프레임을 읽어들임.
 
 	hr = decoder->GetFrame(0, &frameDecode);
 
 	if (FAILED(hr))
-
 	{
 
 		decoder->Release();
@@ -113,10 +115,6 @@ string Direct2DModule::LoadBitmapImage(string filename)
 		return nullptr;
 
 	}
-
-
-
-	// 컨버터 생성
 
 	IWICFormatConverter* converter = 0;
 
@@ -128,7 +126,6 @@ string Direct2DModule::LoadBitmapImage(string filename)
 		return nullptr;
 	}
 
-	// 컨버터 초기화
 	hr = converter->Initialize(
 		frameDecode,
 		GUID_WICPixelFormat32bppPBGRA,
@@ -145,10 +142,9 @@ string Direct2DModule::LoadBitmapImage(string filename)
 	}
 
 
-	// WIC 비트맵으로부터 D2D 비트맵 생성
 	hr = renderTarget->CreateBitmapFromWicBitmap(converter, 0, &bitmap);
-	bitmapDictionary.insert({ filename, bitmap });
-	// 자원 해제
+	bitmapDictionary.insert(make_pair(filename, bitmap));
+
 	decoder->Release();
 	frameDecode->Release();
 	converter->Release();
@@ -156,42 +152,18 @@ string Direct2DModule::LoadBitmapImage(string filename)
 	return filename;
 }
 
-void Direct2DModule::AddPen(vector4 color)
-{
-	ID2D1SolidColorBrush* pen;
-	renderTarget->CreateSolidColorBrush(ColorF(color.x, color.y, color.z, color.w), (ID2D1SolidColorBrush**)&pen);
-	
-	if (penDictionary.find(color) != penDictionary.end())
-	{
-		penDictionary.insert({ color,pen });
-	}
-}
-
-ID2D1SolidColorBrush* Direct2DModule::UsePen(vector4 color)
-{
-	if (penDictionary.find(color) != penDictionary.end())
-	{
-		AddPen(color);
-	}
-	return brushDictionary.at(color);
-}
-
 void Direct2DModule::AddBrush(vector4 color)
 {
 	ID2D1SolidColorBrush* brush;
 	renderTarget->CreateSolidColorBrush(ColorF(color.x, color.y, color.z, color.w), (ID2D1SolidColorBrush**)&brush);
-
-	if (brushDictionary.find(color) != brushDictionary.end())
-	{
-		brushDictionary.insert({ color,brush });
-	}
+	brushDictionary.insert(make_pair(color,brush));
 }
 
 ID2D1SolidColorBrush* Direct2DModule::UseBrush(vector4 color)
 {
-	if (brushDictionary.find(color) != penDictionary.end())
+	if (brushDictionary.find(color) != brushDictionary.end())
 	{
-		AddPen(color);
+		AddBrush(color);
 	}
 	return brushDictionary.at(color);
 }
@@ -206,8 +178,7 @@ vector2 Direct2DModule::GetBitmapSize(string filename)
 
 void Direct2DModule::DrawRectangle(vector2 pos, vector2 size, float rotation, Meterial* meterial)
 {
-	ID2D1SolidColorBrush* brush;
-	ID2D1SolidColorBrush* pen;
+	
 	D2D1_RECT_F rectangle;
 	D2D1_POINT_2F center = { pos.x,  size.y };
 
@@ -218,8 +189,8 @@ void Direct2DModule::DrawRectangle(vector2 pos, vector2 size, float rotation, Me
 
 	renderTarget->SetTransform(Matrix3x2F::Rotation(rotation, center));
 	
-	renderTarget->DrawRectangle(rectangle, pen);
-	renderTarget->FillRectangle(rectangle, brush);
+	renderTarget->DrawRectangle(rectangle, UseBrush(meterial->pen));
+	renderTarget->FillRectangle(rectangle, UseBrush(meterial->brush));
 
 	D2D1_POINT_2F centerz = { 0,0 };
 	renderTarget->SetTransform(Matrix3x2F::Rotation(0, centerz));
@@ -227,8 +198,6 @@ void Direct2DModule::DrawRectangle(vector2 pos, vector2 size, float rotation, Me
 
 void Direct2DModule::DrawEllipse(vector2 pos, vector2 size, float rotation, Meterial* meterial)
 {
-	ID2D1SolidColorBrush* brush;
-	ID2D1SolidColorBrush* pen;
 	D2D1_ELLIPSE ellipse;
 
 	ellipse.radiusX = size.x / 2;
@@ -238,42 +207,32 @@ void Direct2DModule::DrawEllipse(vector2 pos, vector2 size, float rotation, Mete
 
 	D2D1_POINT_2F center = { pos.x,  pos.y };
 	renderTarget->SetTransform(Matrix3x2F::Rotation(rotation, center));
-	renderTarget->CreateSolidColorBrush(ColorF(meterial->pen.x, meterial->pen.y, meterial->pen.z, meterial->pen.w), (ID2D1SolidColorBrush**)&pen);
-	renderTarget->CreateSolidColorBrush(ColorF(meterial->brush.x, meterial->brush.y, meterial->brush.z, meterial->brush.w), (ID2D1SolidColorBrush**)&brush);
-	renderTarget->DrawEllipse(ellipse, pen);
-	renderTarget->FillEllipse(ellipse, brush);
-
+	renderTarget->DrawEllipse(ellipse, UseBrush(meterial->pen));
+	renderTarget->FillEllipse(ellipse, UseBrush(meterial->brush));
 	D2D1_POINT_2F centerz = { 0,0 };
 	renderTarget->SetTransform(Matrix3x2F::Rotation(0, centerz));
 }
 
 void Direct2DModule::DrawLine(vector2 start, vector2 end, float thickness, Meterial* meterial)
 {
-	ID2D1SolidColorBrush* pen;
-	renderTarget->CreateSolidColorBrush(ColorF(meterial->pen.x, meterial->pen.y, meterial->pen.z, meterial->pen.w), (ID2D1SolidColorBrush**)&pen);
-
 	renderTarget->DrawLine(
 		Point2F(start.x, start.y),
 		Point2F(end.x, end.y),
-		pen,
+		UseBrush(meterial->pen),
 		thickness,
 		nullptr
 	);
 }
 
-void Direct2DModule::DrawTextBox(vector2 pos, vector2 size, string text, Meterial* meterial)
+void Direct2DModule::DrawTextBox(vector2 pos, vector2 size, string text, string fontFamily, Meterial* meterial)
 {
 	TCHAR* str = ToTCHAR(text);
-
-	ID2D1SolidColorBrush* pen;
-	renderTarget->CreateSolidColorBrush(ColorF(meterial->pen.x, meterial->pen.y, meterial->pen.z, meterial->pen.w), (ID2D1SolidColorBrush**)&pen);
-
 	renderTarget->DrawText(
 		str,
 		text.length() - 1,
-		textFormatList.at(0),
+		textFormatDictionary.at(fontFamily),
 		RectF(pos.x, pos.y, pos.x + size.x, pos.y + size.y),
-		pen
+		UseBrush(meterial->pen)
 	);
 }
 

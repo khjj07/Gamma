@@ -57,7 +57,7 @@ namespace GammaEngine
 	/// <summary>
 	/// Tween과 관련한 정보를 포함하는 기본 구조체 
 	/// </summary>
-	struct TweenData
+	struct GammaEngineAPI TweenData
 	{
 		float duration;//기간
 		function<void()> callback;//콜백함수
@@ -68,7 +68,7 @@ namespace GammaEngine
 	/// <summary>
 	/// Float형 TweenData
 	/// </summary>
-	struct TweenDataF :public TweenData
+	struct GammaEngineAPI TweenDataF :public TweenData
 	{
 		function<float(float)> easingFunc;
 		float& src;
@@ -90,7 +90,7 @@ namespace GammaEngine
 	/// <summary>
 	/// vector2형 TweenData
 	/// </summary>
-	struct TweenDataV :public TweenData
+	struct GammaEngineAPI TweenDataV :public TweenData
 	{
 		function<float(float)> easingFunc;
 		vector2& src;

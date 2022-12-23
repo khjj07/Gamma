@@ -28,7 +28,7 @@ namespace GammaEngine
 		static void DrawRectangle(vector2 pos, vector2 size, float rotation, Meterial* meterial);
 		static void DrawEllipse(vector2 pos, vector2 size, float rotation, Meterial* meterial);
 		static void DrawLine(vector2 start, vector2 end, float thickness, Meterial* meterial);
-		static void DrawTextBox(vector2 pos, vector2 size, string text, Meterial* meterial);
+		static void DrawTextBox(vector2 pos, vector2 size, string text, string fontFamily, Meterial* meterial);
 		static void DrawBitmap(string bitmap, vector2 pos, vector2 size, float rotation, Meterial* meterial);
 		static string LoadBitmapImage(string filename);
 		static vector2 GetBitmapSize(string bitmap);

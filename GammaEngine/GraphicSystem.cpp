@@ -62,9 +62,9 @@ void GammaEngine::GraphicSystem::DrawLine(vector2 start, vector2 end, float thic
 	render->DrawLine(start, end, thickness, meterial);
 }
 
-void GammaEngine::GraphicSystem::DrawTextBox(vector2 pos, vector2 size, string text, Meterial* meterial)
+void GammaEngine::GraphicSystem::DrawTextBox(vector2 pos, vector2 size, string text, string fontFamily, Meterial* meterial)
 {
-	render->DrawTextBox(pos, size, text, meterial);
+	render->DrawTextBox(pos, size, text, fontFamily, meterial);
 }
 
 void GammaEngine::GraphicSystem::DrawBitmap(string bitmap, vector2 pos, vector2 size, float rotation, Meterial* meterial)

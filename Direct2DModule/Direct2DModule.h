@@ -32,13 +32,11 @@ public:
 	virtual void DrawRectangle(vector2 pos, vector2 size, float rotation, Meterial* meterial);
 	virtual void DrawEllipse(vector2 pos, vector2 size, float rotation, Meterial* meterial);
 	virtual void DrawLine(vector2 start, vector2 end, float thickness, Meterial* meterial);
-	virtual void DrawTextBox(vector2 pos, vector2 size, string text, Meterial* meterial);
+	virtual void DrawTextBox(vector2 pos, vector2 size, string text, string fontFamily, Meterial* meterial);
 	virtual void DrawBitmap(string bitmap, vector2 pos, vector2 size, float rotation, Meterial* meterial);
 	virtual string LoadBitmapImage(string filename);
 	virtual vector2 GetBitmapSize(string filename);
-	virtual void AddPen(vector4);
-	virtual void AddBrush(vector4);
-	ID2D1SolidColorBrush* UsePen(vector4);
+	void AddBrush(vector4);
 	ID2D1SolidColorBrush* UseBrush(vector4);
 
 public:
@@ -47,9 +45,8 @@ public:
 	IWICImagingFactory* imageFactory;
 	static ID2D1HwndRenderTarget* renderTarget;
 public:
-	vector<IDWriteTextFormat*> textFormatList;
+	unordered_map<string, IDWriteTextFormat*> textFormatDictionary;
 	unordered_map<string, ID2D1Bitmap*> bitmapDictionary;
-	unordered_map<vector4, ID2D1SolidColorBrush*> penDictionary;
 	unordered_map<vector4, ID2D1SolidColorBrush*> brushDictionary;
 };
 
