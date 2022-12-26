@@ -3,7 +3,8 @@
 using namespace GammaEngine;
 GammaEngine::BitmapRenderer::BitmapRenderer(GameObject* t) :Renderer(t)
 {
-
+	meterial->pen = vector4(0, 0, 0, 0);
+	meterial->brush = vector4(1, 1, 1, 1);
 }
 
 GammaEngine::BitmapRenderer::~BitmapRenderer()

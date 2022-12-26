@@ -21,7 +21,7 @@ namespace GammaEngine
 		~BitmapRenderer();
 
 	public:
-		virtual void Render() abstract;
+		virtual void Render();
 
 	public:
 		void LoadBitmapImage(wstring filename);

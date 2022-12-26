@@ -43,6 +43,10 @@ HRESULT Direct2DModule::Initialize(HWND hWnd)
 			wstring font =(L"Verdana");
 			CreateTextFormat(font, DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, 30);
 		}
+		if (S_OK == CoCreateInstance(CLSID_WICImagingFactory, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&imageFactory)))
+		{
+
+		}
 	}
 	return 0;
 }
@@ -87,6 +91,7 @@ void Direct2DModule::Release()
 	bitmapDictionary.clear();
 	renderTarget->Release();
 	writeFactory->Release();
+	imageFactory->Release();
 	factory->Release();
 }
 
@@ -145,6 +150,7 @@ wstring Direct2DModule::LoadBitmapImage(wstring filename)
 
 
 	hr = renderTarget->CreateBitmapFromWicBitmap(converter, 0, &bitmap);
+
 	bitmapDictionary.insert(make_pair(filename, bitmap));
 
 	decoder->Release();
@@ -241,5 +247,5 @@ void Direct2DModule::DrawBitmap(wstring bitmap, vector2 pos, vector2 size, float
 	rectangle.right = pos.x + size.x / 2;
 	rectangle.bottom = pos.y + size.y / 2;
 	renderTarget->SetTransform(Matrix3x2F::Rotation(rotation, center));
-	renderTarget->DrawBitmap(bitmapDictionary[bitmap], rectangle, 1.0f, D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR);
+	renderTarget->DrawBitmap(bitmapDictionary[bitmap], rectangle, meterial->brush.w, D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR);
 }
