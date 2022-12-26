@@ -3,7 +3,7 @@
 using namespace std;
 
 class RenderModule;
-class Meterial;
+class Material;
 namespace GammaEngine
 {
 	class Renderer;
@@ -25,13 +25,13 @@ namespace GammaEngine
 		void Resize(int width, int height);
 
 	public:
-		static void DrawRectangle(vector2 pos, vector2 size, float rotation, Meterial* meterial);
-		static void DrawEllipse(vector2 pos, vector2 size, float rotation, Meterial* meterial);
-		static void DrawLine(vector2 start, vector2 end, float thickness, Meterial* meterial);
-		static void DrawTextBox(vector2 pos, vector2 size, string text, string fontFamily, Meterial* meterial);
-		static void DrawBitmap(string bitmap, vector2 pos, vector2 size, float rotation, Meterial* meterial);
-		static string LoadBitmapImage(string filename);
-		static vector2 GetBitmapSize(string bitmap);
+		static void DrawRectangle(vector2 pos, vector2 size, float rotation, Material* meterial);
+		static void DrawEllipse(vector2 pos, vector2 size, float rotation, Material* meterial);
+		static void DrawLine(vector2 start, vector2 end, float thickness, Material* meterial);
+		static void DrawTextBox(vector2 pos, vector2 size, wstring text, wstring fontFamily, Material* meterial);
+		static void DrawBitmap(wstring bitmap, vector2 pos, vector2 size, float rotation, Material* meterial);
+		static wstring LoadBitmapImage(wstring filename);
+		static vector2 GetBitmapSize(wstring bitmap);
 
 	public:
 		static RenderModule* render;

@@ -72,6 +72,9 @@
     <ClCompile Include="main.cpp">
       <Filter>main</Filter>
     </ClCompile>
+    <ClCompile Include="DebugScript.cpp">
+      <Filter>Game\Debug</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\GammaEngine\BoxScript.h">
@@ -109,6 +112,9 @@
     </ClInclude>
     <ClInclude Include="Scene1.h">
       <Filter>Game\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugScript.h">
+      <Filter>Game\Debug</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

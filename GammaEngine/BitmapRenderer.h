@@ -24,9 +24,9 @@ namespace GammaEngine
 		virtual void Render() abstract;
 
 	public:
-		void LoadBitmapImage(string filename);
+		void LoadBitmapImage(wstring filename);
 
 	public:
-		string bitmap;
+		wstring bitmap;
 	};
 }

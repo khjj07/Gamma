@@ -1,6 +1,6 @@
 #pragma once
-#include <math.h>
-
+#include <cmath>
+#include <xhash>
 /// <summary>
 /// 2방향 벡터 자료형
 /// </summary>
@@ -139,7 +139,22 @@ struct vector4
 		w = d;
 	}
 
+	bool operator == (const vector4& other) const {
+		if (x == other.x && y == other.y && z==other.z && w==other.w)
+			return true;
+		return false;
+	}
 };
+
+namespace std {
+	template <>
+	struct hash<vector4> {
+		size_t operator()(const vector4& vec) const {
+			hash<float> hash_func; 
+			return hash_func(vec.x + vec.y*10 + vec.w*100 + vec.z*1000);
+		}
+	};
+}
 
 struct rect2D {
 	vector2 min;

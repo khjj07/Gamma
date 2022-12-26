@@ -16,5 +16,5 @@ void GammaEngine::EllipseRenderer::Render()
 	renderSize.x = renderSize.x * transform->scale.x;
 	renderSize.y = renderSize.y * transform->scale.y;
 	Renderer::Adjust(renderPos, renderSize);
-
+	GraphicSystem::DrawEllipse(renderPos, renderSize, transform->rotation, meterial);
 }

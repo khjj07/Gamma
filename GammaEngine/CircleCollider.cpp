@@ -19,7 +19,7 @@ GammaEngine::CollisionResponse CircleCollider::Collide(Collider* other, bool col
 GammaEngine::CollisionResponse CircleCollider::Check(BoxCollider* other, bool collided)
 {
 	CollisionResponse result;
-	result.state = Not;
+	result.state = CollisionState::Not;
 	result.other = this;
 	bool check;
 
@@ -34,19 +34,19 @@ GammaEngine::CollisionResponse CircleCollider::Check(BoxCollider* other, bool co
 
 	if (!collided && check)
 	{
-		result.state = Enter;
+		result.state = CollisionState::Enter;
 	}
 	else if (collided && check)
 	{
-		result.state = Stay;
+		result.state = CollisionState::Stay;
 	}
 	else if (!collided && !check)
 	{
-		result.state = Not;
+		result.state = CollisionState::Not;
 	}
 	else if (collided && !check)
 	{
-		result.state = Exit;
+		result.state = CollisionState::Exit;
 	}
 
 	return result;
@@ -56,7 +56,7 @@ GammaEngine::CollisionResponse CircleCollider::Check(BoxCollider* other, bool co
 CollisionResponse GammaEngine::CircleCollider::Check(CircleCollider* other, bool collided)
 {
 	CollisionResponse result;
-	result.state = Not;
+	result.state = CollisionState::Not;
 
 	vector2 centerA = transform->position;
 	float rangeA = (transform->scale.x + transform->scale.y) / 2 * radius;
@@ -70,19 +70,19 @@ CollisionResponse GammaEngine::CircleCollider::Check(CircleCollider* other, bool
 
 	if (!collided && check)
 	{
-		result.state = Enter;
+		result.state = CollisionState::Enter;
 	}
 	else if (collided && check)
 	{
-		result.state = Stay;
+		result.state = CollisionState::Stay;
 	}
 	else if (!collided && !check)
 	{
-		result.state = Not;
+		result.state = CollisionState::Not;
 	}
 	else if (collided && !check)
 	{
-		result.state = Exit;
+		result.state = CollisionState::Exit;
 	}
 
 	return result;
@@ -91,26 +91,26 @@ CollisionResponse GammaEngine::CircleCollider::Check(CircleCollider* other, bool
 CollisionResponse GammaEngine::CircleCollider::Check(LineCollider* other, bool collided)
 {
 	CollisionResponse result;
-	result.state = Not;
+	result.state = CollisionState::Not;
 
 	bool check = GetIntersectPoint(other->startPoint, other->endPoint, transform->position, radius);
 	result.other = this;
 
 	if (!collided && check)
 	{
-		result.state = Enter;
+		result.state = CollisionState::Enter;
 	}
 	else if (collided && check)
 	{
-		result.state = Stay;
+		result.state = CollisionState::Stay;
 	}
 	else if (!collided && !check)
 	{
-		result.state = Not;
+		result.state = CollisionState::Not;
 	}
 	else if (collided && !check)
 	{
-		result.state = Exit;
+		result.state = CollisionState::Exit;
 	}
 
 	return result;

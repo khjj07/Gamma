@@ -55,8 +55,8 @@ void GammaEngine::WindowSystem::Initialize(int& screenWidth,int& screenHeight)
 	wc.hIconSm = wc.hIcon;
 	wc.hCursor = LoadCursor(NULL, IDI_WINLOGO);
 	wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
-	wc.lpszMenuName = MAKEINTRESOURCEW(IDC_GAMMAENGINE);
-	wc.lpszClassName = applicationName;
+	wc.lpszMenuName = (LPCSTR)MAKEINTRESOURCEW(IDC_GAMMAENGINE);
+	wc.lpszClassName = (LPCSTR)applicationName;
 	wc.cbSize = sizeof(WNDCLASSEX);
 
 	RegisterClassEx(&wc);
@@ -81,7 +81,7 @@ void GammaEngine::WindowSystem::Initialize(int& screenWidth,int& screenHeight)
 		//posY = (GetSystemMetrics(SM_CYSCREEN)) - screenHeight / 2;
 	}
 
-	hWnd = CreateWindowEx(WS_EX_APPWINDOW, applicationName, applicationName, WS_OVERLAPPEDWINDOW, posX, posY, screenWidth, screenHeight, NULL, NULL, hInstance, NULL);
+	hWnd = CreateWindowEx(WS_EX_APPWINDOW, (LPCSTR)applicationName, (LPCSTR)applicationName, WS_OVERLAPPEDWINDOW, posX, posY, screenWidth, screenHeight, NULL, NULL, hInstance, NULL);
 	
 	ShowWindow(hWnd, SW_SHOW);
 	SetForegroundWindow(hWnd);
@@ -129,7 +129,7 @@ void GammaEngine::WindowSystem::ShutDown()
 	DestroyWindow(hWnd);
 	hWnd = NULL;
 
-	UnregisterClass(applicationName, hInstance);
+	UnregisterClass((LPCSTR)applicationName, hInstance);
 	hInstance = NULL;
 	ApplicationHandler = NULL;
 }

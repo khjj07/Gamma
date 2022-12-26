@@ -4,7 +4,7 @@ using namespace GammaEngine;
 GammaEngine::TextRenderer::TextRenderer(GameObject* t) :Renderer(t)
 {
 	size = vector2(100, 100);
-	text = string("");
+	text = wstring(L"");
 }
 
 GammaEngine::TextRenderer::~TextRenderer()
@@ -21,7 +21,7 @@ void GammaEngine::TextRenderer::Render()
 		renderSize.x = renderSize.x * transform->scale.x;
 		renderSize.y = renderSize.y * transform->scale.y;
 		Renderer::Adjust(renderPos);
-		GraphicSystem::DrawTextBox(renderPos, renderSize, text,string("Verdana"), meterial);
+		GraphicSystem::DrawTextBox(renderPos, renderSize, text,wstring(L"Verdana"), meterial);
 	}
 	
 }

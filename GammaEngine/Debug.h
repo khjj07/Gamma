@@ -1,7 +1,10 @@
 #pragma once
+#include <string>
 /// <summary>
 /// 디버그용 클래스
 /// </summary>
+
+using namespace std;
 class Debug : public GameObject
 {
 public:
@@ -25,5 +28,5 @@ public:
 	virtual void Update();
 
 public:
-	string fps;
+	wstring fps;
 };

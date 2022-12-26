@@ -11,7 +11,7 @@ GammaEngine::BitmapRenderer::~BitmapRenderer()
 
 }
 
-void GammaEngine::BitmapRenderer::LoadBitmapImage(string filename)
+void GammaEngine::BitmapRenderer::LoadBitmapImage(wstring filename)
 {
 	bitmap = GraphicSystem::LoadBitmapImage(filename);
 	size = GraphicSystem::GetBitmapSize(bitmap);

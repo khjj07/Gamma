@@ -6,7 +6,7 @@ namespace GammaEngine
 	/// <summary>
 	/// 콜리전의 현재 상태를 구분하는 enum 타입
 	/// </summary>
-	enum CollisionState
+	enum class CollisionState
 	{
 		Enter,
 		Exit,
@@ -19,6 +19,7 @@ namespace GammaEngine
 	/// </summary>
 	struct GammaEngineAPI CollisionResponse
 	{
+		CollisionResponse() : state(CollisionState::Not), other(nullptr){}
 		CollisionState state; //상태
 		Collider* other; //다른 충돌체
 		vector2 normal; //법선벡터

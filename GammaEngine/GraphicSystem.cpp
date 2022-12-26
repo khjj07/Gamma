@@ -47,37 +47,37 @@ void GammaEngine::GraphicSystem::Resize(int width, int height)
 	render->Resize(width, height);
 }
 
-void GammaEngine::GraphicSystem::DrawRectangle(vector2 pos, vector2 size, float rotation, Meterial* meterial)
+void GammaEngine::GraphicSystem::DrawRectangle(vector2 pos, vector2 size, float rotation, Material* meterial)
 {
 	render->DrawRectangle(pos, size, rotation, meterial);
 }
 
-void GammaEngine::GraphicSystem::DrawEllipse(vector2 pos, vector2 size, float rotation, Meterial* meterial)
+void GammaEngine::GraphicSystem::DrawEllipse(vector2 pos, vector2 size, float rotation, Material* meterial)
 {
 	render->DrawEllipse(pos, size, rotation, meterial);
 }
 
-void GammaEngine::GraphicSystem::DrawLine(vector2 start, vector2 end, float thickness, Meterial* meterial)
+void GammaEngine::GraphicSystem::DrawLine(vector2 start, vector2 end, float thickness, Material* meterial)
 {
 	render->DrawLine(start, end, thickness, meterial);
 }
 
-void GammaEngine::GraphicSystem::DrawTextBox(vector2 pos, vector2 size, string text, string fontFamily, Meterial* meterial)
+void GammaEngine::GraphicSystem::DrawTextBox(vector2 pos, vector2 size, wstring text, wstring fontFamily, Material* meterial)
 {
 	render->DrawTextBox(pos, size, text, fontFamily, meterial);
 }
 
-void GammaEngine::GraphicSystem::DrawBitmap(string bitmap, vector2 pos, vector2 size, float rotation, Meterial* meterial)
+void GammaEngine::GraphicSystem::DrawBitmap(wstring bitmap, vector2 pos, vector2 size, float rotation, Material* meterial)
 {
 	render->DrawBitmap(bitmap,pos, size, rotation, meterial);
 }
 
-string GammaEngine::GraphicSystem::LoadBitmapImage(string filename)
+wstring GammaEngine::GraphicSystem::LoadBitmapImage(wstring filename)
 {
 	return render->LoadBitmapImage(filename);
 }
 
-vector2 GammaEngine::GraphicSystem::GetBitmapSize(string bitmap)
+vector2 GammaEngine::GraphicSystem::GetBitmapSize(wstring bitmap)
 {
 	return render->GetBitmapSize(bitmap);
 }

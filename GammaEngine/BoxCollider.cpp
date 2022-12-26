@@ -19,7 +19,7 @@ CollisionResponse GammaEngine::BoxCollider::Collide(Collider* other, bool collid
 CollisionResponse GammaEngine::BoxCollider::Check(BoxCollider* other, bool collided)
 {
 	CollisionResponse result;
-	result.state = Not;
+	result.state = CollisionState::Not;
 	result.other = this;
 
 	bool check;
@@ -34,19 +34,19 @@ CollisionResponse GammaEngine::BoxCollider::Check(BoxCollider* other, bool colli
 	
 	if (!collided && check)
 	{
-		result.state = Enter;
+		result.state = CollisionState::Enter;
 	}
 	else if (collided && check)
 	{
-		result.state = Stay;
+		result.state = CollisionState::Stay;
 	}
 	else if (!collided && !check)
 	{
-		result.state = Not;
+		result.state = CollisionState::Not;
 	}
 	else if (collided && !check)
 	{
-		result.state = Exit;
+		result.state = CollisionState::Exit;
 	}
 
 	return result;
@@ -55,7 +55,7 @@ CollisionResponse GammaEngine::BoxCollider::Check(BoxCollider* other, bool colli
 CollisionResponse GammaEngine::BoxCollider::Check(CircleCollider* other, bool collided)
 {
 	CollisionResponse result;
-	result.state = Not;
+	result.state = CollisionState::Not;
 	result.other = this;
 	bool check;
 	if (transform->rotation == 0)
@@ -73,19 +73,19 @@ CollisionResponse GammaEngine::BoxCollider::Check(CircleCollider* other, bool co
 
 	if (!collided && check)
 	{
-		result.state = Enter;
+		result.state = CollisionState::Enter;
 	}
 	else if (collided && check)
 	{
-		result.state = Stay;
+		result.state = CollisionState::Stay;
 	}
 	else if (!collided && !check)
 	{
-		result.state = Not;
+		result.state = CollisionState::Not;
 	}
 	else if (collided && !check)
 	{
-		result.state = Exit;
+		result.state = CollisionState::Exit;
 	}
 
 	return result;
@@ -94,26 +94,26 @@ CollisionResponse GammaEngine::BoxCollider::Check(CircleCollider* other, bool co
 CollisionResponse GammaEngine::BoxCollider::Check(LineCollider* other, bool collided)
 {
 	CollisionResponse result;
-	result.state = Not;
+	result.state = CollisionState::Not;
 	result.other = this;
 	bool check;
 
 	check = LineToOBB(other, this);
 	if (!collided && check)
 	{
-		result.state = Enter;
+		result.state = CollisionState::Enter;
 	}
 	else if (collided && check)
 	{
-		result.state = Stay;
+		result.state = CollisionState::Stay;
 	}
 	else if (!collided && !check)
 	{
-		result.state = Not;
+		result.state = CollisionState::Not;
 	}
 	else if (collided && !check)
 	{
-		result.state = Exit;
+		result.state = CollisionState::Exit;
 	}
 
 	return result;

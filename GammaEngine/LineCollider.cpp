@@ -20,26 +20,26 @@ CollisionResponse GammaEngine::LineCollider::Collide(Collider* other, bool colli
 CollisionResponse GammaEngine::LineCollider::Check(BoxCollider* other, bool collided)
 {
 	CollisionResponse result;
-	result.state = Not;
+	result.state = CollisionState::Not;
 	result.other = this;
 	bool check;
 	
 	check = LineToOBB(this,other);
 	if (!collided && check)
 	{
-		result.state = Enter;
+		result.state = CollisionState::Enter;
 	}
 	else if (collided && check)
 	{
-		result.state = Stay;
+		result.state = CollisionState::Stay;
 	}
 	else if (!collided && !check)
 	{
-		result.state = Not;
+		result.state = CollisionState::Not;
 	}
 	else if (collided && !check)
 	{
-		result.state = Exit;
+		result.state = CollisionState::Exit;
 	}
 
 	return result;
@@ -48,26 +48,26 @@ CollisionResponse GammaEngine::LineCollider::Check(BoxCollider* other, bool coll
 CollisionResponse GammaEngine::LineCollider::Check(CircleCollider* other, bool collided)
 {
 	CollisionResponse result;
-	result.state = Not;
+	result.state = CollisionState::Not;
 
 	bool check = GetIntersectPoint(startPoint, endPoint, other->transform->position, other->radius);
 	result.other = this;
 
 	if (!collided && check)
 	{
-		result.state = Enter;
+		result.state = CollisionState::Enter;
 	}
 	else if (collided && check)
 	{
-		result.state = Stay;
+		result.state = CollisionState::Stay;
 	}
 	else if (!collided && !check)
 	{
-		result.state = Not;
+		result.state = CollisionState::Not;
 	}
 	else if (collided && !check)
 	{
-		result.state = Exit;
+		result.state = CollisionState::Exit;
 	}
 
 	return result;
@@ -76,26 +76,26 @@ CollisionResponse GammaEngine::LineCollider::Check(CircleCollider* other, bool c
 CollisionResponse GammaEngine::LineCollider::Check(LineCollider* other, bool collided)
 {
 	CollisionResponse result;
-	result.state = Not;
+	result.state = CollisionState::Not;
 
 	 bool check= GetIntersectPoint(startPoint, endPoint, other->startPoint, other->endPoint, result.position);
 	 result.other = this;
 
 	 if (!collided && check)
 	 {
-		 result.state = Enter;
+		 result.state = CollisionState::Enter;
 	 }
 	 else if (collided && check)
 	 {
-		 result.state = Stay;
+		 result.state = CollisionState::Stay;
 	 }
 	 else if (!collided && !check)
 	 {
-		 result.state = Not;
+		 result.state = CollisionState::Not;
 	 }
 	 else if (collided && !check)
 	 {
-		 result.state = Exit;
+		 result.state = CollisionState::Exit;
 	 }
 
 	return result;
