@@ -20,7 +20,7 @@ namespace GammaEngine {
 		void AddFrame(wstring);
 
 	private:
-		static function<void()> PlayFunction[6];
+		static function<void(wstring&, float, vector<wstring>&, int&)> PlayFunction[6];
 		wstring& image;
 	private:
 		static void PlayOnceForward(wstring& image, float playtime, vector<wstring>& images, int& count);

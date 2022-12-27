@@ -127,6 +127,9 @@
       <Filter>Framework\Component\Collider</Filter>
     </ClInclude>
     <ClInclude Include="GammaEngine.h" />
+    <ClInclude Include="Animation.h">
+      <Filter>Framework\Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GraphicSystem.cpp">
@@ -206,6 +209,9 @@
     </ClCompile>
     <ClCompile Include="LineCollider.cpp">
       <Filter>Framework\Component\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation.cpp">
+      <Filter>Framework\Component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
