@@ -47,20 +47,14 @@ void GammaEngine::Animation::PlayOnceBackward(wstring& image, float playtime, ve
 
 void GammaEngine::Animation::PlayOncePingpong(wstring& image, float playtime, vector<wstring>& images, int& count)
 {
+	bool forward = true;
 	TimerHandler* handler = Timer::Delay(playtime / images.size()*0.5, true, [playtime, handler, &image, images, &count]() {
 		image = GraphicSystem::LoadBitmapImage(images[count]);
 		if (count == images.size()-1)
 		{
-			Timer::Cancel(handler);
-			TimerHandler* handler2 = Timer::Delay(playtime / images.size() * 0.5, true, [handler2, &image, images, &count]() {
-					image = GraphicSystem::LoadBitmapImage(images[count]);
-					if (count == 0)
-					{
-						Timer::Cancel(handler2);
-					}
-					count--;
-			});
+			
 		}
+		
 		count++;
 	});
 }
@@ -97,7 +91,7 @@ void GammaEngine::Animation::PlayLoopPingpong(wstring& image, float playtime, ve
 		if (count == images.size() - 1)
 		{
 			Timer::Cancel(handler);
-			TimerHandler* handler2 = Timer::Delay(playtime / images.size() * 0.5, true, [playtime, handler2, &image, &images, &count]() {
+			TimerHandler* handler2 = Timer::Delay(playtime / images.size() * 0.5, true, [playtime, handler2, &image, images, &count]() {
 				image = GraphicSystem::LoadBitmapImage(images[count]);
 				if (count == 0)
 				{
