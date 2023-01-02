@@ -20,9 +20,6 @@ namespace GammaEngine {
 		void AddFrame(wstring);
 
 	private:
-		static function<void(wstring&, float, vector<wstring>&, int&)> PlayFunction[6];
-		wstring& image;
-	private:
 		static void PlayOnceForward(wstring& image, float playtime, vector<wstring>& images, int& count);
 		static void PlayOnceBackward(wstring& image, float playtime, vector<wstring>& images, int& count);
 		static void PlayOncePingpong(wstring& image, float playtime, vector<wstring>& images, int& count);
@@ -33,6 +30,9 @@ namespace GammaEngine {
 	public:
 		float playtime;
 
+	private:
+		static function<void(wstring&, float, vector<wstring>&, int&)> PlayFunction[6];
+		wstring& image;
 	private: 
 		vector<wstring> images;
 		int count;

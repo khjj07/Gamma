@@ -41,7 +41,7 @@
 #include "BitmapRenderer.h"
 #include "LineRenderer.h"
 #include "TextRenderer.h"
-
+#include "Animation.h"
 //collision
 #include "Collider.h"
 #include "BoxCollider.h"

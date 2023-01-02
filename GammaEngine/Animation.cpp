@@ -22,8 +22,9 @@ GammaEngine::Animation::~Animation()
 
 void GammaEngine::Animation::PlayOnceForward(wstring& image, float playtime, vector<wstring>& images, int& count)
 {
-	TimerHandler* handler = Timer::Delay(playtime / images.size(), true, [handler,&image,images,&count]() {
-		image=GraphicSystem::LoadBitmapImage(images[count]);
+	count = 0;
+	TimerHandler* handler = Timer::Delay(playtime / images.size(), true, [&image, handler,images,&count]() {
+		wstring image = GraphicSystem::LoadBitmapImage(images[count]);
 		if (count == images.size() - 1)
 		{
 			Timer::Cancel(handler);
@@ -35,8 +36,8 @@ void GammaEngine::Animation::PlayOnceForward(wstring& image, float playtime, vec
 void GammaEngine::Animation::PlayOnceBackward(wstring& image, float playtime, vector<wstring>& images, int& count)
 {
 	count = images.size() - 1;
-	TimerHandler* handler = Timer::Delay(playtime / images.size(), true, [handler, &image, images, &count]() {
-		image = GraphicSystem::LoadBitmapImage(images[count]);
+	TimerHandler* handler = Timer::Delay(playtime / images.size(), true, [&image, handler, images, &count]() {
+		wstring image = GraphicSystem::LoadBitmapImage(images[count]);
 		if (count == 0)
 		{
 			Timer::Cancel(handler);
@@ -48,21 +49,34 @@ void GammaEngine::Animation::PlayOnceBackward(wstring& image, float playtime, ve
 void GammaEngine::Animation::PlayOncePingpong(wstring& image, float playtime, vector<wstring>& images, int& count)
 {
 	bool forward = true;
-	TimerHandler* handler = Timer::Delay(playtime / images.size()*0.5, true, [playtime, handler, &image, images, &count]() {
-		image = GraphicSystem::LoadBitmapImage(images[count]);
-		if (count == images.size()-1)
+	count = 0;
+	TimerHandler* handler = Timer::Delay(playtime / images.size() * 0.5, true, [&image, &forward, playtime, handler,images, &count]() {
+		wstring image = GraphicSystem::LoadBitmapImage(images[count]);
+		if (forward && count == images.size() - 1)
 		{
-			
+			forward = false;
 		}
-		
-		count++;
+		else if (!forward && count == 0)
+		{
+			Timer::Cancel(handler);
+		}
+
+		if (forward)
+		{
+			count++;
+		}
+		else
+		{
+			count--;
+		}
 	});
 }
 
 void GammaEngine::Animation::PlayLoopForward(wstring& image, float playtime, vector<wstring>& images, int& count)
 {
-	TimerHandler* handler = Timer::Delay(playtime / images.size(), true, [handler, &image, images, &count]() {
-		image = GraphicSystem::LoadBitmapImage(images[count]);
+	count = 0;
+	TimerHandler* handler = Timer::Delay(playtime / images.size(), true, [&image, handler, images, &count]() {
+		wstring image = GraphicSystem::LoadBitmapImage(images[count]);
 		if (count == images.size() - 1)
 		{
 			count = 0;
@@ -74,8 +88,8 @@ void GammaEngine::Animation::PlayLoopForward(wstring& image, float playtime, vec
 void GammaEngine::Animation::PlayLoopBackward(wstring& image, float playtime, vector<wstring>& images, int& count)
 {
 	count = images.size() - 1;
-	TimerHandler* handler = Timer::Delay(playtime / images.size(), true, [handler, &image, images, &count]() {
-		image = GraphicSystem::LoadBitmapImage(images[count]);
+	TimerHandler* handler = Timer::Delay(playtime / images.size(), true, [&image, handler, images, &count]() {
+		wstring image = GraphicSystem::LoadBitmapImage(images[count]);
 		if (count == 0)
 		{
 			count = images.size() - 1;
@@ -86,30 +100,36 @@ void GammaEngine::Animation::PlayLoopBackward(wstring& image, float playtime, ve
 
 void GammaEngine::Animation::PlayLoopPingpong(wstring& image, float playtime, vector<wstring>& images, int& count)
 {
-	TimerHandler* handler = Timer::Delay(playtime / images.size() * 0.5, true, [playtime, handler, &image, images, &count]() {
+	count = 0;
+	bool forward = true;
+	TimerHandler* handler = Timer::Delay(playtime / images.size() * 0.5, true, [&image, &forward, playtime, handler, images, &count]() {
 		image = GraphicSystem::LoadBitmapImage(images[count]);
-		if (count == images.size() - 1)
+		if (forward && count == images.size() - 1)
 		{
-			Timer::Cancel(handler);
-			TimerHandler* handler2 = Timer::Delay(playtime / images.size() * 0.5, true, [playtime, handler2, &image, images, &count]() {
-				image = GraphicSystem::LoadBitmapImage(images[count]);
-				if (count == 0)
-				{
-					PlayLoopPingpong(image, playtime, images, count);
-				}
-				count--;
-				});
+			forward = false;
 		}
-		count++;
-		});
+		else if (!forward && count == 0)
+		{
+			forward = true;
+		}
+
+		if (forward)
+		{
+			count++;
+		}
+		else
+		{
+			count--;
+		}
+	});
 }
 
 void GammaEngine::Animation::Play(PLAYBACK playback)
 {
-	PlayFunction[playback]();
+	PlayFunction[playback](image, playtime, images, count);
 }
 
-void GammaEngine::Animation::AddFrame(wstring)
+void GammaEngine::Animation::AddFrame(wstring image)
 {
-
+	images.push_back(image);
 }

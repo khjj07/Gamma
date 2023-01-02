@@ -13,6 +13,7 @@ Box2Script::~Box2Script()
 void Box2Script::Start()
 {
 	Tween::Animate(transform->rotation, PLAYBACK::LOOP_FORWARD, 360, EASING::LINEAR, 10);
+	
 	transform->rotation = 40;
 	
 }
