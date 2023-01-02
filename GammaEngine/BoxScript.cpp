@@ -14,7 +14,7 @@ BoxScript::~BoxScript()
 
 void BoxScript::Start()
 {
-	GetComponent<Animation>()->Play(PLAYBACK::ONCE_FORWARD);
+	GetComponent<Animation>()->Play(PLAYBACK::LOOP_FORWARD);
 }
 
 void BoxScript::Update()

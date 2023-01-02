@@ -50,7 +50,7 @@ namespace GammaEngine {
 		vector<Component*>::iterator iter;
 		for (iter = componentList.begin(); iter < componentList.end(); iter++)
 		{
-			if (typeid(T).name() == typeid(**iter).name())
+			if (strcmp(typeid(T).name(), typeid(**iter).name())==0)
 				return (T*)*iter;
 		}
 		return nullptr;

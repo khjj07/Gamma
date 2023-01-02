@@ -9,6 +9,23 @@
 /// 위치 크기 회전 정보를 포함하는 컴포넌트
 /// </summary>
 namespace GammaEngine {
+	struct GammaEngineAPI AnimationData {
+		TimerHandler* handler;
+		wstring& image;
+		vector<wstring>& images;
+		float playtime;
+		int count;
+		bool forward;
+
+		AnimationData(wstring& img, vector<wstring>& imgs)
+			:handler(nullptr),
+			image(img),
+			images(imgs),
+			playtime(1.0f),
+			count(0),
+			forward(true){}
+	};
+
 	class GammaEngineAPI Animation : public Component
 	{
 	public:
@@ -20,22 +37,18 @@ namespace GammaEngine {
 		void AddFrame(wstring);
 
 	private:
-		static void PlayOnceForward(wstring& image, float playtime, vector<wstring>& images, int& count);
-		static void PlayOnceBackward(wstring& image, float playtime, vector<wstring>& images, int& count);
-		static void PlayOncePingpong(wstring& image, float playtime, vector<wstring>& images, int& count);
-		static void PlayLoopForward(wstring& image, float playtime, vector<wstring>& images, int& count);
-		static void PlayLoopBackward(wstring& image, float playtime, vector<wstring>& images, int& count);
-		static void PlayLoopPingpong(wstring& image, float playtime, vector<wstring>& images, int& count);
-
-	public:
-		float playtime;
+		static void PlayOnceForward(AnimationData* data);
+		static void PlayOnceBackward(AnimationData* data);
+		static void PlayOncePingpong(AnimationData* data);
+		static void PlayLoopForward(AnimationData* data);
+		static void PlayLoopBackward(AnimationData* data);
+		static void PlayLoopPingpong(AnimationData* data);
 
 	private:
-		static function<void(wstring&, float, vector<wstring>&, int&)> PlayFunction[6];
-		wstring& image;
+		static function<void(AnimationData*)> PlayFunction[6];
+		
 	private: 
 		vector<wstring> images;
-		int count;
 	};
 }
 
