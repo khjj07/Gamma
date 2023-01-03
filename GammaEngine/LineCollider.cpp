@@ -103,5 +103,5 @@ CollisionResponse GammaEngine::LineCollider::Check(LineCollider* other, bool col
 
 vector2 GammaEngine::LineCollider::GetNormalVector(vector2 v)
 {
-	return vector2::Normalize(v - transform->position);
+	return vector2::Normalize(v - transform->GetWorldPosition());
 }

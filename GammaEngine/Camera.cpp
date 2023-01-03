@@ -17,7 +17,8 @@ GammaEngine::Camera::~Camera()
 
 vector2 GammaEngine::Camera::ScreenToWorldPoint(vector2 p)
 {
-	POINT center = { Screen::width / 2 - transform->position.x, Screen::height / 2 -transform->position.y} ;
+	vector2 position = transform->GetWorldPosition();
+	POINT center = { Screen::width / 2 - position.x, Screen::height / 2 - position.y} ;
 	ScreenToClient(Input::hWnd, &center);
 	vector2 diff = vector2(center.x, center.y) - vector2(center.x, center.y) * orthoScale;
 	vector2 point = diff + p*orthoScale - vector2(center.x, center.y);
@@ -26,7 +27,8 @@ vector2 GammaEngine::Camera::ScreenToWorldPoint(vector2 p)
 
 vector2 GammaEngine::Camera::WorldToScreenPoint(vector2 p)
 {
-	POINT center = { Screen::width / 2 - transform->position.x, Screen::height / 2 - transform->position.y };
+	vector2 position = transform->GetWorldPosition();
+	POINT center = { Screen::width / 2 - position.x, Screen::height / 2 - position.y };
 	ScreenToClient(Input::hWnd, &center);
 	vector2 diff = vector2(center.x, center.y) - vector2(center.x, center.y) * orthoScale;
 	vector2 point = diff + p * orthoScale - vector2(center.x, center.y);

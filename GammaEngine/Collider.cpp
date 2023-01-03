@@ -35,56 +35,69 @@ bool GammaEngine::Collider::GetIntersectPoint(vector2 AP1, vector2 AP2,vector2 B
 bool GammaEngine::Collider::AABB_to_AABB(BoxCollider* A, BoxCollider* B)
 {
 	rect2D a, b;
-	a.min.x = -A->bounds.x / 2 * A->transform->scale.x + A->transform->position.x;
-	a.min.y = -A->bounds.y / 2 * A->transform->scale.y + A->transform->position.y;
-	a.max.x = A->bounds.x / 2 * A->transform->scale.x + A->transform->position.x;
-	a.max.y = A->bounds.y / 2 * A->transform->scale.y + A->transform->position.y;
+	vector2 aScale = A->transform->GetWorldScale();
+	vector2 aPosition = A->transform->GetWorldPosition();
+	vector2 bScale = B->transform->GetWorldScale();
+	vector2 bPosition = B->transform->GetWorldPosition();
 
-	b.min.x = -B->bounds.x / 2 * B->transform->scale.x + B->transform->position.x;
-	b.min.y = -B->bounds.y / 2 * B->transform->scale.y + B->transform->position.y;
-	b.max.x = B->bounds.x / 2 * B->transform->scale.x + B->transform->position.x;
-	b.max.y = B->bounds.y / 2 * B->transform->scale.y + B->transform->position.y;
+	a.min.x = -A->bounds.x / 2 * aScale.x + aPosition.x;
+	a.min.y = -A->bounds.y / 2 * aScale.y + aPosition.y;
+	a.max.x = A->bounds.x / 2 * aScale.x + aPosition.x;
+	a.max.y = A->bounds.y / 2 * aScale.y + aPosition.y;
+
+	b.min.x = -B->bounds.x / 2 * bScale.x + bPosition.x;
+	b.min.y = -B->bounds.y / 2 * bScale.y + bPosition.y;
+	b.max.x = B->bounds.x / 2 * bScale.x + bPosition.x;
+	b.max.y = B->bounds.y / 2 * bScale.y + bPosition.y;
 
 	if (a.max.x < b.min.x || a.min.x > b.max.x) return false;
 	if (a.max.y < b.min.y || a.min.y > b.max.y) return false;
 	return true;
 }
+
 bool GammaEngine::Collider::OBB_to_OBB(BoxCollider* A, BoxCollider* B)
 {
-	vector2 diffrence = A->transform->position - B->transform->position;
-	float thetaA = A->transform->rotation / 180 * PI;
-	float thetaB = B->transform->rotation / 180 * PI;
+	vector2 aScale = A->transform->GetWorldScale();
+	vector2 aPosition = A->transform->GetWorldPosition();
+	float aRotation= A->transform->GetWorldRotation();
+	vector2 bScale = B->transform->GetWorldScale();
+	vector2 bPosition = B->transform->GetWorldPosition();
+	float bRotation= B->transform->GetWorldRotation();
+
+	vector2 diffrence = aPosition - bPosition;
+	float thetaA = aRotation / 180 * PI;
+	float thetaB = bRotation / 180 * PI;
 
 	vector2 upA = vector2(-sin(thetaA), cos(thetaA));
 	vector2 rightA = vector2(cos(thetaA), sin(thetaA));
 	vector2 upB = vector2(-sin(thetaB), cos(thetaB));
 	vector2 rightB = vector2(cos(thetaB), sin(thetaB));
 	
-	if (abs(vector2::Dot(diffrence, upA)) > abs(vector2::Dot(upA, upA * A->bounds.y / 2 * A->transform->scale.y)) +
-		abs(vector2::Dot(upA, rightA * A->bounds.x / 2 * A->transform->scale.x)) +
-		abs(vector2::Dot(upA, upB * B->bounds.y / 2 * B->transform->scale.y)) +
-		abs(vector2::Dot(upA, rightB * B->bounds.x / 2 * B->transform->scale.x)))
+	if (abs(vector2::Dot(diffrence, upA)) > abs(vector2::Dot(upA, upA * A->bounds.y / 2 * aScale.y)) +
+		abs(vector2::Dot(upA, rightA * A->bounds.x / 2 * aScale.x)) +
+		abs(vector2::Dot(upA, upB * B->bounds.y / 2 * bScale.y)) +
+		abs(vector2::Dot(upA, rightB * B->bounds.x / 2 * bScale.x)))
 	{
 		return false;
 	}
-	if (abs(vector2::Dot(diffrence, rightA)) > abs(vector2::Dot(rightA, upA * A->bounds.y / 2 * A->transform->scale.y)) +
-		abs(vector2::Dot(rightA, rightA * A->bounds.x / 2 * A->transform->scale.x)) +
-		abs(vector2::Dot(rightA, upB * B->bounds.y / 2 * B->transform->scale.y)) +
-		abs(vector2::Dot(rightA, rightB * B->bounds.x / 2 * B->transform->scale.x)))
+	if (abs(vector2::Dot(diffrence, rightA)) > abs(vector2::Dot(rightA, upA * A->bounds.y / 2 * aScale.y)) +
+		abs(vector2::Dot(rightA, rightA * A->bounds.x / 2 * aScale.x)) +
+		abs(vector2::Dot(rightA, upB * B->bounds.y / 2 * bScale.y)) +
+		abs(vector2::Dot(rightA, rightB * B->bounds.x / 2 * bScale.x)))
 	{
 		return false;
 	}
-	if (abs(vector2::Dot(diffrence, upB)) > abs(vector2::Dot(upB, upA * A->bounds.y / 2 * A->transform->scale.y)) +
-		abs(vector2::Dot(upB, rightA * A->bounds.x / 2 * A->transform->scale.x)) +
-		abs(vector2::Dot(upB, upB * B->bounds.y / 2 * B->transform->scale.y)) +
-		abs(vector2::Dot(upB, rightB * B->bounds.x / 2 * B->transform->scale.x)))
+	if (abs(vector2::Dot(diffrence, upB)) > abs(vector2::Dot(upB, upA * A->bounds.y / 2 * aScale.y)) +
+		abs(vector2::Dot(upB, rightA * A->bounds.x / 2 * aScale.x)) +
+		abs(vector2::Dot(upB, upB * B->bounds.y / 2 * bScale.y)) +
+		abs(vector2::Dot(upB, rightB * B->bounds.x / 2 * bScale.x)))
 	{
 		return false;
 	}
-	if (abs(vector2::Dot(diffrence, rightB)) > abs(vector2::Dot(rightB, upA * A->bounds.y / 2 * A->transform->scale.y)) +
-		abs(vector2::Dot(rightB, rightA * A->bounds.x / 2 * A->transform->scale.x)) +
-		abs(vector2::Dot(rightB, upB * B->bounds.y / 2 * B->transform->scale.y)) +
-		abs(vector2::Dot(rightB, rightB * B->bounds.x / 2 * B->transform->scale.x)))
+	if (abs(vector2::Dot(diffrence, rightB)) > abs(vector2::Dot(rightB, upA * A->bounds.y / 2 * aScale.y)) +
+		abs(vector2::Dot(rightB, rightA * A->bounds.x / 2 *aScale.x)) +
+		abs(vector2::Dot(rightB, upB * B->bounds.y / 2 * bScale.y)) +
+		abs(vector2::Dot(rightB, rightB * B->bounds.x / 2 * bScale.x)))
 	{
 		return false;
 	}
@@ -93,14 +106,21 @@ bool GammaEngine::Collider::OBB_to_OBB(BoxCollider* A, BoxCollider* B)
 
 bool GammaEngine::Collider::LineToOBB(LineCollider* A, BoxCollider* B)
 {
-	float thetaB = B->transform->rotation / 180 * PI;
+	vector2 aScale = A->transform->GetWorldScale();
+	vector2 aPosition = A->transform->GetWorldPosition();
+	float aRotation = A->transform->GetWorldRotation();
+	vector2 bScale = B->transform->GetWorldScale();
+	vector2 bPosition = B->transform->GetWorldPosition();
+	float bRotation = B->transform->GetWorldRotation();
+
+	float thetaB = bRotation / 180 * PI;
 	vector2 upB = vector2(-sin(thetaB), cos(thetaB));
 	vector2 rightB = vector2(cos(thetaB), sin(thetaB));
 
-	vector2 leftUpB = B->transform->position + upB * B->bounds.y / 2 * B->transform->scale.y + rightB * -B->bounds.x / 2 * B->transform->scale.x;
-	vector2 rightUpB = B->transform->position + upB * B->bounds.y / 2 * B->transform->scale.y + rightB * B->bounds.x / 2 * B->transform->scale.x;
-	vector2 leftDownB = B->transform->position + upB * -B->bounds.y / 2 * B->transform->scale.y + rightB * -B->bounds.x / 2 * B->transform->scale.x;
-	vector2 rightDownB = B->transform->position + upB * -B->bounds.y / 2 * B->transform->scale.y + rightB * B->bounds.x / 2 * B->transform->scale.x;
+	vector2 leftUpB = bPosition + upB * B->bounds.y / 2 * bScale.y + rightB * -B->bounds.x / 2 * bScale.x;
+	vector2 rightUpB = bPosition + upB * B->bounds.y / 2 * bScale.y + rightB * B->bounds.x / 2 * bScale.x;
+	vector2 leftDownB = bPosition + upB * -B->bounds.y / 2 * bScale.y + rightB * -B->bounds.x / 2 * bScale.x;
+	vector2 rightDownB = bPosition + upB * -B->bounds.y / 2 * bScale.y + rightB * B->bounds.x / 2 * bScale.x;
 	vector2 tmp;
 
 	if (GetIntersectPoint(A->startPoint, A->endPoint, leftUpB, rightUpB, tmp))
@@ -125,14 +145,21 @@ bool GammaEngine::Collider::LineToOBB(LineCollider* A, BoxCollider* B)
 
 bool GammaEngine::Collider::Circle_to_AABB(CircleCollider* A, BoxCollider* B)
 {
-	vector2 center = A->transform->position;
-	float range = (A->transform->scale.x + A->transform->scale.y) / 2 * A->radius;
+	vector2 aScale = A->transform->GetWorldScale();
+	vector2 aPosition = A->transform->GetWorldPosition();
+	float aRotation = A->transform->GetWorldRotation();
+	vector2 bScale = B->transform->GetWorldScale();
+	vector2 bPosition = B->transform->GetWorldPosition();
+	float bRotation = B->transform->GetWorldRotation();
+
+	vector2 center = aPosition;
+	float range = (aScale.x + aScale.y) / 2 * A->radius;
 
 	rect2D b;
-	b.min.x = -B->bounds.x / 2 * B->transform->scale.x + B->transform->position.x;
-	b.min.y = -B->bounds.y / 2 * B->transform->scale.y + B->transform->position.y;
-	b.max.x = B->bounds.x / 2 * B->transform->scale.x + B->transform->position.x;
-	b.max.y = B->bounds.y / 2 * B->transform->scale.y + B->transform->position.y;
+	b.min.x = -B->bounds.x / 2 * bScale.x + bPosition.x;
+	b.min.y = -B->bounds.y / 2 * bScale.y + bPosition.y;
+	b.max.x = B->bounds.x / 2 * bScale.x + bPosition.x;
+	b.max.y = B->bounds.y / 2 * bScale.y + bPosition.y;
 
 	vector2 dot = center+((b.min + b.max) / 2 - center).Normalize()*range;
 	if (A->InBound((b.min + b.max) / 2)|| Physics::InBound(b, dot))
@@ -147,16 +174,23 @@ bool GammaEngine::Collider::Circle_to_AABB(CircleCollider* A, BoxCollider* B)
 
 bool GammaEngine::Collider::Circle_to_OBB(BoxCollider* A, CircleCollider* B)
 {
-	float distance = vector2::Distance(A->transform->position, B->transform->position);
-	vector2 diffrence = A->transform->position - B->transform->position;
-	vector2 direction = (A->transform->position - B->transform->position).Normalize();
+	vector2 aScale = A->transform->GetWorldScale();
+	vector2 aPosition = A->transform->GetWorldPosition();
+	float aRotation = A->transform->GetWorldRotation();
+	vector2 bScale = B->transform->GetWorldScale();
+	vector2 bPosition = B->transform->GetWorldPosition();
+	float bRotation = B->transform->GetWorldRotation();
 
-	float thetaA = A->transform->rotation / 180 * PI;;
-	float scaleB = (B->transform->scale.x + B->transform->scale.y) / 2;
+	float distance = vector2::Distance(aPosition, bPosition);
+	vector2 diffrence = aPosition - bPosition;
+	vector2 direction = (aPosition - bPosition).Normalize();
+
+	float thetaA = aRotation / 180 * PI;;
+	float scaleB = (bScale.x + bScale.y) / 2;
 	vector2 upA = vector2(-sin(thetaA), cos(thetaA)).Normalize();
 	vector2 rightA = vector2(cos(thetaA), sin(thetaA)).Normalize();
 
-	if(abs(vector2::Dot(upA, diffrence)) <= A->bounds.y / 2 * A->transform->scale.y + B->radius* scaleB && abs(vector2::Dot(rightA, diffrence)) <= A->bounds.x / 2 * A->transform->scale.x + B->radius * scaleB)
+	if(abs(vector2::Dot(upA, diffrence)) <= A->bounds.y / 2 * aScale.y + B->radius* scaleB && abs(vector2::Dot(rightA, diffrence)) <= A->bounds.x / 2 * aScale.x + B->radius * scaleB)
 	{
 		return true;
 	}
@@ -165,11 +199,18 @@ bool GammaEngine::Collider::Circle_to_OBB(BoxCollider* A, CircleCollider* B)
 
 vector2 GammaEngine::Collider::GetContactPoint(BoxCollider* A, CircleCollider* B)
 {
-	float distance = vector2::Distance(A->transform->position, B->transform->position);
-	vector2 diffrence = A->transform->position - B->transform->position;
-	vector2 direction = (A->transform->position - B->transform->position).Normalize();
-	float thetaA = A->transform->rotation / 180 * PI;;
-	float scaleB = (B->transform->scale.x + B->transform->scale.y) / 2;
+	vector2 aScale = A->transform->GetWorldScale();
+	vector2 aPosition = A->transform->GetWorldPosition();
+	float aRotation = A->transform->GetWorldRotation();
+	vector2 bScale = B->transform->GetWorldScale();
+	vector2 bPosition = B->transform->GetWorldPosition();
+	float bRotation = B->transform->GetWorldRotation();
+
+	float distance = vector2::Distance(aPosition, bPosition);
+	vector2 diffrence = aPosition - bPosition;
+	vector2 direction = (aPosition - bPosition).Normalize();
+	float thetaA = bRotation / 180 * PI;;
+	float scaleB = (bScale.x + bScale.y) / 2;
 	vector2 upA = vector2(-sin(thetaA), cos(thetaA)).Normalize();
 	vector2 rightA = vector2(cos(thetaA), sin(thetaA)).Normalize();
 	vector2 point = vector2(vector2::Dot(upA, diffrence) - vector2::Dot(upA, direction * B->radius * scaleB), vector2::Dot(rightA, diffrence) - vector2::Dot(rightA, direction * B->radius * scaleB));
@@ -178,89 +219,96 @@ vector2 GammaEngine::Collider::GetContactPoint(BoxCollider* A, CircleCollider* B
 
 vector2 GammaEngine::Collider::GetContactPoint(BoxCollider* A, BoxCollider* B)
 {
-	float thetaA = A->transform->rotation / 180 * PI;
+	vector2 aScale = A->transform->GetWorldScale();
+	vector2 aPosition = A->transform->GetWorldPosition();
+	float aRotation = A->transform->GetWorldRotation();
+	vector2 bScale = B->transform->GetWorldScale();
+	vector2 bPosition = B->transform->GetWorldPosition();
+	float bRotation = B->transform->GetWorldRotation();
+
+	float thetaA = aRotation / 180 * PI;
 	vector2 upA = vector2(-sin(thetaA), cos(thetaA));
 	vector2 rightA = vector2(cos(thetaA), sin(thetaA));
-	float thetaB = B->transform->rotation / 180 * PI;
+	float thetaB = bRotation / 180 * PI;
 	vector2 upB = vector2(-sin(thetaB), cos(thetaB));
 	vector2 rightB = vector2(cos(thetaB), sin(thetaB));
 
-	vector2 leftUpA = A->transform->position + upA * A->bounds.y / 2 * A->transform->scale.y + rightA * -A->bounds.x / 2 * A->transform->scale.x;
-	vector2 rightUpA = A->transform->position + upA * A->bounds.y / 2 * A->transform->scale.y + rightA * A->bounds.x / 2 * A->transform->scale.x;
-	vector2 leftDownA = A->transform->position + upA * -A->bounds.y / 2 * A->transform->scale.y + rightA * -A->bounds.x / 2 * A->transform->scale.x;
-	vector2 rightDownA = A->transform->position + upA * -A->bounds.y / 2 * A->transform->scale.y + rightA * A->bounds.x / 2 * A->transform->scale.x;
+	vector2 leftUpA = aPosition + upA * A->bounds.y / 2 * aScale.y + rightA * -A->bounds.x / 2 * aScale.x;
+	vector2 rightUpA = aPosition + upA * A->bounds.y / 2 * aScale.y + rightA * A->bounds.x / 2 * aScale.x;
+	vector2 leftDownA = aPosition + upA * -A->bounds.y / 2 * aScale.y + rightA * -A->bounds.x / 2 * aScale.x;
+	vector2 rightDownA = aPosition + upA * -A->bounds.y / 2 * aScale.y + rightA * A->bounds.x / 2 * aScale.x;
 
-	vector2 leftUpB = B->transform->position + upB * B->bounds.y / 2 * B->transform->scale.y + rightB * -B->bounds.x / 2 * B->transform->scale.x;
-	vector2 rightUpB = B->transform->position + upB * B->bounds.y / 2 * B->transform->scale.y + rightB * B->bounds.x / 2 * B->transform->scale.x;
-	vector2 leftDownB = B->transform->position + upB * -B->bounds.y / 2 * B->transform->scale.y + rightB * -B->bounds.x / 2 * B->transform->scale.x;
-	vector2 rightDownB = B->transform->position + upB * -B->bounds.y / 2 * B->transform->scale.y + rightB * B->bounds.x / 2 * B->transform->scale.x;
+	vector2 leftUpB = bPosition + upB * B->bounds.y / 2 * bScale.y + rightB * -B->bounds.x / 2 * bScale.x;
+	vector2 rightUpB = bPosition + upB * B->bounds.y / 2 * bScale.y + rightB * B->bounds.x / 2 * bScale.x;
+	vector2 leftDownB = bPosition + upB * -B->bounds.y / 2 * bScale.y + rightB * -B->bounds.x / 2 * bScale.x;
+	vector2 rightDownB = bPosition + upB * -B->bounds.y / 2 * bScale.y + rightB * B->bounds.x / 2 * bScale.x;
 
 	vector2 result,tmp;
 	int count = 0;
-	if (GetIntersectPoint(A->transform->position, leftUpA, leftUpB, rightUpB, tmp))
+	if (GetIntersectPoint(aPosition, leftUpA, leftUpB, rightUpB, tmp))
 	{
 		return tmp;
 	}
-	if (GetIntersectPoint(A->transform->position, leftUpA, rightUpB, rightDownB, tmp))
+	if (GetIntersectPoint(aPosition, leftUpA, rightUpB, rightDownB, tmp))
 	{
 		return tmp;
 	}
-	if (GetIntersectPoint(A->transform->position, leftUpA, rightDownB, leftDownB, tmp))
+	if (GetIntersectPoint(aPosition, leftUpA, rightDownB, leftDownB, tmp))
 	{
 		return tmp;
 	}
-	if (GetIntersectPoint(A->transform->position, leftUpA, leftDownB, leftUpB, tmp))
-	{
-		return tmp;
-	}
-
-	if (GetIntersectPoint(A->transform->position, rightUpA, leftUpB, rightUpB, tmp))
-	{
-		return tmp;
-	}
-	if (GetIntersectPoint(A->transform->position, rightUpA, rightUpB, rightDownB, tmp))
-	{
-		return tmp;
-	}
-	if (GetIntersectPoint(A->transform->position, rightUpA, rightDownB, leftDownB, tmp))
-	{
-		return tmp;
-	}
-	if (GetIntersectPoint(A->transform->position, rightUpA, leftDownB, leftUpB, tmp))
+	if (GetIntersectPoint(aPosition, leftUpA, leftDownB, leftUpB, tmp))
 	{
 		return tmp;
 	}
 
-	if (GetIntersectPoint(A->transform->position, rightDownA, leftUpB, rightUpB, tmp))
+	if (GetIntersectPoint(aPosition, rightUpA, leftUpB, rightUpB, tmp))
 	{
 		return tmp;
 	}
-	if (GetIntersectPoint(A->transform->position, rightDownA, rightUpB, rightDownB, tmp))
+	if (GetIntersectPoint(aPosition, rightUpA, rightUpB, rightDownB, tmp))
 	{
 		return tmp;
 	}
-	if (GetIntersectPoint(A->transform->position, rightDownA, rightDownB, leftDownB, tmp))
+	if (GetIntersectPoint(aPosition, rightUpA, rightDownB, leftDownB, tmp))
 	{
 		return tmp;
 	}
-	if (GetIntersectPoint(A->transform->position, rightDownA, leftDownB, leftUpB, tmp))
+	if (GetIntersectPoint(aPosition, rightUpA, leftDownB, leftUpB, tmp))
 	{
 		return tmp;
 	}
 
-	if (GetIntersectPoint(A->transform->position, leftDownA, leftUpB, rightUpB, tmp))
+	if (GetIntersectPoint(aPosition, rightDownA, leftUpB, rightUpB, tmp))
 	{
 		return tmp;
 	}
-	if (GetIntersectPoint(A->transform->position, leftDownA, rightUpB, rightDownB, tmp))
+	if (GetIntersectPoint(aPosition, rightDownA, rightUpB, rightDownB, tmp))
 	{
 		return tmp;
 	}
-	if (GetIntersectPoint(A->transform->position, leftDownA, rightDownB, leftDownB, tmp))
+	if (GetIntersectPoint(aPosition, rightDownA, rightDownB, leftDownB, tmp))
 	{
 		return tmp;
 	}
-	if (GetIntersectPoint(A->transform->position, leftDownA, leftDownB, leftUpB, tmp))
+	if (GetIntersectPoint(aPosition, rightDownA, leftDownB, leftUpB, tmp))
+	{
+		return tmp;
+	}
+
+	if (GetIntersectPoint(aPosition, leftDownA, leftUpB, rightUpB, tmp))
+	{
+		return tmp;
+	}
+	if (GetIntersectPoint(aPosition, leftDownA, rightUpB, rightDownB, tmp))
+	{
+		return tmp;
+	}
+	if (GetIntersectPoint(aPosition, leftDownA, rightDownB, leftDownB, tmp))
+	{
+		return tmp;
+	}
+	if (GetIntersectPoint(aPosition, leftDownA, leftDownB, leftUpB, tmp))
 	{
 		return tmp;
 	}

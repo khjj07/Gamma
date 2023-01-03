@@ -31,7 +31,7 @@ void GammaEngine::Renderer::Adjust(vector2& v)
 {
 	if (Camera::main)
 	{
-		vector2 center = vector2(Screen::width / 2, Screen::height / 2) - Camera::main->transform->position;
+		vector2 center = vector2(Screen::width / 2, Screen::height / 2) - Camera::main->transform->GetWorldPosition();
 
 		v = v / Camera::main->orthoScale + center;
 	}
@@ -45,7 +45,7 @@ void GammaEngine::Renderer::Adjust(vector2& pos,vector2& size)
 {
 	if (Camera::main)
 	{
-		vector2 center = vector2(Screen::width / 2, Screen::height / 2) - Camera::main->transform->position;
+		vector2 center = vector2(Screen::width / 2, Screen::height / 2) - Camera::main->transform->GetWorldPosition();
 			
 		pos = pos / Camera::main->orthoScale + center;
 		

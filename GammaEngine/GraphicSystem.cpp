@@ -4,6 +4,7 @@
 
 using namespace GammaEngine;
 RenderModule* GammaEngine::GraphicSystem::render = nullptr;
+
 GammaEngine::GraphicSystem::GraphicSystem()
 {
 

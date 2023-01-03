@@ -28,16 +28,18 @@ void CursorSript::Update()
 		{
 		case CreateMode::box :
 		{
-			GameObject* box = new Box();
-			box->transform->position = mousePos;
-			Instantiate(box);
+			GameObject* circle = new Circle();
+			Instantiate(circle);
+			circle->transform->parent = transform;
+			circle->transform->position=mousePos;
 			break;
 		}
 		case CreateMode::circle:
 		{
 			GameObject* circle = new Circle();
-			circle->transform->position = mousePos;
 			Instantiate(circle);
+			circle->transform->parent = transform;
+			circle->transform->SetWorldPosition(mousePos);
 			break;
 		}
 		default:

@@ -14,6 +14,13 @@ namespace GammaEngine {
 	public:
 		Transform(GameObject* t);
 		~Transform();
+	public:
+		vector2 GetWorldPosition();
+		float GetWorldRotation();
+		vector2 GetWorldScale(); 
+		void SetWorldPosition(vector2 v);
+		void SetWorldRotation(float x);
+		void SetWorldScale(vector2 v);
 
 	public:
 		vector2 position = vector2();

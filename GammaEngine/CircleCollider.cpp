@@ -23,7 +23,7 @@ GammaEngine::CollisionResponse CircleCollider::Check(BoxCollider* other, bool co
 	result.other = this;
 	bool check;
 
-	if (other->transform->rotation == 0)
+	if (other->transform->GetWorldRotation() == 0)
 	{
 		check = Circle_to_AABB(this, other);
 	}
@@ -58,11 +58,14 @@ CollisionResponse GammaEngine::CircleCollider::Check(CircleCollider* other, bool
 	CollisionResponse result;
 	result.state = CollisionState::Not;
 
-	vector2 centerA = transform->position;
-	float rangeA = (transform->scale.x + transform->scale.y) / 2 * radius;
+	vector2 centerA = transform->GetWorldPosition();
+	vector2 scaleA = transform->GetWorldScale();
 
-	vector2 centerB = other->transform->position;
-	float rangeB = (other->transform->scale.x + other->transform->scale.y) / 2 * other->radius;
+	float rangeA = (scaleA.x + scaleA.y) / 2 * radius;
+
+	vector2 centerB = other->transform->GetWorldPosition();
+	vector2 scaleB = other->transform->GetWorldScale();
+	float rangeB = (scaleB.x + scaleB.y) / 2 * other->radius;
 
 	bool check = Circle_to_Circle(centerA, rangeA, centerB, rangeB);
 
@@ -93,7 +96,7 @@ CollisionResponse GammaEngine::CircleCollider::Check(LineCollider* other, bool c
 	CollisionResponse result;
 	result.state = CollisionState::Not;
 
-	bool check = GetIntersectPoint(other->startPoint, other->endPoint, transform->position, radius);
+	bool check = GetIntersectPoint(other->startPoint, other->endPoint, transform->GetWorldPosition(), radius);
 	result.other = this;
 
 	if (!collided && check)
@@ -118,12 +121,13 @@ CollisionResponse GammaEngine::CircleCollider::Check(LineCollider* other, bool c
 
 bool GammaEngine::CircleCollider::InBound(vector2 v)
 {
-	vector2 center = transform->position;
-	float range = radius*(transform->scale.x+ transform->scale.y)/2;
+	vector2 center = transform->GetWorldPosition();
+	vector2 scale = transform->GetWorldScale();
+	float range = radius*(scale.x+ scale.y)/2;
 	return vector2::Distance(center, v) <= range;
 }
 
  vector2 GammaEngine::CircleCollider::GetNormalVector(vector2 v)
 {
-	 return vector2::Normalize(v - transform->position);
+	 return vector2::Normalize(v - transform->GetWorldPosition());
 }
