@@ -17,20 +17,26 @@ namespace GammaEngine
 	class GammaEngineAPI BoxCollider :public Collider
 	{
 	public:
+		friend class Collider;
+
+	public:
 		BoxCollider(GameObject*);
 		~BoxCollider();
+
 	public:
 		virtual bool InBound(vector2);
-		virtual CollisionResponse Collide(Collider*, bool);
 		virtual vector2 GetNormalVector(vector2);
+		virtual CollisionResponse Collide(Collider*, bool);
 		virtual CollisionResponse Check(BoxCollider* other, bool collided);
 		virtual CollisionResponse Check(CircleCollider* other, bool collided);
 		virtual CollisionResponse Check(LineCollider* other, bool collided);
+	
 	public:
-		vector2 bounds;
+		void SetBounds(vector2);
+
 	private:
-
+		vector<vector2> simplex;
+		vector2 bounds;
 	};
-
 }
 

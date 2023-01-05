@@ -32,22 +32,7 @@ GammaEngine::CollisionResponse CircleCollider::Check(BoxCollider* other, bool co
 		check = Circle_to_OBB(other, this);
 	}
 
-	if (!collided && check)
-	{
-		result.state = CollisionState::Enter;
-	}
-	else if (collided && check)
-	{
-		result.state = CollisionState::Stay;
-	}
-	else if (!collided && !check)
-	{
-		result.state = CollisionState::Not;
-	}
-	else if (collided && !check)
-	{
-		result.state = CollisionState::Exit;
-	}
+	DecideCollisionState(result, collided, check);
 
 	return result;
 }
@@ -57,36 +42,11 @@ CollisionResponse GammaEngine::CircleCollider::Check(CircleCollider* other, bool
 {
 	CollisionResponse result;
 	result.state = CollisionState::Not;
-
-	vector2 centerA = transform->GetWorldPosition();
-	vector2 scaleA = transform->GetWorldScale();
-
-	float rangeA = (scaleA.x + scaleA.y) / 2 * radius;
-
-	vector2 centerB = other->transform->GetWorldPosition();
-	vector2 scaleB = other->transform->GetWorldScale();
-	float rangeB = (scaleB.x + scaleB.y) / 2 * other->radius;
-
-	bool check = Circle_to_Circle(centerA, rangeA, centerB, rangeB);
+	bool check = Circle_to_Circle(this,other);
 
 	result.other = this;
 
-	if (!collided && check)
-	{
-		result.state = CollisionState::Enter;
-	}
-	else if (collided && check)
-	{
-		result.state = CollisionState::Stay;
-	}
-	else if (!collided && !check)
-	{
-		result.state = CollisionState::Not;
-	}
-	else if (collided && !check)
-	{
-		result.state = CollisionState::Exit;
-	}
+	DecideCollisionState(result, collided, check);
 
 	return result;
 }
@@ -99,22 +59,7 @@ CollisionResponse GammaEngine::CircleCollider::Check(LineCollider* other, bool c
 	bool check = GetIntersectPoint(other->startPoint, other->endPoint, transform->GetWorldPosition(), radius);
 	result.other = this;
 
-	if (!collided && check)
-	{
-		result.state = CollisionState::Enter;
-	}
-	else if (collided && check)
-	{
-		result.state = CollisionState::Stay;
-	}
-	else if (!collided && !check)
-	{
-		result.state = CollisionState::Not;
-	}
-	else if (collided && !check)
-	{
-		result.state = CollisionState::Exit;
-	}
+	DecideCollisionState(result, collided, check);
 
 	return result;
 }

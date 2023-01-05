@@ -1,6 +1,6 @@
 #include "stdafx.h"
 using namespace GammaEngine;
-GammaEngine::BoxCollider::BoxCollider(GameObject* t):Collider(t)
+GammaEngine::BoxCollider::BoxCollider(GameObject* t) :Collider(t)
 {
 
 }
@@ -8,6 +8,21 @@ GammaEngine::BoxCollider::BoxCollider(GameObject* t):Collider(t)
 GammaEngine::BoxCollider::~BoxCollider()
 {
 
+}
+
+void GammaEngine::BoxCollider::SetBounds(vector2 v)
+{
+	bounds = v;
+	vector2 position = transform->GetWorldPosition();
+	vector2 scale = transform->GetWorldScale();
+
+	float thetaA = transform->GetWorldRotation() / 180 * PI;
+	vector2 up = vector2(-sin(thetaA), cos(thetaA));
+	vector2 right = vector2(cos(thetaA), sin(thetaA));
+	simplex[0] = position -up * bounds.y * scale.y / 2 - right * bounds.x * scale.x / 2;
+	simplex[1] = position - up * bounds.y * scale.y / 2 - right * bounds.x * scale.x / 2;
+	simplex[2] = position - up * bounds.y * scale.y / 2 - right * bounds.x * scale.x / 2;
+	simplex[3] = position - up * bounds.y * scale.y / 2 - right * bounds.x * scale.x / 2;
 }
 
 CollisionResponse GammaEngine::BoxCollider::Collide(Collider* other, bool collided)
@@ -22,31 +37,17 @@ CollisionResponse GammaEngine::BoxCollider::Check(BoxCollider* other, bool colli
 	result.other = this;
 
 	bool check;
-	if (transform->GetWorldRotation() == 0 && other->transform->GetWorldRotation() ==0)
-	{
-		check = AABB_to_AABB(this, other);
-	}
-	else
-	{
-		check = OBB_to_OBB(this,other);
-	}
-	
-	if (!collided && check)
-	{
-		result.state = CollisionState::Enter;
-	}
-	else if (collided && check)
-	{
-		result.state = CollisionState::Stay;
-	}
-	else if (!collided && !check)
-	{
-		result.state = CollisionState::Not;
-	}
-	else if (collided && !check)
-	{
-		result.state = CollisionState::Exit;
-	}
+	// 	if (transform->GetWorldRotation() == 0 && other->transform->GetWorldRotation() == 0)
+	// 	{
+	// 		check = AABB_to_AABB(this, other);
+	// 	}
+	// 	else
+	// 	{
+	// 		check = OBB_to_OBB(this,other);
+	// 	}
+
+
+	DecideCollisionState(result, collided, check);
 
 	return result;
 }
@@ -70,22 +71,7 @@ CollisionResponse GammaEngine::BoxCollider::Check(CircleCollider* other, bool co
 		//gjk
 	}
 
-	if (!collided && check)
-	{
-		result.state = CollisionState::Enter;
-	}
-	else if (collided && check)
-	{
-		result.state = CollisionState::Stay;
-	}
-	else if (!collided && !check)
-	{
-		result.state = CollisionState::Not;
-	}
-	else if (collided && !check)
-	{
-		result.state = CollisionState::Exit;
-	}
+	DecideCollisionState(result, collided, check);
 
 	return result;
 }
@@ -98,22 +84,8 @@ CollisionResponse GammaEngine::BoxCollider::Check(LineCollider* other, bool coll
 	bool check;
 
 	check = LineToOBB(other, this);
-	if (!collided && check)
-	{
-		result.state = CollisionState::Enter;
-	}
-	else if (collided && check)
-	{
-		result.state = CollisionState::Stay;
-	}
-	else if (!collided && !check)
-	{
-		result.state = CollisionState::Not;
-	}
-	else if (collided && !check)
-	{
-		result.state = CollisionState::Exit;
-	}
+
+	DecideCollisionState(result, collided, check);
 
 	return result;
 }
@@ -135,12 +107,12 @@ bool GammaEngine::BoxCollider::InBound(vector2 v)
 	}
 	else
 	{
-		float distance = vector2::Distance(position,v);
-		vector2 diffrence = v- position;
-		float thetaA = transform->GetWorldRotation()/180*PI;
+		float distance = vector2::Distance(position, v);
+		vector2 diffrence = v - position;
+		float thetaA = transform->GetWorldRotation() / 180 * PI;
 		vector2 upA = vector2(-sin(thetaA), cos(thetaA));
 		vector2 rightA = vector2(cos(thetaA), sin(thetaA));
-		if (abs(vector2::Dot(upA, diffrence)) <= bounds.y/2 * scale.y && abs(vector2::Dot(rightA, diffrence)) <= bounds.x/2 * scale.x)
+		if (abs(vector2::Dot(upA, diffrence)) <= bounds.y / 2 * scale.y && abs(vector2::Dot(rightA, diffrence)) <= bounds.x / 2 * scale.x)
 		{
 			return true;
 		}
@@ -158,7 +130,7 @@ vector2 GammaEngine::BoxCollider::GetNormalVector(vector2 v)
 	vector2 upA = vector2(-sin(thetaA), cos(thetaA));
 	vector2 rightA = vector2(cos(thetaA), sin(thetaA));
 
-	if (abs(vector2::Dot(upA, v))/ bounds.y / 2 * scale.y < abs(vector2::Dot(rightA, v)/ bounds.x / 2 * scale.x))
+	if (abs(vector2::Dot(upA, v)) / bounds.y / 2 * scale.y < abs(vector2::Dot(rightA, v) / bounds.x / 2 * scale.x))
 	{
 		if (vector2::Dot(upA, v) > 0)
 		{

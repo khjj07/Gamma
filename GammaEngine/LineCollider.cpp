@@ -25,22 +25,8 @@ CollisionResponse GammaEngine::LineCollider::Check(BoxCollider* other, bool coll
 	bool check;
 	
 	check = LineToOBB(this,other);
-	if (!collided && check)
-	{
-		result.state = CollisionState::Enter;
-	}
-	else if (collided && check)
-	{
-		result.state = CollisionState::Stay;
-	}
-	else if (!collided && !check)
-	{
-		result.state = CollisionState::Not;
-	}
-	else if (collided && !check)
-	{
-		result.state = CollisionState::Exit;
-	}
+
+	DecideCollisionState(result, collided, check);
 
 	return result;
 }
@@ -53,22 +39,7 @@ CollisionResponse GammaEngine::LineCollider::Check(CircleCollider* other, bool c
 	bool check = GetIntersectPoint(startPoint, endPoint, other->transform->position, other->radius);
 	result.other = this;
 
-	if (!collided && check)
-	{
-		result.state = CollisionState::Enter;
-	}
-	else if (collided && check)
-	{
-		result.state = CollisionState::Stay;
-	}
-	else if (!collided && !check)
-	{
-		result.state = CollisionState::Not;
-	}
-	else if (collided && !check)
-	{
-		result.state = CollisionState::Exit;
-	}
+	DecideCollisionState(result, collided, check);
 
 	return result;
 }
@@ -81,22 +52,7 @@ CollisionResponse GammaEngine::LineCollider::Check(LineCollider* other, bool col
 	 bool check= GetIntersectPoint(startPoint, endPoint, other->startPoint, other->endPoint, result.position);
 	 result.other = this;
 
-	 if (!collided && check)
-	 {
-		 result.state = CollisionState::Enter;
-	 }
-	 else if (collided && check)
-	 {
-		 result.state = CollisionState::Stay;
-	 }
-	 else if (!collided && !check)
-	 {
-		 result.state = CollisionState::Not;
-	 }
-	 else if (collided && !check)
-	 {
-		 result.state = CollisionState::Exit;
-	 }
+	 DecideCollisionState(result, collided, check);
 
 	return result;
 }

@@ -1,6 +1,27 @@
 #include "stdafx.h"
 using namespace GammaEngine;
 
+static void DecideCollisionState(CollisionResponse& result, bool collided, bool check)
+{
+	if (!collided && check)
+	{
+		result.state = CollisionState::Enter;
+	}
+	else if (collided && check)
+	{
+		result.state = CollisionState::Stay;
+	}
+	else if (!collided && !check)
+	{
+		result.state = CollisionState::Not;
+	}
+	else if (collided && !check)
+	{
+		result.state = CollisionState::Exit;
+	}
+
+}
+
 bool GammaEngine::Collider::GetIntersectPoint(vector2 AP1, vector2 AP2,
 	vector2 BP1, vector2 BP2, vector2& IP)
 {
@@ -23,6 +44,7 @@ bool GammaEngine::Collider::GetIntersectPoint(vector2 AP1, vector2 AP2,
 
 	return true;
 }
+
 bool GammaEngine::Collider::GetIntersectPoint(vector2 AP1, vector2 AP2,vector2 BP1, float r)
 {
 	float m = (AP2.y - AP1.y) / (AP2.x - AP1.x);
@@ -30,7 +52,6 @@ bool GammaEngine::Collider::GetIntersectPoint(vector2 AP1, vector2 AP2,vector2 B
 	float d = sqrt((m * BP1.x -BP1.y + c) * (m * BP1.x - BP1.y + c) / (m * m) + 1);
 	return d<=r;
 }
-
 
 bool GammaEngine::Collider::AABB_to_AABB(BoxCollider* A, BoxCollider* B)
 {
@@ -216,6 +237,62 @@ vector2 GammaEngine::Collider::GetContactPoint(BoxCollider* A, CircleCollider* B
 	vector2 point = vector2(vector2::Dot(upA, diffrence) - vector2::Dot(upA, direction * B->radius * scaleB), vector2::Dot(rightA, diffrence) - vector2::Dot(rightA, direction * B->radius * scaleB));
 	return point;
 }
+vector2 GammaEngine::Collider::FarthestPoint(vector<vector2> set, vector2 direction)
+{
+	vector2 result;
+	vector<vector2>::iterator iter;
+	iter = set.begin();
+	result = *iter;
+	iter++;
+	for (; iter < set.end(); iter++)
+	{
+		if (vector2::Dot(direction, result) > vector2::Dot(direction, *iter))
+		{
+			result = *iter;
+		}
+	}
+	return result;
+}
+
+vector2 GammaEngine::Collider::SupportFunc(vector<vector2> setA, vector<vector2> setB, vector2 direction)
+{
+	return FarthestPoint(setA, direction)-FarthestPoint(setB, direction);
+}
+
+bool GammaEngine::Collider::GJK(const BoxCollider* A, const BoxCollider* B)
+{
+	vector2 support = SupportFunc(A->simplex, B->simplex,vector2::Right);
+
+	vector<vector2> points;
+	points.push_back(support);
+	vector2 direction = -support;
+	while (true) {
+		support = SupportFunc(A->simplex, B->simplex, direction);
+
+		if (vector2::Dot(support,direction) <= 0) 
+		{
+			return false;
+		}
+
+		points.push_back(support);
+		if (NextSimplex(points, direction)) {
+			return true;
+		}
+	}
+}
+
+bool GammaEngine::Collider::NextSimplex(vector<vector2>& points,vector2& direction)
+{
+	switch (points.size()) {
+	case 2: return Line(points, direction);
+	case 3: return Triangle(points, direction);
+	case 4: return Tetrahedron(points, direction);
+	}
+
+	// never should be here
+	return false;
+}
+
 
 vector2 GammaEngine::Collider::GetContactPoint(BoxCollider* A, BoxCollider* B)
 {
@@ -314,8 +391,17 @@ vector2 GammaEngine::Collider::GetContactPoint(BoxCollider* A, BoxCollider* B)
 	}
 }
 
-bool GammaEngine::Collider::Circle_to_Circle(vector2 centerA, float rangeA, vector2 centerB, float rangeB)
+bool GammaEngine::Collider::Circle_to_Circle(CircleCollider* A, CircleCollider* B)
 {
+	vector2 centerA = A->transform->GetWorldPosition();
+	vector2 scaleA = A->transform->GetWorldScale();
+
+	float rangeA = (scaleA.x + scaleA.y) / 2 * A->radius;
+
+	vector2 centerB = B->transform->GetWorldPosition();
+	vector2 scaleB = B->transform->GetWorldScale();
+	float rangeB = (scaleB.x + scaleB.y) / 2 * B->radius;
+	
 	return vector2::Distance(centerA, centerB) <= rangeA + rangeB;
 }
 
@@ -324,7 +410,6 @@ GammaEngine::Collider::Collider(GameObject* t) : Component(t)
 	CollisionSystem::Instance()->colliderList.push_back(this);
 	CollisionSystem::Instance()->collidedList.push_back(Collided(this));
 }
-
 
 GammaEngine::Collider::~Collider()
 {

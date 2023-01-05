@@ -28,10 +28,10 @@ void CursorSript::Update()
 		{
 		case CreateMode::box :
 		{
-			GameObject* circle = new Circle();
-			Instantiate(circle);
-			circle->transform->parent = transform;
-			circle->transform->position=mousePos;
+			GameObject* box = new Box();
+			Instantiate(box);
+			box->transform->position = mousePos;
+
 			break;
 		}
 		case CreateMode::circle:
