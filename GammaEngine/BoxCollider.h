@@ -18,6 +18,7 @@ namespace GammaEngine
 	{
 	public:
 		friend class Collider;
+		friend class Physics;
 
 	public:
 		BoxCollider(GameObject*);
@@ -33,9 +34,8 @@ namespace GammaEngine
 	
 	public:
 		void SetBounds(vector2);
-
+		void ComputePoints(vector<vector2>&);
 	private:
-		vector<vector2> simplex;
 		vector2 bounds;
 	};
 }

@@ -14,7 +14,7 @@ BoxScript::~BoxScript()
 
 void BoxScript::Start()
 {
-	GetComponent<Animation>()->Play(PLAYBACK::LOOP_FORWARD);
+
 }
 
 void BoxScript::Update()
@@ -26,16 +26,13 @@ void BoxScript::Update()
 
 void BoxScript::OnCollisionEnter(CollisionResponse response)
 {
-	
+	if (response.other->CompareTag("box"))
+	{
+		GetComponent<RectangleRenderer>()->SetPen(vector4(1, 0, 0, 1));
+	}
 }
-
-void BoxScript::OnCollisionStay(CollisionResponse response)
-{
-
-}
-
 
 void BoxScript::OnCollisionExit(CollisionResponse response)
 {
-
+	GetComponent<RectangleRenderer>()->SetPen(vector4(0 ,0, 0, 1));
 }

@@ -189,7 +189,7 @@ void Direct2DModule::DrawRectangle(vector2 pos, vector2 size, float rotation, Ma
 {
 
 	D2D1_RECT_F rectangle;
-	D2D1_POINT_2F center = { pos.x,  size.y };
+	D2D1_POINT_2F center = { pos.x,  pos.y };
 
 	rectangle.left = pos.x - size.x / 2;
 	rectangle.top = pos.y - size.y / 2;
@@ -241,11 +241,13 @@ void Direct2DModule::DrawTextBox(vector2 pos, vector2 size, wstring text, wstrin
 void Direct2DModule::DrawBitmap(wstring bitmap, vector2 pos, vector2 size, float rotation, Material* meterial)
 {
 	D2D1_RECT_F rectangle;
-	D2D1_POINT_2F center = { pos.x,  size.y };
+	D2D1_POINT_2F center = { pos.x,  pos.y };
 	rectangle.left = pos.x - size.x / 2;
 	rectangle.top = pos.y - size.y / 2;
 	rectangle.right = pos.x + size.x / 2;
 	rectangle.bottom = pos.y + size.y / 2;
 	renderTarget->SetTransform(Matrix3x2F::Rotation(rotation, center));
 	renderTarget->DrawBitmap(bitmapDictionary[bitmap], rectangle, meterial->brush.w, D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR);
+	D2D1_POINT_2F centerz = { 0,0 };
+	renderTarget->SetTransform(Matrix3x2F::Rotation(0, centerz));
 }

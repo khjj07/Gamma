@@ -13,16 +13,6 @@ GammaEngine::BoxCollider::~BoxCollider()
 void GammaEngine::BoxCollider::SetBounds(vector2 v)
 {
 	bounds = v;
-	vector2 position = transform->GetWorldPosition();
-	vector2 scale = transform->GetWorldScale();
-
-	float thetaA = transform->GetWorldRotation() / 180 * PI;
-	vector2 up = vector2(-sin(thetaA), cos(thetaA));
-	vector2 right = vector2(cos(thetaA), sin(thetaA));
-	simplex[0] = position -up * bounds.y * scale.y / 2 - right * bounds.x * scale.x / 2;
-	simplex[1] = position - up * bounds.y * scale.y / 2 - right * bounds.x * scale.x / 2;
-	simplex[2] = position - up * bounds.y * scale.y / 2 - right * bounds.x * scale.x / 2;
-	simplex[3] = position - up * bounds.y * scale.y / 2 - right * bounds.x * scale.x / 2;
 }
 
 CollisionResponse GammaEngine::BoxCollider::Collide(Collider* other, bool collided)
@@ -37,15 +27,15 @@ CollisionResponse GammaEngine::BoxCollider::Check(BoxCollider* other, bool colli
 	result.other = this;
 
 	bool check;
-	// 	if (transform->GetWorldRotation() == 0 && other->transform->GetWorldRotation() == 0)
-	// 	{
-	// 		check = AABB_to_AABB(this, other);
-	// 	}
-	// 	else
-	// 	{
-	// 		check = OBB_to_OBB(this,other);
-	// 	}
-
+// 	if (transform->GetWorldRotation() == 0 && other->transform->GetWorldRotation() == 0)
+// 	{
+// 		check = AABB_to_AABB(this, other);
+// 	}
+// 	else
+// 	{
+// 		check = OBB_to_OBB(this,other);
+// 	}
+	check = GJK(this, other);
 
 	DecideCollisionState(result, collided, check);
 
@@ -74,6 +64,21 @@ CollisionResponse GammaEngine::BoxCollider::Check(CircleCollider* other, bool co
 	DecideCollisionState(result, collided, check);
 
 	return result;
+}
+
+void GammaEngine::BoxCollider::ComputePoints(vector<vector2>& point)
+{
+	vector2 position = transform->GetWorldPosition();
+	vector2 scale = transform->GetWorldScale();
+
+	float theta = transform->GetWorldRotation() / 180 * PI;
+	vector2 up = vector2(-sin(theta), cos(theta));
+	vector2 right = vector2(cos(theta), sin(theta));
+
+	point.push_back(position+up * bounds.y * scale.y/2+right* bounds.x * scale.x/2);
+	point.push_back(position-up * bounds.y * scale.y/2+right* bounds.x * scale.x/2);
+	point.push_back(position+up * bounds.y * scale.y/2-right* bounds.x * scale.x/2);
+	point.push_back(position-up * bounds.y * scale.y/2-right* bounds.x * scale.x/2);
 }
 
 CollisionResponse GammaEngine::BoxCollider::Check(LineCollider* other, bool collided)

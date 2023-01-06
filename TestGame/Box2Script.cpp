@@ -48,10 +48,10 @@ void Box2Script::LateUpdate()
 
 void Box2Script::OnCollisionEnter(CollisionResponse response)
 {
-	
+	GetComponent<RectangleRenderer>()->SetBrush(vector4(1, 0, 0, 1));
 }
 
 void Box2Script::OnCollisionExit(CollisionResponse response)
 {
-	
+	GetComponent<RectangleRenderer>()->SetBrush(vector4(1, 1, 1, 1));
 }

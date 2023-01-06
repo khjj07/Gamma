@@ -49,7 +49,7 @@ void CursorSript::Update()
 
 	if (hover && Input::GetMouseButtonDown(0))
 	{
-
+		target = hover;
 	}
 	if (hover && Input::GetMouseButtonDown(1))
 	{

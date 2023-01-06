@@ -1,7 +1,7 @@
 #include "stdafx.h"
 using namespace GammaEngine;
 
-static void DecideCollisionState(CollisionResponse& result, bool collided, bool check)
+void GammaEngine::Collider::DecideCollisionState(CollisionResponse& result, bool collided, bool check)
 {
 	if (!collided && check)
 	{
@@ -241,7 +241,7 @@ vector2 GammaEngine::Collider::FarthestPoint(vector<vector2> set, vector2 direct
 {
 	vector2 result;
 	vector<vector2>::iterator iter;
-	iter = set.begin();
+ 	iter = set.begin();
 	result = *iter;
 	iter++;
 	for (; iter < set.end(); iter++)
@@ -256,41 +256,57 @@ vector2 GammaEngine::Collider::FarthestPoint(vector<vector2> set, vector2 direct
 
 vector2 GammaEngine::Collider::SupportFunc(vector<vector2> setA, vector<vector2> setB, vector2 direction)
 {
-	return FarthestPoint(setA, direction)-FarthestPoint(setB, direction);
+	vector2 A = FarthestPoint(setA, direction);
+	vector2 B = FarthestPoint(setB, -direction);
+	return A - B;
 }
 
-bool GammaEngine::Collider::GJK(const BoxCollider* A, const BoxCollider* B)
-{
-	vector2 support = SupportFunc(A->simplex, B->simplex,vector2::Right);
+bool GammaEngine::Collider::GJK(BoxCollider* A, BoxCollider* B){
+	// First point of pts1-pts2
+	vector<vector2> pointA;
+	A->ComputePoints(pointA);
+	vector<vector2> pointB;
+	B->ComputePoints(pointB);
 
-	vector<vector2> points;
-	points.push_back(support);
-	vector2 direction = -support;
-	while (true) {
-		support = SupportFunc(A->simplex, B->simplex, direction);
 
-		if (vector2::Dot(support,direction) <= 0) 
-		{
-			return false;
+	vector2 a = SupportFunc(pointA, pointB, vector2(1, 1));
+
+	// First direction
+	vector2 v = -a;
+
+	// Second point
+	vector2 b = SupportFunc(pointA, pointB, v);
+	if (vector2::Dot(b, v) <= 0) return false; // Second point fails
+
+	// Second direction
+	vector2 ab = b-a;
+	v = vector2::tripleProduct(ab, -a, ab);
+
+	for (;;) {
+		// Third point
+		vector2 c = SupportFunc(pointA, pointB, v);
+		if (vector2::Dot(c, v) <= 0) return false; // Third point fails
+
+		vector2 c0 = -c;
+		vector2 cb = b - c;
+		vector2 ca = a - c;
+
+		vector2 cbPerp = vector2::tripleProduct(ca, cb, cb);
+		vector2 caPerp = vector2::tripleProduct(cb, ca, ca);
+
+		if (vector2::Dot(caPerp, c0) > 0) {
+			b = c;
+			v = caPerp;
 		}
-
-		points.push_back(support);
-		if (NextSimplex(points, direction)) {
+		else if (vector2::Dot(cbPerp, c0) > 0) {
+			a = c;
+			v = cbPerp;
+		}
+		else
+		{
 			return true;
 		}
 	}
-}
-
-bool GammaEngine::Collider::NextSimplex(vector<vector2>& points,vector2& direction)
-{
-	switch (points.size()) {
-	case 2: return Line(points, direction);
-	case 3: return Triangle(points, direction);
-	case 4: return Tetrahedron(points, direction);
-	}
-
-	// never should be here
-	return false;
 }
 
 
