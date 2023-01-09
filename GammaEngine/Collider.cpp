@@ -246,7 +246,7 @@ vector2 GammaEngine::Collider::FarthestPoint(vector<vector2> set, vector2 direct
 	iter++;
 	for (; iter < set.end(); iter++)
 	{
-		if (vector2::Dot(direction, result) > vector2::Dot(direction, *iter))
+		if (vector2::Dot(direction, result) < vector2::Dot(direction, *iter))
 		{
 			result = *iter;
 		}
@@ -254,46 +254,43 @@ vector2 GammaEngine::Collider::FarthestPoint(vector<vector2> set, vector2 direct
 	return result;
 }
 
-vector2 GammaEngine::Collider::SupportFunc(vector<vector2> setA, vector<vector2> setB, vector2 direction)
+vector2 GammaEngine::Collider::Support(vector<vector2> setA, vector<vector2> setB, vector2 direction)
 {
 	vector2 A = FarthestPoint(setA, direction);
 	vector2 B = FarthestPoint(setB, -direction);
 	return A - B;
 }
 
-bool GammaEngine::Collider::GJK(BoxCollider* A, BoxCollider* B){
-	// First point of pts1-pts2
+bool GammaEngine::Collider::GJK(BoxCollider* A, BoxCollider* B, vector<vector2>& result)
+{
 	vector<vector2> pointA;
 	A->ComputePoints(pointA);
 	vector<vector2> pointB;
 	B->ComputePoints(pointB);
 
+	vector2 direction = (A->transform->position - B->transform->position).Normalize();
+	vector2 a = Support(pointA, pointB, direction);
 
-	vector2 a = SupportFunc(pointA, pointB, vector2(1, 1));
-
-	// First direction
 	vector2 v = -a;
 
-	// Second point
-	vector2 b = SupportFunc(pointA, pointB, v);
-	if (vector2::Dot(b, v) <= 0) return false; // Second point fails
+	vector2 b = Support(pointA, pointB, v);
 
-	// Second direction
+	if (vector2::Dot(b, v) <= 0) return false;
+
 	vector2 ab = b-a;
-	v = vector2::tripleProduct(ab, -a, ab);
+	v = vector2::TripleProduct(ab, -a, ab);
 
 	for (;;) {
-		// Third point
-		vector2 c = SupportFunc(pointA, pointB, v);
-		if (vector2::Dot(c, v) <= 0) return false; // Third point fails
+		vector2 c = Support(pointA, pointB, v);
+		if (vector2::Dot(c, v) <= 0) return false;
 
 		vector2 c0 = -c;
 		vector2 cb = b - c;
 		vector2 ca = a - c;
 
-		vector2 cbPerp = vector2::tripleProduct(ca, cb, cb);
-		vector2 caPerp = vector2::tripleProduct(cb, ca, ca);
-
+		vector2 cbPerp = vector2::TripleProduct(ca, cb, cb);
+		vector2 caPerp = vector2::TripleProduct(cb, ca, ca);
+		
 		if (vector2::Dot(caPerp, c0) > 0) {
 			b = c;
 			v = caPerp;
@@ -304,11 +301,22 @@ bool GammaEngine::Collider::GJK(BoxCollider* A, BoxCollider* B){
 		}
 		else
 		{
+			result.push_back(a);
+			result.push_back(b);
+			result.push_back(c);
 			return true;
 		}
 	}
 }
 
+vector2 ClosesetEdge(vector<vector2> polytope)
+{
+	float npts = polytope.size();
+	float dmin = INFINITY;
+	vector2 closest;
+	
+	return closest;
+}
 
 vector2 GammaEngine::Collider::GetContactPoint(BoxCollider* A, BoxCollider* B)
 {

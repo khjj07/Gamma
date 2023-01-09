@@ -95,9 +95,9 @@ struct vector2
 		return result;
 	}
 
-	static vector2 tripleProduct(vector2 a, vector2 b, vector2 c)
+	static vector2 TripleProduct(vector2 a, vector2 b, vector2 c)
 	{
-		return b* (vector2::Dot(a, c)) - c * (vector2::Dot(a, b));
+		return b * (vector2::Dot(a, c)) - c * (vector2::Dot(a, b));
 	}
 
 	float Length()

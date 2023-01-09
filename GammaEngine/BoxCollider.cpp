@@ -35,8 +35,9 @@ CollisionResponse GammaEngine::BoxCollider::Check(BoxCollider* other, bool colli
 // 	{
 // 		check = OBB_to_OBB(this,other);
 // 	}
-	check = GJK(this, other);
-
+	vector<vector2> polytope;
+	check = GJK(this, other,polytope);
+	polytope
 	DecideCollisionState(result, collided, check);
 
 	return result;
