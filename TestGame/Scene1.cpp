@@ -10,6 +10,7 @@ using namespace GammaEngine;
 Scene1::Scene1()
 {
 	Hold<Cursor>();
+	Hold<Box2>();
 	Hold<Debug>();
 	Hold<Cam1>();
 }

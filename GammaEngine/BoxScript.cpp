@@ -20,15 +20,16 @@ void BoxScript::Start()
 void BoxScript::Update()
 {
 	transform->position += velocity * Time::deltaTime;
-	//velocity += gravity;
+	velocity =velocity+ gravity;
     correction = vector2();
 }
 
-void BoxScript::OnCollisionEnter(CollisionResponse response)
+void BoxScript::OnCollisionStay(CollisionResponse response)
 {
 	if (response.other->CompareTag("box"))
 	{
-		GetComponent<RectangleRenderer>()->SetPen(vector4(1, 0, 0, 1));
+		velocity = vector2();
+		transform->position = transform->position + response.normal*response.distance;
 	}
 }
 

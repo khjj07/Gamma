@@ -31,12 +31,16 @@ namespace GammaEngine
 		static bool Circle_to_Circle(CircleCollider*, CircleCollider*);
 		static bool GetIntersectPoint(vector2 AP1, vector2 AP2, vector2 BP1, vector2 BP2, vector2& IP);
 		static bool GetIntersectPoint(vector2 AP1, vector2 AP2, vector2 BP1, float r);
-		static bool GJK(BoxCollider* A, BoxCollider* B, vector<vector2>& result);
-	public:
-		static vector2 FarthestPoint(vector<vector2>, vector2);
 		static vector2 GetContactPoint(BoxCollider*, CircleCollider*);
 		static vector2 GetContactPoint(BoxCollider*, BoxCollider*);
-		static vector2 Support(vector<vector2>, vector<vector2>, vector2);
+		static bool GJK(vector<vector2>& A, vector<vector2>& B,vector2 direction, vector<vector2>& result);
+		static void EPA(vector<vector2>& A, vector<vector2>& B, vector<vector2>& polytope, vector2& normal, float& distance);
+
+	private:
+		static vector2 FarthestPoint(vector<vector2>, vector2);
+		static vector2 Support(vector<vector2>&, vector<vector2>&, vector2);
+		static void ClosesetEdge(vector<vector2>& polytope, vector2& normal, float& distance);
+
 	public:
 		bool CompareTag(string str);
 		bool CompareTag(char* str);

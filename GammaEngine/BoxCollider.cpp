@@ -27,28 +27,43 @@ CollisionResponse GammaEngine::BoxCollider::Check(BoxCollider* other, bool colli
 	result.other = this;
 
 	bool check;
-// 	if (transform->GetWorldRotation() == 0 && other->transform->GetWorldRotation() == 0)
-// 	{
-// 		check = AABB_to_AABB(this, other);
-// 	}
-// 	else
-// 	{
-// 		check = OBB_to_OBB(this,other);
-// 	}
+	// 	if (transform->GetWorldRotation() == 0 && other->transform->GetWorldRotation() == 0)
+	// 	{
+	// 		check = AABB_to_AABB(this, other);
+	// 	}
+	// 	else
+	// 	{
+	// 		check = OBB_to_OBB(this,other);
+	// 	}
 	vector<vector2> polytope;
-	check = GJK(this, other,polytope);
-	polytope
-	DecideCollisionState(result, collided, check);
+	vector<vector2> pointA;
+	vector<vector2> pointB;
+	vector2 normal;
+	float distance;
 
+	this->ComputePoints(pointA);
+	other->ComputePoints(pointB);
+	check = GJK(pointA, pointB, vector2(1,1), polytope);
+
+	if (check)
+	{
+		EPA(pointA, pointB, polytope, normal, distance);
+		result.normal = normal;
+		result.distance = distance;
+	}
+
+	DecideCollisionState(result, collided, check);
 	return result;
 }
 
 CollisionResponse GammaEngine::BoxCollider::Check(CircleCollider* other, bool collided)
 {
 	CollisionResponse result;
+	bool check;
+
 	result.state = CollisionState::Not;
 	result.other = this;
-	bool check;
+
 	if (transform->GetWorldRotation() == 0)
 	{
 		check = Circle_to_AABB(other, this);

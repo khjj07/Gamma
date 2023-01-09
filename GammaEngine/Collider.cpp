@@ -254,21 +254,16 @@ vector2 GammaEngine::Collider::FarthestPoint(vector<vector2> set, vector2 direct
 	return result;
 }
 
-vector2 GammaEngine::Collider::Support(vector<vector2> setA, vector<vector2> setB, vector2 direction)
+vector2 GammaEngine::Collider::Support(vector<vector2>& setA, vector<vector2>& setB, vector2 direction)
 {
 	vector2 A = FarthestPoint(setA, direction);
 	vector2 B = FarthestPoint(setB, -direction);
 	return A - B;
 }
 
-bool GammaEngine::Collider::GJK(BoxCollider* A, BoxCollider* B, vector<vector2>& result)
+bool GammaEngine::Collider::GJK(vector<vector2>& pointA, vector<vector2>& pointB,vector2 direction, vector<vector2>& result)
 {
-	vector<vector2> pointA;
-	A->ComputePoints(pointA);
-	vector<vector2> pointB;
-	B->ComputePoints(pointB);
 
-	vector2 direction = (A->transform->position - B->transform->position).Normalize();
 	vector2 a = Support(pointA, pointB, direction);
 
 	vector2 v = -a;
@@ -309,14 +304,42 @@ bool GammaEngine::Collider::GJK(BoxCollider* A, BoxCollider* B, vector<vector2>&
 	}
 }
 
-vector2 ClosesetEdge(vector<vector2> polytope)
+void GammaEngine::Collider::ClosesetEdge(vector<vector2>& polytope, vector2& normal,float& distance)
 {
 	float npts = polytope.size();
-	float dmin = INFINITY;
+	float dmin = 1000000;
 	vector2 closest;
-	
-	return closest;
+	int N = polytope.size();
+	for (int i = 0; i < N; i++)
+	{
+		vector2 a = polytope[i];
+		vector2 b = polytope[(i + 1) % N];
+		vector2 l = b - a;
+		vector2 n = vector2::Normalize(vector2::TripleProduct(l,a,l));
+		float dist = vector2::Dot(n, a);
+		if (dist < dmin && !isnan(dist))
+		{
+			dmin = dist;
+			normal = n;
+			distance = dist;
+		}
+	}
 }
+
+void GammaEngine::Collider::EPA(vector<vector2>& A, vector<vector2>& B, vector<vector2>& polytope, vector2& normal, float& distance)
+{
+	for (;;) 
+	{
+		ClosesetEdge(polytope, normal, distance);
+		vector2 r = Support(A, B, normal);
+		if (abs(vector2::Dot(normal, r) - distance) < 0.001)
+		{
+			break;
+		}
+		polytope.push_back(r);
+	}
+}
+
 
 vector2 GammaEngine::Collider::GetContactPoint(BoxCollider* A, BoxCollider* B)
 {
