@@ -28,8 +28,11 @@ void BoxScript::OnCollisionStay(CollisionResponse response)
 {
 	if (response.other->CompareTag("box"))
 	{
-		velocity = vector2();
 		transform->position = transform->position + response.normal*response.distance;
+		if (vector2::Dot(velocity, response.normal) < 0)
+		{
+			velocity = velocity - response.normal * vector2::Dot(velocity, response.normal);
+		}
 	}
 }
 

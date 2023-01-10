@@ -40,6 +40,16 @@ struct vector2
 		y = b;
 	}
 
+	friend bool operator ==(vector2 a, vector2 b)
+	{
+		return a.x == b.x && a.y == b.y;
+	}
+
+	friend bool operator !=(vector2& a, vector2& b)
+	{
+		return a.x != b.x || a.y != b.y;
+	}
+
 	vector2 operator -()
 	{
 		return vector2(-x, -y);
@@ -118,12 +128,20 @@ struct vector2
 
 	vector2 Normalize()
 	{
+		if (Length() == 0)
+		{
+			return vector2();
+		}
 		vector2 result = vector2(x / this->Length(), y / this->Length());
 		return result;
 	}
 
 	static vector2 Normalize(vector2 v)
 	{
+		if (Length(v)==0)
+		{
+			return vector2();
+		}
 		vector2 result = vector2( v.x / Length(v),v.y / Length(v) );
 		return result;
 	}

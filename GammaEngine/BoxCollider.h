@@ -25,16 +25,13 @@ namespace GammaEngine
 		~BoxCollider();
 
 	public:
+		vector<vector2> ComputePoints();
+		virtual vector2 FarthestPoint(vector2 v);
 		virtual bool InBound(vector2);
-		virtual vector2 GetNormalVector(vector2);
 		virtual CollisionResponse Collide(Collider*, bool);
-		virtual CollisionResponse Check(BoxCollider* other, bool collided);
-		virtual CollisionResponse Check(CircleCollider* other, bool collided);
-		virtual CollisionResponse Check(LineCollider* other, bool collided);
 	
 	public:
 		void SetBounds(vector2);
-		void ComputePoints(vector<vector2>&);
 	private:
 		vector2 bounds;
 	};

@@ -55,6 +55,7 @@
 #include "CircleCollider.h"
 #include "CollisionSystem.h"
 #include "Physics.h"
+#include "Rigidbody.h"
 
 //Entity
 #include "GameObject.h"

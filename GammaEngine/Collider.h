@@ -23,22 +23,14 @@ namespace GammaEngine
 
 	public:
 		static void DecideCollisionState(CollisionResponse&, bool, bool);
-		static bool LineToOBB(LineCollider*, BoxCollider*);
-		static bool AABB_to_AABB(BoxCollider*, BoxCollider*);
-		static bool OBB_to_OBB(BoxCollider*, BoxCollider*);
-		static bool Circle_to_AABB(CircleCollider*, BoxCollider*);
-		static bool Circle_to_OBB(BoxCollider*, CircleCollider*);
-		static bool Circle_to_Circle(CircleCollider*, CircleCollider*);
-		static bool GetIntersectPoint(vector2 AP1, vector2 AP2, vector2 BP1, vector2 BP2, vector2& IP);
-		static bool GetIntersectPoint(vector2 AP1, vector2 AP2, vector2 BP1, float r);
-		static vector2 GetContactPoint(BoxCollider*, CircleCollider*);
-		static vector2 GetContactPoint(BoxCollider*, BoxCollider*);
-		static bool GJK(vector<vector2>& A, vector<vector2>& B,vector2 direction, vector<vector2>& result);
-		static void EPA(vector<vector2>& A, vector<vector2>& B, vector<vector2>& polytope, vector2& normal, float& distance);
+		static bool GJK(Collider* pointA, Collider* pointB, vector<vector2>& result);
+		static bool GJK(Collider* pointA, vector2 v);
+		static void EPA(Collider* A, Collider* B, vector<vector2>& polytope, vector2& normal, float& distance);
+		static vector2 FarthestPoint(vector<vector2>, vector2);
 
 	private:
-		static vector2 FarthestPoint(vector<vector2>, vector2);
-		static vector2 Support(vector<vector2>&, vector<vector2>&, vector2);
+		static vector2 Support(Collider*, Collider*, vector2);
+		static vector2 Support(Collider* A, vector2 v, vector2 direction);
 		static void ClosesetEdge(vector<vector2>& polytope, vector2& normal, float& distance);
 
 	public:
@@ -49,7 +41,7 @@ namespace GammaEngine
 
 	public:
 		virtual bool InBound(vector2);
-		virtual vector2 GetNormalVector(vector2);
+		virtual vector2 FarthestPoint(vector2 v);
 		virtual CollisionResponse Collide(Collider*, bool) = 0;
 		virtual CollisionResponse Check(BoxCollider*, bool) = 0;
 		virtual CollisionResponse Check(CircleCollider*, bool) = 0;

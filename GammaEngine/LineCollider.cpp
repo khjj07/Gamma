@@ -17,47 +17,10 @@ CollisionResponse GammaEngine::LineCollider::Collide(Collider* other, bool colli
 	return other->Check(this, collided);
 }
 
-CollisionResponse GammaEngine::LineCollider::Check(BoxCollider* other, bool collided)
+vector2 GammaEngine::LineCollider::FarthestPoint(vector2 v)
 {
-	CollisionResponse result;
-	result.state = CollisionState::Not;
-	result.other = this;
-	bool check;
-	
-	check = LineToOBB(this,other);
-
-	DecideCollisionState(result, collided, check);
-
-	return result;
-}
-
-CollisionResponse GammaEngine::LineCollider::Check(CircleCollider* other, bool collided)
-{
-	CollisionResponse result;
-	result.state = CollisionState::Not;
-
-	bool check = GetIntersectPoint(startPoint, endPoint, other->transform->position, other->radius);
-	result.other = this;
-
-	DecideCollisionState(result, collided, check);
-
-	return result;
-}
-
-CollisionResponse GammaEngine::LineCollider::Check(LineCollider* other, bool collided)
-{
-	CollisionResponse result;
-	result.state = CollisionState::Not;
-
-	 bool check= GetIntersectPoint(startPoint, endPoint, other->startPoint, other->endPoint, result.position);
-	 result.other = this;
-
-	 DecideCollisionState(result, collided, check);
-
-	return result;
-}
-
-vector2 GammaEngine::LineCollider::GetNormalVector(vector2 v)
-{
-	return vector2::Normalize(v - transform->GetWorldPosition());
+	vector<vector2> simplex;
+	simplex.push_back(startPoint);
+	simplex.push_back(endPoint);
+	return Collider::FarthestPoint(simplex, v);
 }

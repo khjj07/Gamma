@@ -13,66 +13,26 @@ GammaEngine::CircleCollider::~CircleCollider()
 
 GammaEngine::CollisionResponse CircleCollider::Collide(Collider* other, bool collided)
 {
-	return other->Check(this, collided);
-}
-
-GammaEngine::CollisionResponse CircleCollider::Check(BoxCollider* other, bool collided)
-{
 	CollisionResponse result;
-	result.state = CollisionState::Not;
-	result.other = this;
-	bool check;
+	vector<vector2> polytope;
 
-	if (other->transform->GetWorldRotation() == 0)
+	bool detect = GJK(this, other, polytope);
+	result.other = other;
+	if (detect)
 	{
-		check = Circle_to_AABB(this, other);
+		EPA(this, other, polytope, result.normal, result.distance);
 	}
-	else
-	{
-		check = Circle_to_OBB(other, this);
-	}
-
-	DecideCollisionState(result, collided, check);
-
-	return result;
-}
-
-
-CollisionResponse GammaEngine::CircleCollider::Check(CircleCollider* other, bool collided)
-{
-	CollisionResponse result;
-	result.state = CollisionState::Not;
-	bool check = Circle_to_Circle(this,other);
-
-	result.other = this;
-
-	DecideCollisionState(result, collided, check);
-
-	return result;
-}
-
-CollisionResponse GammaEngine::CircleCollider::Check(LineCollider* other, bool collided)
-{
-	CollisionResponse result;
-	result.state = CollisionState::Not;
-
-	bool check = GetIntersectPoint(other->startPoint, other->endPoint, transform->GetWorldPosition(), radius);
-	result.other = this;
-
-	DecideCollisionState(result, collided, check);
-
+	DecideCollisionState(result, detect, collided);
 	return result;
 }
 
 bool GammaEngine::CircleCollider::InBound(vector2 v)
 {
-	vector2 center = transform->GetWorldPosition();
-	vector2 scale = transform->GetWorldScale();
-	float range = radius*(scale.x+ scale.y)/2;
-	return vector2::Distance(center, v) <= range;
+	vector2 position = transform->GetWorldPosition();
+	return vector2::Distance(position, v) <= radius;
 }
 
- vector2 GammaEngine::CircleCollider::GetNormalVector(vector2 v)
+vector2 GammaEngine::CircleCollider::FarthestPoint(vector2 v)
 {
-	 return vector2::Normalize(v - transform->GetWorldPosition());
+	return v.Normalize() * radius;
 }

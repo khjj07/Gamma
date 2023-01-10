@@ -55,7 +55,6 @@ RaycastResponse GammaEngine::Physics::Raycast(vector2 from, vector2 to, string t
 					result.gameObject = (*iter)->gameObject;
 					result.collider = (*iter);
 					result.fraction = k / count;
-					result.normal = (*iter)->GetNormalVector(check);
 					result.position = check;
 					result.hit = true;
 					return result;
@@ -107,7 +106,6 @@ RaycastResponse GammaEngine::Physics::Raycast(vector2 from, vector2 to, vector<s
 					result.gameObject = (*iter)->gameObject;
 					result.collider = (*iter);
 					result.fraction = k / count;
-					result.normal = (*iter)->GetNormalVector(check);
 					result.position = check;
 					result.hit = true;
 					return result;

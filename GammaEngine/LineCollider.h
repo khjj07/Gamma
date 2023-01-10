@@ -21,10 +21,7 @@ namespace GammaEngine {
 
 	public:
 		virtual CollisionResponse Collide(Collider*, bool);
-		virtual vector2 GetNormalVector(vector2);
-		virtual CollisionResponse Check(BoxCollider* other, bool collided);
-		virtual CollisionResponse Check(CircleCollider* other, bool collided);
-		virtual CollisionResponse Check(LineCollider* other, bool collided);
+		virtual vector2 FarthestPoint(vector2 v);
 
 	public:
 		vector2 startPoint;
