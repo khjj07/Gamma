@@ -1,32 +1,88 @@
 #pragma once
-#include <string>
-/// <summary>
-/// 디버그용 클래스
-/// </summary>
-
+#include <vector>
 using namespace std;
-class Debug : public GameObject
+
+#ifdef GammaEngineAPI_Exporting
+#define GammaEngineAPI __declspec(dllexport)
+#else
+#define GammaEngineAPI __declspec(dllimport)
+#endif
+
+class RenderModule;
+class Material;
+
+namespace GammaEngine
 {
-public:
-	Debug();
-	~Debug();
+	struct DebugShape
+	{
+		Material* material;
+		DebugShape(Material*  material) : material(material)
+		{
 
-private:
+		}
+	};
 
-};
+	struct DebugRect : public DebugShape
+	{
+		vector2 pos;
+		vector2 size;
+		float rotation;
+		DebugRect(vector2 pos, vector2 size, float rotation, Material* material)
+			: pos(pos), size(size), rotation(rotation), DebugShape(material)
+		{
 
-/// <summary>
-/// 디버그 스크립트 클래스
-/// </summary>
-class DebugScript : public Component
-{
-public:
-	DebugScript(GameObject*);
-	~DebugScript();
+		};
+	};
 
-public:
-	virtual void Update();
+	struct DebugEllipse : public DebugShape
+	{
+		vector2 pos;
+		vector2 size;
+		float rotation;
+		DebugEllipse(vector2 pos, vector2 size, float rotation, Material* material)
+			: pos(pos), size(size), rotation(rotation), DebugShape(material)
+		{
 
-public:
-	wstring fps;
-};
+		};
+	};
+
+	struct DebugLine: public DebugShape
+	{
+		vector2 start;
+		vector2 end;
+		float thickness;
+		DebugLine(vector2 start, vector2 end, float thickness, Material* material)
+			: start(start), end(end), thickness(thickness), DebugShape(material)
+		{
+
+		};
+	};
+
+	/// <summary>
+	/// 디버그용 클래스
+	/// </summary>
+	/// 
+	/// #ifdef GammaEngineAPI_Exporting
+	class GammaEngineAPI Debug
+	{
+	public:
+		friend class GraphicSystem;
+
+	public:
+		Debug();
+		~Debug();
+
+	private:
+		static void Render();
+
+	public:
+		static void DrawRectangle(vector2 pos, vector2 size, float rotation, Material* meterial);
+		static void DrawEllipse(vector2 pos, vector2 size, float rotation, Material* meterial);
+		static void DrawLine(vector2 start, vector2 end, float thickness, Material* meterial);
+
+	public:
+		static vector<GammaEngine::DebugRect*> rect;
+		static vector<GammaEngine::DebugEllipse*> ellipse;
+		static vector<GammaEngine::DebugLine*> line;
+	};
+}

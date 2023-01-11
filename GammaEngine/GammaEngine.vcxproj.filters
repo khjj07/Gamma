@@ -40,6 +40,9 @@
     <Filter Include="Framework\Component\Physics">
       <UniqueIdentifier>{52fc3262-d56f-4a08-b5eb-31caca8c9b72}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Framework\Debug">
+      <UniqueIdentifier>{393ce50f-74c8-4a10-86e1-d65f4f01a626}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -136,6 +139,9 @@
     <ClInclude Include="LineCollider.h">
       <Filter>Framework\Component\Collider</Filter>
     </ClInclude>
+    <ClInclude Include="Debug.h">
+      <Filter>Framework\Debug</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GraphicSystem.cpp">
@@ -221,6 +227,9 @@
     </ClCompile>
     <ClCompile Include="LineCollider.cpp">
       <Filter>Framework\Component\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug.cpp">
+      <Filter>Framework\Debug</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

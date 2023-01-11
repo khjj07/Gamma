@@ -1,44 +1,77 @@
 #include "stdafx.h"
-#include "Debug.h"
 
-Debug::Debug()
+using namespace GammaEngine;
+
+
+vector<GammaEngine::DebugRect*> GammaEngine::Debug::rect;
+vector<GammaEngine::DebugEllipse*>  GammaEngine::Debug::ellipse;
+vector<GammaEngine::DebugLine*> GammaEngine::Debug::line;
+
+GammaEngine::Debug::Debug()
 {
-	AddComponent<TextRenderer>();
-	AddComponent<DebugScript>();
-	GetComponent<TextRenderer>()->size = vector2(500, 800);
+;
 }
 
-Debug::~Debug()
-{
-
-}
-
-DebugScript::DebugScript(GameObject* t) :Component(t)
-{
-
-}
-
-DebugScript::~DebugScript()
+GammaEngine::Debug::~Debug()
 {
 
 }
 
-void DebugScript::Update()
+void GammaEngine::Debug::DrawRectangle(vector2 pos, vector2 size, float rotation, Material* material)
 {
-	transform->position = Camera::main->ScreenToWorldPoint(vector2(1400, 10));
-	//transform->scale = Camera::main->ScreenToWorldScale(vector2(1, 1));
+	DebugRect* debugShape = new DebugRect(pos, size, rotation, material);
+	rect.push_back(debugShape);
+}
 
-	static int frameCnt = 0;
-	static double accum = 0;
-	if (accum >= 1)
+void GammaEngine::Debug::DrawEllipse(vector2 pos, vector2 size, float rotation, Material* material)
+{
+	DebugEllipse* debugShape = new DebugEllipse(pos, size, rotation, material);
+	ellipse.push_back(debugShape);
+}
+
+void GammaEngine::Debug::DrawLine(vector2 start, vector2 end, float thickness, Material* material)
+{
+	DebugLine* debugShape = new DebugLine(start, end, thickness, material);
+	line.push_back(debugShape);
+}
+
+void GammaEngine::Debug::Render()
+{
+	
+	for (auto iter = rect.begin(); iter != rect.end(); iter++)
 	{
-		char str[300];
-		sprintf_s(str, sizeof(str), "fps = %d \n스페이스 : 도형 바꾸기(사각형,원)\n빈공간 좌클릭 : 도형 생성\n도형 좌클릭 : 도형 선택\nWASD : 선택된 도형 이동\nQE : 선택된 도형회전\n방향키 : 카메라 이동\n마우스 스크롤 : 카메라 줌인/줌아웃\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", frameCnt);
-		fps = string(str);
-		frameCnt = 0;
-		accum = 0;
+		DebugRect* debugShape = *iter;
+		GraphicSystem::DrawRectangle(debugShape->pos, debugShape->size, debugShape->rotation, debugShape->material);
 	}
-	transform->GetComponent<TextRenderer>()->text = fps;
-	frameCnt++;
-	accum += Time::deltaTime;
+
+	for (auto iter = ellipse.begin(); iter != ellipse.end(); iter++)
+	{
+		DebugEllipse* debugShape = *iter;
+		GraphicSystem::DrawEllipse(debugShape->pos, debugShape->size, debugShape->rotation, debugShape->material);
+	}
+
+	for (auto iter = line.begin(); iter != line.end(); iter++)
+	{
+		DebugLine* debugShape = *iter;
+		GraphicSystem::DrawLine(debugShape->start, debugShape->end, debugShape->thickness, debugShape->material);
+	}
+	for (auto iter = rect.begin(); iter != rect.end(); iter++)
+	{
+		delete* iter;
+	}
+
+	for (auto iter = ellipse.begin(); iter != ellipse.end(); iter++)
+	{
+		delete* iter;
+	}
+
+	for (auto iter = line.begin(); iter != line.end(); iter++)
+	{
+		delete* iter;
+	}
+
+	rect.clear();
+	ellipse.clear();
+	line.clear();
+
 }

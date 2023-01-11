@@ -14,7 +14,17 @@ GammaEngine::LineCollider::~LineCollider()
 
 CollisionResponse GammaEngine::LineCollider::Collide(Collider* other, bool collided)
 {
-	return other->Check(this, collided);
+	CollisionResponse result;
+	vector<vector2> polytope;
+
+	bool detect = GJK(this, other, polytope);
+	result.other = other;
+	if (detect)
+	{
+		EPA(this, other, polytope, result.normal, result.distance);
+	}
+	DecideCollisionState(result, collided, detect);
+	return result;
 }
 
 vector2 GammaEngine::LineCollider::FarthestPoint(vector2 v)

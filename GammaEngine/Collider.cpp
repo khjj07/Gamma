@@ -54,7 +54,7 @@ vector2 GammaEngine::Collider::Support(Collider* A, vector2 v, vector2 direction
 
 bool GammaEngine::Collider::GJK(Collider* A, Collider* B, vector<vector2>& result)
 {
-	vector2 direction = B->transform->GetWorldPosition() - A->transform->GetWorldPosition();
+	vector2 direction = vector2(1,1);
 	vector2 a = Support(A, B, direction);
 
 	vector2 v = -a;
@@ -97,12 +97,12 @@ bool GammaEngine::Collider::GJK(Collider* A, Collider* B, vector<vector2>& resul
 
 bool GammaEngine::Collider::GJK(Collider* A, vector2 vv)
 {
-	vector2 direction = A->transform->GetWorldPosition() - vv;
+	vector2 direction = vector2(1, 1);
 	vector2 a = Support(A, vv, direction);
 
 	vector2 v = -a;
 
-	vector2 b = Support(A, v, v);
+	vector2 b = Support(A, vv, v);
 
 	if (vector2::Dot(b, v) <= 0) return false;
 
@@ -110,7 +110,7 @@ bool GammaEngine::Collider::GJK(Collider* A, vector2 vv)
 	v = vector2::TripleProduct(ab, -a, ab);
 
 	for (;;) {
-		vector2 c = Support(A, v, v);
+		vector2 c = Support(A, vv, v);
 		if (vector2::Dot(c, v) <= 0) return false;
 
 		vector2 c0 = -c;
@@ -138,7 +138,7 @@ bool GammaEngine::Collider::GJK(Collider* A, vector2 vv)
 void GammaEngine::Collider::ClosesetEdge(vector<vector2>& polytope, vector2& normal,float& distance)
 {
 	float npts = polytope.size();
-	float dmin = 1000000;
+	float dmin = INFINITY;
 	int N = polytope.size();
 	for (int i = 0; i < N; i++)
 	{
@@ -146,13 +146,17 @@ void GammaEngine::Collider::ClosesetEdge(vector<vector2>& polytope, vector2& nor
 		vector2 b = polytope[(i + 1) % N];
 		vector2 l = b - a;
 		vector2 n = vector2::Normalize(vector2::TripleProduct(l,a,l));
-		float dist = vector2::Dot(n, a);
-		if (dist < dmin)
+		if (n.Length()!=0)
 		{
-			dmin = dist;
-			normal = n;
-			distance = dist;
+			float dist = vector2::Dot(n, a);
+			if (dist < dmin)
+			{
+				dmin = dist;
+				normal = n;
+				distance = dist;
+			}
 		}
+		
 	}
 }
 
@@ -162,12 +166,12 @@ void GammaEngine::Collider::EPA(Collider* A, Collider* B, vector<vector2>& polyt
 	{
 		ClosesetEdge(polytope, normal, distance);
 		vector2 r = Support(A, B, normal);
-		if (abs(vector2::Dot(normal, r) - distance) < 0.01)
+		if (abs(vector2::Dot(normal, r) - distance) < 0.001)
 		{
 			break;
 		}
 		auto it2 = find(polytope.begin(), polytope.end(), r);
-		if(it2 != polytope.end())
+		if (it2 != polytope.end())
 		{
 			break;
 		}
@@ -221,14 +225,4 @@ bool GammaEngine::Collider::CompareTags(vector<char*> strList)
 		}
 	}
 	return false;
-}
-
- vector2 GammaEngine::Collider::FarthestPoint(vector2 v)
-{
-	 return vector2();
-}
-
-bool GammaEngine::Collider::InBound(vector2 v)
-{
-	return false;	
 }

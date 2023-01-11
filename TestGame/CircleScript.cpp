@@ -4,10 +4,12 @@ using namespace GammaEngine;
 
 CircleScript::CircleScript(GameObject* t) :Component(t)
 {
+
 }
 
 CircleScript::~CircleScript()
 {
+
 }
 
 void CircleScript::Start()
@@ -18,22 +20,23 @@ void CircleScript::Start()
 void CircleScript::Update()
 {
 	transform->position += velocity * Time::deltaTime;
-	//velocity += gravity;
 	correction = vector2();
-}
-
-void CircleScript::OnCollisionEnter(CollisionResponse response)
-{
-	
 }
 
 void CircleScript::OnCollisionStay(CollisionResponse response)
 {
+	if (response.other->CompareTag("box"))
+	{
+		transform->position = transform->position - response.normal * (response.distance + 1);
+		if (vector2::Dot(velocity, response.normal) < 0)
+		{
+			velocity = velocity - response.normal * vector2::Dot(velocity, response.normal);
+		}
 
+	}
 }
-
 
 void CircleScript::OnCollisionExit(CollisionResponse response)
 {
-	
+	GetComponent<EllipseRenderer>()->SetPen(vector4(0, 0, 0, 1));
 }

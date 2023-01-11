@@ -40,6 +40,9 @@ void GammaEngine::GraphicSystem::Frame()
 	{
 		(*renderComponentIter)->Render();
 	}
+#if DEBUG
+	Debug::Render();
+#endif
 	render->EndDraw();
 }
 

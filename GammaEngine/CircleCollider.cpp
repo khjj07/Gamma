@@ -22,7 +22,7 @@ GammaEngine::CollisionResponse CircleCollider::Collide(Collider* other, bool col
 	{
 		EPA(this, other, polytope, result.normal, result.distance);
 	}
-	DecideCollisionState(result, detect, collided);
+	DecideCollisionState(result, collided, detect);
 	return result;
 }
 
@@ -34,5 +34,6 @@ bool GammaEngine::CircleCollider::InBound(vector2 v)
 
 vector2 GammaEngine::CircleCollider::FarthestPoint(vector2 v)
 {
-	return v.Normalize() * radius;
+	vector2 position = transform->GetWorldPosition();
+	return position+v.Normalize() * radius;
 }

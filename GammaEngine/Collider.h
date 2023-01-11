@@ -40,12 +40,9 @@ namespace GammaEngine
 		bool CompareTags(vector<char*> strList);
 
 	public:
-		virtual bool InBound(vector2);
-		virtual vector2 FarthestPoint(vector2 v);
+		virtual bool InBound(vector2) = 0;
+		virtual vector2 FarthestPoint(vector2 v) = 0;
 		virtual CollisionResponse Collide(Collider*, bool) = 0;
-		virtual CollisionResponse Check(BoxCollider*, bool) = 0;
-		virtual CollisionResponse Check(CircleCollider*, bool) = 0;
-		virtual CollisionResponse Check(LineCollider*, bool) = 0;
 	};
 
 

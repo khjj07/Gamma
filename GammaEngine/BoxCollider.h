@@ -32,8 +32,11 @@ namespace GammaEngine
 	
 	public:
 		void SetBounds(vector2);
+		void ResetPoints();
 	private:
 		vector2 bounds;
+		vector<vector2> simplex;
+		Material* debug;
 	};
 }
 

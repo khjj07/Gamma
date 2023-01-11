@@ -22,7 +22,7 @@ void CursorSript::Update()
 	vector2 mousePos = Camera::main->ScreenToWorldPoint(Input::GetMousePosition());
 	transform->position = mousePos;
 
-	if (!hover && Input::GetMouseButtonDown(0))
+	if (Input::GetMouseButtonDown(0))
 	{
 		switch (mode)
 		{
@@ -38,46 +38,13 @@ void CursorSript::Update()
 		{
 			GameObject* circle = new Circle();
 			Instantiate(circle);
-			circle->transform->parent = transform;
-			circle->transform->SetWorldPosition(mousePos);
+			circle->transform->position = mousePos;
 			break;
 		}
 		default:
 			break;
 		}
 	}
-
-	if (hover && Input::GetMouseButtonDown(0))
-	{
-		target = hover;
-	}
-	if (hover && Input::GetMouseButtonDown(1))
-	{
-		if (hover == target)
-		{
-			target = NULL;
-		}
-		Destroy(hover);
-		hover = NULL;
-	}
-
-	if (target)
-	{
-		if (Input::GetKey('W'))
-			target->transform->position.y -= targetSpeed * Time::deltaTime;
-		if (Input::GetKey('A'))
-			target->transform->position.x -= targetSpeed * Time::deltaTime;
-		if (Input::GetKey('S'))
-			target->transform->position.y += targetSpeed * Time::deltaTime;
-		if (Input::GetKey('D'))
-			target->transform->position.x += targetSpeed * Time::deltaTime;
-		if (Input::GetKey('Q'))
-			target->transform->rotation -= targetRotateSpeed * Time::deltaTime;
-		if (Input::GetKey('E'))
-			target->transform->rotation += targetRotateSpeed * Time::deltaTime;
-	}
-
-
 
 	if (Input::GetKeyDown(VK_SPACE))
 	{
@@ -93,10 +60,5 @@ void CursorSript::Update()
 			break;
 		}
 	}
-	hover = NULL;
-}
 
-void CursorSript::OnCollisionStay(CollisionResponse response)
-{
-	hover = response.other->gameObject;
 }

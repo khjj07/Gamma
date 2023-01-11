@@ -32,9 +32,6 @@
     <ClCompile Include="..\GammaEngine\BoxScript.cpp">
       <Filter>Game\Scripts</Filter>
     </ClCompile>
-    <ClCompile Include="Debug.cpp">
-      <Filter>Game\Debug</Filter>
-    </ClCompile>
     <ClCompile Include="Box.cpp">
       <Filter>Game\Prefab</Filter>
     </ClCompile>
@@ -68,16 +65,10 @@
     <ClCompile Include="main.cpp">
       <Filter>main</Filter>
     </ClCompile>
-    <ClCompile Include="DebugScript.cpp">
-      <Filter>Game\Debug</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\GammaEngine\BoxScript.h">
       <Filter>Game\Scripts</Filter>
-    </ClInclude>
-    <ClInclude Include="Debug.h">
-      <Filter>Game\Debug</Filter>
     </ClInclude>
     <ClInclude Include="Box.h">
       <Filter>Game\Prefab</Filter>
@@ -108,9 +99,6 @@
     </ClInclude>
     <ClInclude Include="Scene1.h">
       <Filter>Game\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="DebugScript.h">
-      <Filter>Game\Debug</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

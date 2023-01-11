@@ -7,9 +7,27 @@
 using namespace std;
 
 class Material {
+
 public:
-	vector4 pen = vector4(0,0,0,1);
-	vector4 brush = vector4(0, 0, 0, 0);
+	vector4 pen;
+	vector4 brush;
+
+public:
+	Material(): pen(vector4(0, 0, 0, 1)), brush(vector4(0, 0, 0, 0))
+	{
+
+	};
+
+	Material(vector4 pen) : pen(pen), brush(vector4(0, 0, 0, 0))
+	{
+
+	};
+
+	Material(vector4 pen, vector4 brush) : pen(pen), brush(brush)
+	{
+
+	};
+
 };
 
 class RenderModule
