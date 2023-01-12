@@ -39,12 +39,12 @@ public:
 	virtual void EndDraw() abstract;
 public:
 	virtual void Resize(int, int) abstract;
-	virtual void DrawRectangle(vector2 size, vector2 pos, vector2 scale, float rotation, Material* material) abstract;
-	virtual void DrawPolygon(wstring name, vector2 pos, vector2 scale, float rotation, Material* material) abstract;
-	virtual void DrawEllipse(vector2 size, vector2 pos, vector2 scale, float rotation, Material* material) abstract;
+	virtual void DrawRectangle(vector2 size, Matrix3x3 matrix, Material* material) abstract;
+	virtual void DrawPolygon(wstring name, Matrix3x3 matrix, Material* material) abstract;
+	virtual void DrawEllipse(vector2 size, Matrix3x3 matrix, Material* material) abstract;
 	virtual void DrawLine(vector2 start, vector2 end, Material* material) abstract;
-	virtual void DrawTextBox(vector2 size, vector2 pos, vector2 scale, wstring text, wstring fontFamily, Material* material) abstract;
-	virtual void DrawBitmap(wstring bitmap, vector2 size, vector2 pos, vector2 scale, float rotation, Material* material)abstract;
+	virtual void DrawTextBox(vector2 size, Matrix3x3 matrix, wstring text, wstring fontFamily, Material* material) abstract;
+	virtual void DrawBitmap(wstring bitmap, vector2 size, Matrix3x3 matrix, Material* material)abstract;
 	virtual wstring LoadBitmapImage(wstring) abstract;
 	virtual wstring MakePolygon(wstring,vector<vector2>) abstract;
 	virtual vector2 GetBitmapSize(wstring) abstract;

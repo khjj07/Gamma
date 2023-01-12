@@ -16,12 +16,10 @@ namespace GammaEngine {
 		~Transform();
 	public:
 		vector2 GetWorldPosition();
-		float GetWorldRotation();
 		vector2 GetWorldScale(); 
 		void SetWorldPosition(vector2 v);
-		void SetWorldRotation(float x);
 		void SetWorldScale(vector2 v);
-
+		Matrix3x3 GetWorldMatrix();
 	public:
 		vector2 position = vector2();
 		float rotation = 0;

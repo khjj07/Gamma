@@ -12,12 +12,8 @@ GammaEngine::PolygonRenderer::~PolygonRenderer()
 
 void GammaEngine::PolygonRenderer::Render()
 {
-	vector2 scale = transform->GetWorldScale();
-
-	vector2 renderPos = transform->GetWorldPosition() + offset;
-	
-	Renderer::Adjust(renderPos, scale);
-	GraphicSystem::DrawPolygon(name, renderPos, scale, transform->GetWorldRotation(), material);
+	Matrix3x3 matrix = Camera::main->Projection() * Matrix3x3::Translation(offset.x, offset.y) * transform->GetWorldMatrix();
+	GraphicSystem::DrawPolygon(name, matrix, material);
 }
 
 void GammaEngine::PolygonRenderer::SetPoints(vector<vector2> newPoints)

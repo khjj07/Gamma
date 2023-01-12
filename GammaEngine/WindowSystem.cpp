@@ -1,7 +1,12 @@
 #include "stdafx.h"
 #include "WindowSystem.h"
 using namespace GammaEngine;
-GammaEngine::WindowSystem::WindowSystem()
+GammaEngine::WindowSystem::WindowSystem():hWnd(0),applicationName(0),hInstance(0)
+{
+
+}
+
+GammaEngine::WindowSystem::~WindowSystem()
 {
 
 }

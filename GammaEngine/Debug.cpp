@@ -41,19 +41,19 @@ void GammaEngine::Debug::Render()
 	for (auto iter = rect.begin(); iter != rect.end(); iter++)
 	{
 		DebugRect* debugShape = *iter;
-		GraphicSystem::DrawRectangle(debugShape->size,debugShape->pos, vector2(1,1), debugShape->rotation, debugShape->material);
+		//GraphicSystem::DrawRectangle(debugShape->size,debugShape->pos, vector2(1,1), debugShape->rotation, debugShape->material);
 	}
 
 	for (auto iter = ellipse.begin(); iter != ellipse.end(); iter++)
 	{
 		DebugEllipse* debugShape = *iter;
-		GraphicSystem::DrawEllipse(debugShape->size, debugShape->pos, vector2(1, 1), debugShape->rotation, debugShape->material);
+		//GraphicSystem::DrawEllipse(debugShape->size, debugShape->pos, vector2(1, 1), debugShape->rotation, debugShape->material);
 	}
 
 	for (auto iter = line.begin(); iter != line.end(); iter++)
 	{
 		DebugLine* debugShape = *iter;
-		GraphicSystem::DrawLine(debugShape->start, debugShape->end, debugShape->material);
+		//GraphicSystem::DrawLine(debugShape->start, debugShape->end, debugShape->material);
 	}
 	for (auto iter = rect.begin(); iter != rect.end(); iter++)
 	{

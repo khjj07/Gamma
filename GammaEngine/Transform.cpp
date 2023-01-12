@@ -23,15 +23,18 @@ vector2 GammaEngine::Transform::GetWorldPosition()
 	}
 }
 
-float GammaEngine::Transform::GetWorldRotation()
+Matrix3x3 GammaEngine::Transform::GetWorldMatrix()
 {
+	Matrix3x3 localMatrix;
+	localMatrix = Matrix3x3::Scale(scale.x, scale.y)* Matrix3x3::Rotate(rotation) * Matrix3x3::Translation(position.x,position.y) ;
+	
 	if (parent)
 	{
-		return rotation + parent->GetWorldRotation();
+		return parent->GetWorldMatrix() * localMatrix;
 	}
 	else
 	{
-		return rotation;
+		return localMatrix;
 	}
 }
 
@@ -51,15 +54,9 @@ vector2 GammaEngine::Transform::GetWorldScale()
 	}
 }
 
-
 void GammaEngine::Transform::SetWorldPosition(vector2 v)
 {
 	position = v-parent->GetWorldPosition();
-}
-
-void GammaEngine::Transform::SetWorldRotation(float x)
-{
-	rotation = x - parent->GetWorldRotation();
 }
 
 void GammaEngine::Transform::SetWorldScale(vector2 v)

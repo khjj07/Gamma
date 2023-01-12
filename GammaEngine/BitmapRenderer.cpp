@@ -20,11 +20,6 @@ void GammaEngine::BitmapRenderer::LoadBitmapImage(wstring filename)
 
 void GammaEngine::BitmapRenderer::Render()
 {
-	vector2 scale = transform->GetWorldScale();
-
-	vector2 renderPos = transform->GetWorldPosition() + offset;
-	vector2 renderSize = size;
-
-	Renderer::Adjust(renderPos, scale);
-	GraphicSystem::DrawBitmap(bitmap, renderSize, renderPos, scale, transform->GetWorldRotation(), material);
+	Matrix3x3 matrix = Camera::main->Projection() * Matrix3x3::Translation(offset.x, offset.y) * transform->GetWorldMatrix();
+	GraphicSystem::DrawBitmap(bitmap, size, matrix, material);
 }

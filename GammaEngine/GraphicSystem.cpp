@@ -51,35 +51,35 @@ void GammaEngine::GraphicSystem::Resize(int width, int height)
 	render->Resize(width, height);
 }
 
-void GammaEngine::GraphicSystem::DrawRectangle(vector2 size, vector2 pos, vector2 scale, float rotation, Material* meterial)
+void GammaEngine::GraphicSystem::DrawRectangle(vector2 size, Matrix3x3 matrix, Material* meterial)
 {
-	render->DrawRectangle(size, pos, scale,rotation, meterial);
+	render->DrawRectangle(size, matrix, meterial);
 }
 
 
-void GammaEngine::GraphicSystem::DrawEllipse(vector2 size, vector2 pos, vector2 scale, float rotation, Material* meterial)
+void GammaEngine::GraphicSystem::DrawEllipse(vector2 size, Matrix3x3 matrix, Material* material)
 {
-	render->DrawEllipse(size, pos,scale, rotation, meterial);
+	render->DrawEllipse(size, matrix, material);
 }
 
-void GammaEngine::GraphicSystem::DrawLine(vector2 start, vector2 end, Material* meterial)
+void GammaEngine::GraphicSystem::DrawLine(vector2 start, vector2 end, Material* material)
 {
-	render->DrawLine(start, end, meterial);
+	render->DrawLine(start, end, material);
 }
 
-void GammaEngine::GraphicSystem::DrawTextBox(vector2 size, vector2 pos, vector2 scale, wstring text, wstring fontFamily, Material* meterial)
+void GammaEngine::GraphicSystem::DrawTextBox(vector2 size, Matrix3x3 matrix, wstring text, wstring fontFamily, Material* material)
 {
-	render->DrawTextBox(size, pos, scale, text, fontFamily, meterial);
+	render->DrawTextBox(size, matrix,text, fontFamily, material);
 }
 
-void GammaEngine::GraphicSystem::DrawBitmap(wstring bitmap, vector2 size, vector2 pos, vector2 scale, float rotation, Material* meterial)
+void GammaEngine::GraphicSystem::DrawBitmap(wstring bitmap, vector2 size, Matrix3x3 matrix, Material* meterial)
 {
-	render->DrawBitmap(bitmap, size, pos, scale, rotation, meterial);
+	render->DrawBitmap(bitmap, size, matrix, meterial);
 }
 
-void GammaEngine::GraphicSystem::DrawPolygon(wstring name, vector2 pos, vector2 scale, float rotation, Material* material)
+void GammaEngine::GraphicSystem::DrawPolygon(wstring name, Matrix3x3 matrix, Material* material)
 {
-	render->DrawPolygon(name, pos, scale, rotation, material);
+	render->DrawPolygon(name, matrix, material);
 }
 
 wstring GammaEngine::GraphicSystem::LoadBitmapImage(wstring filename)

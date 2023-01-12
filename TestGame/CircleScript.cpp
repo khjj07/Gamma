@@ -31,7 +31,7 @@ void CircleScript::OnCollisionStay(CollisionResponse response)
 		{
 			velocity = velocity - response.normal * vector2::Dot(velocity, response.normal);
 		}
-		transform->position = transform->position - response.normal * (response.distance + 2);
+		transform->position = transform->position - response.normal * (response.distance + 1);
 
 	}
 }

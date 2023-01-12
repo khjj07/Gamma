@@ -33,7 +33,7 @@ CollisionResponse GammaEngine::BoxCollider::Collide(Collider* other, bool collid
 		result.distance = distance;
 	}
 #if DEBUG
-	vector2 position = transform->GetWorldPosition();
+	vector2 position = transform->position;
 	this->GetComponent<RectangleRenderer>()->Adjust(position);
 	Debug::DrawLine(position, position +result.normal*result.distance,2,debug);
 #endif
@@ -46,10 +46,10 @@ vector<vector2> GammaEngine::BoxCollider::ComputePoints()
 {
 	if (simplex.size()!=4)
 	{
-		vector2 position = transform->GetWorldPosition();
-		vector2 scale = transform->GetWorldScale();
+		vector2 position = transform->position;
+		vector2 scale = transform->scale;
 
-		float theta = transform->GetWorldRotation() / 180 * PI;
+		float theta = transform->rotation / 180 * PI;
 		vector2 up = vector2(-sin(theta), cos(theta));
 		vector2 right = vector2(cos(theta), sin(theta));
 

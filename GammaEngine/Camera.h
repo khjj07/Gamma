@@ -24,6 +24,7 @@ namespace GammaEngine
 		vector2 ScreenToWorldPoint(vector2);
 		vector2 WorldToScreenPoint(vector2 p);
 		vector2 ScreenToWorldScale(vector2 s);
+		Matrix3x3 Projection();
 
 	public:
 		static Camera* main;

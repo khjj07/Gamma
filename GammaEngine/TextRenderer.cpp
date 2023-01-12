@@ -16,13 +16,8 @@ void GammaEngine::TextRenderer::Render()
 {
 	if (text.length() > 0)
 	{
-		vector2 scale = transform->GetWorldScale();
-
-		vector2 renderPos = transform->GetWorldPosition() + offset;
-		vector2 renderSize = size;
-
-		Renderer::Adjust(renderPos);
-		GraphicSystem::DrawTextBox(renderSize,renderPos, scale, text,wstring(L"Verdana"), material);
+		Matrix3x3 matrix = Camera::main->Projection() * Matrix3x3::Translation(offset.x, offset.y) * transform->GetWorldMatrix();
+		GraphicSystem::DrawTextBox(size,matrix, text,wstring(L"Verdana"), material);
 	}
 	
 }
