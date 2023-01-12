@@ -166,6 +166,7 @@
     <ClInclude Include="LineCollider.h" />
     <ClInclude Include="LineRenderer.h" />
     <ClInclude Include="Physics.h" />
+    <ClInclude Include="PolygonRenderer.h" />
     <ClInclude Include="RectangleRenderer.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Rigidbody.h" />
@@ -200,6 +201,7 @@
     <ClCompile Include="LineCollider.cpp" />
     <ClCompile Include="LineRenderer.cpp" />
     <ClCompile Include="Physics.cpp" />
+    <ClCompile Include="PolygonRenderer.cpp" />
     <ClCompile Include="RectangleRenderer.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Rigidbody.cpp" />

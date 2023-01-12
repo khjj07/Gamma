@@ -32,13 +32,15 @@ public:
 	virtual void EndDraw();
 	void CreateTextFormat(wstring fontFamilyName, DWRITE_FONT_WEIGHT fontWeight, DWRITE_FONT_STYLE fontStyle, DWRITE_FONT_STRETCH fontStretch, int fontSize);//새로운 폰트를 생성하는 함수
 	virtual void Resize(int, int);
-	virtual void DrawRectangle(vector2 pos, vector2 size, float rotation, Material* meterial);
-	virtual void DrawEllipse(vector2 pos, vector2 size, float rotation, Material* meterial);
-	virtual void DrawLine(vector2 start, vector2 end, float thickness, Material* meterial);
-	virtual void DrawTextBox(vector2 pos, vector2 size, wstring text, wstring fontFamily, Material* meterial);
-	virtual void DrawBitmap(wstring bitmap, vector2 pos, vector2 size, float rotation, Material* meterial);
-	virtual wstring LoadBitmapImage(wstring filename);
-	virtual vector2 GetBitmapSize(wstring filename);
+	virtual void DrawRectangle(vector2 size, vector2 pos, vector2 scale, float rotation, Material* material);
+	virtual void DrawPolygon(wstring name, vector2 pos, vector2 scale, float rotation, Material* material);
+	virtual void DrawEllipse(vector2 size, vector2 pos, vector2 scale, float rotation, Material* material) ;
+	virtual void DrawLine(vector2 start, vector2 end, Material* material);
+	virtual void DrawTextBox(vector2 size, vector2 pos, vector2 scale, wstring text, wstring fontFamily, Material* material);
+	virtual void DrawBitmap(wstring bitmap,vector2 size, vector2 pos, vector2 scale, float rotation, Material* material);
+	virtual wstring LoadBitmapImage(wstring);
+	virtual wstring MakePolygon(wstring, vector<vector2>);
+	virtual vector2 GetBitmapSize(wstring);
 	void AddBrush(vector4);
 	ID2D1SolidColorBrush* UseBrush(vector4);
 
@@ -50,6 +52,7 @@ public:
 public:
 	unordered_map<wstring, IDWriteTextFormat*> textFormatDictionary;
 	unordered_map<wstring, ID2D1Bitmap*> bitmapDictionary;
+	unordered_map<wstring, ID2D1PathGeometry*> polygonDictionary;
 	unordered_map<vector4, ID2D1SolidColorBrush*> brushDictionary;
 };
 

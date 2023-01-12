@@ -35,7 +35,7 @@ namespace GammaEngine
 	public:
 		vector2 size;
 		vector2 offset;
-		Material* meterial;
+		Material* material;
 		int order = 0;
 	};
 }

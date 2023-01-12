@@ -25,14 +25,15 @@ namespace GammaEngine
 		void Resize(int width, int height);
 
 	public:
-		static void DrawRectangle(vector2 pos, vector2 size, float rotation, Material* meterial);
-		static void DrawEllipse(vector2 pos, vector2 size, float rotation, Material* meterial);
-		static void DrawLine(vector2 start, vector2 end, float thickness, Material* meterial);
-		static void DrawTextBox(vector2 pos, vector2 size, wstring text, wstring fontFamily, Material* meterial);
-		static void DrawBitmap(wstring bitmap, vector2 pos, vector2 size, float rotation, Material* meterial);
-		static wstring LoadBitmapImage(wstring filename);
-		static vector2 GetBitmapSize(wstring bitmap);
-
+		static void DrawRectangle(vector2 size, vector2 pos, vector2 scale, float rotation, Material* material);
+		static void DrawPolygon(wstring name, vector2 pos, vector2 scale, float rotation, Material* material);
+		static void DrawEllipse(vector2 size, vector2 pos, vector2 scale, float rotation, Material* material);
+		static void DrawLine(vector2 start, vector2 end, Material* material);
+		static void DrawTextBox(vector2 size, vector2 pos, vector2 scale, wstring text, wstring fontFamily, Material* material);
+		static void DrawBitmap(wstring bitmap,vector2 size, vector2 pos, vector2 scale, float rotation, Material* material);
+		static wstring LoadBitmapImage(wstring);
+		static wstring MakePolygon(wstring, vector<vector2>);
+		static vector2 GetBitmapSize(wstring);
 	public:
 		static RenderModule* render;
 

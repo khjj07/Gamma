@@ -7,7 +7,7 @@ GammaEngine::Renderer::Renderer(GameObject* t) : Component(t)
 	graphic->renderComponentList.push_back(this);
 	size = vector2();
 	offset = vector2();
-	meterial = new Material();
+	material = new Material();
 }
 
 GammaEngine::Renderer::~Renderer()
@@ -18,12 +18,12 @@ GammaEngine::Renderer::~Renderer()
 
 void GammaEngine::Renderer::SetBrush(vector4 color)
 {
-	meterial->brush = color;
+	material->brush = color;
 }
 
 void GammaEngine::Renderer::SetPen(vector4 color)
 {
-	meterial->pen = color;
+	material->pen = color;
 }
 
 

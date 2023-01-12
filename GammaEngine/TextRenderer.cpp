@@ -21,10 +21,8 @@ void GammaEngine::TextRenderer::Render()
 		vector2 renderPos = transform->GetWorldPosition() + offset;
 		vector2 renderSize = size;
 
-		renderSize.x = renderSize.x * scale.x;
-		renderSize.y = renderSize.y * scale.y;
 		Renderer::Adjust(renderPos);
-		GraphicSystem::DrawTextBox(renderPos, renderSize, text,wstring(L"Verdana"), meterial);
+		GraphicSystem::DrawTextBox(renderSize,renderPos, scale, text,wstring(L"Verdana"), material);
 	}
 	
 }

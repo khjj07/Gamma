@@ -38,6 +38,7 @@
 #include "Renderer.h"
 #include "EllipseRenderer.h"
 #include "RectangleRenderer.h"
+#include "PolygonRenderer.h"
 #include "BitmapRenderer.h"
 #include "LineRenderer.h"
 #include "TextRenderer.h"

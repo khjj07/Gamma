@@ -142,6 +142,9 @@
     <ClInclude Include="Debug.h">
       <Filter>Framework\Debug</Filter>
     </ClInclude>
+    <ClInclude Include="PolygonRenderer.h">
+      <Filter>Framework\Component\Renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GraphicSystem.cpp">
@@ -230,6 +233,9 @@
     </ClCompile>
     <ClCompile Include="Debug.cpp">
       <Filter>Framework\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="PolygonRenderer.cpp">
+      <Filter>Framework\Component\Renderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

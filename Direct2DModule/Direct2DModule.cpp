@@ -185,69 +185,126 @@ vector2 Direct2DModule::GetBitmapSize(wstring filename)
 	return vector2(size.width, size.height);
 }
 
-void Direct2DModule::DrawRectangle(vector2 pos, vector2 size, float rotation, Material* meterial)
+void Direct2DModule::DrawRectangle(vector2 size, vector2 pos, vector2 scale, float rotation, Material* material)
 {
-
 	D2D1_RECT_F rectangle;
 	D2D1_POINT_2F center = { pos.x,  pos.y };
+	D2D1_SIZE_F _scale = { scale.x,scale.y };
+	rectangle.left = -size.x / 2;
+	rectangle.top = -size.y / 2;
+	rectangle.right = size.x / 2;
+	rectangle.bottom = size.y / 2;
 
-	rectangle.left = pos.x - size.x / 2;
-	rectangle.top = pos.y - size.y / 2;
-	rectangle.right = pos.x + size.x / 2;
-	rectangle.bottom = pos.y + size.y / 2;
+	renderTarget->SetTransform(Matrix3x2F::Translation(pos.x, pos.y)* Matrix3x2F::Scale(_scale, center)* Matrix3x2F::Rotation(rotation, center));
 
-	renderTarget->SetTransform(Matrix3x2F::Rotation(rotation, center));
+	renderTarget->DrawRectangle(rectangle, UseBrush(material->pen));
+	renderTarget->FillRectangle(rectangle, UseBrush(material->brush));
 
-	renderTarget->DrawRectangle(rectangle, UseBrush(meterial->pen));
-	renderTarget->FillRectangle(rectangle, UseBrush(meterial->brush));
+	D2D1_POINT_2F centerz = { 0,0 };
+	renderTarget->SetTransform(Matrix3x2F::Rotation(0, centerz));
+	renderTarget->SetTransform(Matrix3x2F::Translation(0, 0));
+}
+wstring Direct2DModule::MakePolygon(wstring name, vector<vector2> points)
+{
+	ID2D1PathGeometry* polygon;
+	ID2D1GeometrySink* pSink = NULL;
+	HRESULT hr = factory->CreatePathGeometry(&polygon);
+	vector<D2D1_POINT_2F> p;
+	for (auto iter = points.begin(); iter != points.end(); iter++)
+	{
+		p.push_back({ (*iter).x,(*iter).y });
+	}
+
+	if (SUCCEEDED(hr))
+	{
+		hr = polygon->Open(&pSink);
+		if (SUCCEEDED(hr))
+		{
+			pSink->BeginFigure(
+				p[0],
+				D2D1_FIGURE_BEGIN_FILLED
+			);
+			for (int i = 1; i < p.size(); i++)
+			{
+				pSink->AddLine(p[i]);
+			}
+			
+			pSink->AddLine(p[0]);
+
+			pSink->EndFigure(D2D1_FIGURE_END_CLOSED);
+
+			hr = pSink->Close();
+		}
+		pSink->Release();
+		polygonDictionary.insert(make_pair(name ,polygon));
+	}
+	return name;
+}
+void Direct2DModule::DrawPolygon(wstring name, vector2 pos,vector2 scale, float rotation, Material* material)
+{
+	D2D1_POINT_2F center = { pos.x,  pos.y };
+	D2D1_SIZE_F _scale = { scale.x,scale.y };
+
+	renderTarget->SetTransform(Matrix3x2F::Translation(pos.x, pos.y) * Matrix3x2F::Scale(_scale, center) * Matrix3x2F::Rotation(rotation, center));
+
+	renderTarget->DrawGeometry(polygonDictionary[name], UseBrush(material->pen), 1.f);
+	renderTarget->FillGeometry(polygonDictionary[name], UseBrush(material->brush));
 
 	D2D1_POINT_2F centerz = { 0,0 };
 	renderTarget->SetTransform(Matrix3x2F::Rotation(0, centerz));
 }
 
-void Direct2DModule::DrawEllipse(vector2 pos, vector2 size, float rotation, Material* meterial)
+void Direct2DModule::DrawEllipse(vector2 size, vector2 pos, vector2 scale, float rotation, Material* material)
 {
 	D2D1_ELLIPSE ellipse;
 
 	ellipse.radiusX = size.x / 2;
 	ellipse.radiusY = size.y / 2;
-	ellipse.point.x = pos.x;
-	ellipse.point.y = pos.y;
+	ellipse.point.x =0;
+	ellipse.point.y =0;
 
 	D2D1_POINT_2F center = { pos.x,  pos.y };
-	renderTarget->SetTransform(Matrix3x2F::Rotation(rotation, center));
-	renderTarget->DrawEllipse(ellipse, UseBrush(meterial->pen));
-	renderTarget->FillEllipse(ellipse, UseBrush(meterial->brush));
+	D2D1_SIZE_F _scale = { scale.x,scale.y };
+
+	renderTarget->SetTransform(Matrix3x2F::Translation(pos.x, pos.y) * Matrix3x2F::Scale(_scale, center) * Matrix3x2F::Rotation(rotation, center));
+
+
+	renderTarget->DrawEllipse(ellipse, UseBrush(material->pen));
+	renderTarget->FillEllipse(ellipse, UseBrush(material->brush));
 	D2D1_POINT_2F centerz = { 0,0 };
 	renderTarget->SetTransform(Matrix3x2F::Rotation(0, centerz));
 }
 
-void Direct2DModule::DrawLine(vector2 start, vector2 end, float thickness, Material* meterial)
+void Direct2DModule::DrawLine(vector2 start, vector2 end, Material* material)
 {
 	renderTarget->DrawLine(
 		Point2F(start.x, start.y),
 		Point2F(end.x, end.y),
-		UseBrush(meterial->pen),
-		thickness,
+		UseBrush(material->pen),
+		material->thickness,
 		nullptr
 	);
 }
 
-void Direct2DModule::DrawTextBox(vector2 pos, vector2 size, wstring text, wstring fontFamily, Material* meterial)
+void Direct2DModule::DrawTextBox(vector2 size, vector2 pos, vector2 scale, wstring text, wstring fontFamily, Material* material)
 {
-	renderTarget->DrawText(text.c_str(), text.length() - 1, textFormatDictionary[fontFamily], RectF(pos.x, pos.y, pos.x + size.x, pos.y + size.y), UseBrush(meterial->pen));
+	renderTarget->DrawText(text.c_str(), text.length() - 1, textFormatDictionary[fontFamily], RectF(pos.x, pos.y, pos.x + size.x, pos.y + size.y), UseBrush(material->pen));
 }
 
-void Direct2DModule::DrawBitmap(wstring bitmap, vector2 pos, vector2 size, float rotation, Material* meterial)
+void Direct2DModule::DrawBitmap(wstring bitmap, vector2 size, vector2 pos, vector2 scale, float rotation, Material* material)
 {
 	D2D1_RECT_F rectangle;
 	D2D1_POINT_2F center = { pos.x,  pos.y };
-	rectangle.left = pos.x - size.x / 2;
-	rectangle.top = pos.y - size.y / 2;
-	rectangle.right = pos.x + size.x / 2;
-	rectangle.bottom = pos.y + size.y / 2;
-	renderTarget->SetTransform(Matrix3x2F::Rotation(rotation, center));
-	renderTarget->DrawBitmap(bitmapDictionary[bitmap], rectangle, meterial->brush.w, D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR);
+	D2D1_SIZE_F _scale = { scale.x,scale.y };
+
+	rectangle.left = -size.x / 2;
+	rectangle.top = -size.y / 2;
+	rectangle.right = size.x / 2;
+	rectangle.bottom = size.y / 2;
+
+	renderTarget->SetTransform(Matrix3x2F::Translation(pos.x, pos.y) * Matrix3x2F::Scale(_scale, center) * Matrix3x2F::Rotation(rotation, center));
+
+	renderTarget->DrawBitmap(bitmapDictionary[bitmap], rectangle, material->brush.w, D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR);
 	D2D1_POINT_2F centerz = { 0,0 };
 	renderTarget->SetTransform(Matrix3x2F::Rotation(0, centerz));
 }

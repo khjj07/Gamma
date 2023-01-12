@@ -16,9 +16,6 @@ void GammaEngine::RectangleRenderer::Render()
 
 	vector2 renderPos = transform->GetWorldPosition() + offset;
 	vector2 renderSize = size;
-
-	renderSize.x = renderSize.x * scale.x;
-	renderSize.y = renderSize.y * scale.y;
-	Renderer::Adjust(renderPos, renderSize);
-	GraphicSystem::DrawRectangle(renderPos, renderSize,transform->GetWorldRotation(),meterial);
+	Renderer::Adjust(renderPos, scale);
+	GraphicSystem::DrawRectangle(renderSize,renderPos, scale,transform->GetWorldRotation(), material);
 }

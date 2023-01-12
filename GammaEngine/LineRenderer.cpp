@@ -15,5 +15,5 @@ void GammaEngine::LineRenderer::Render()
     vector2 d = dst;
     Adjust(s);
     Adjust(d);
-    GraphicSystem::DrawLine(s, d, thickness, meterial);
+    GraphicSystem::DrawLine(s, d, material);
 }

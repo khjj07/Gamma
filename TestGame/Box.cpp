@@ -10,6 +10,12 @@ Box::Box()
 	GetComponent<BoxCollider>()->SetBounds(vector2(80, 80));
 	AddComponent<RectangleRenderer>();
 	GetComponent<RectangleRenderer>()->size=vector2(80, 80);
+
+	AddComponent<PolygonRenderer>();
+	GetComponent<PolygonRenderer>()->AddPoints(vector2(- 100, -100));
+	GetComponent<PolygonRenderer>()->AddPoints(vector2(100, -100));
+	GetComponent<PolygonRenderer>()->AddPoints(vector2(0, 100));
+	GetComponent<PolygonRenderer>()->MakePolygon(wstring(L"triangle"));
 	AddComponent<Animation>();
 
 
