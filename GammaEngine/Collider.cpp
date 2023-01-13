@@ -135,9 +135,8 @@ bool GammaEngine::Collider::GJK(Collider* A, vector2 vv)
 	}
 }
 
-void GammaEngine::Collider::ClosesetEdge(vector<vector2>& polytope, vector2& normal,float& distance)
+void GammaEngine::Collider::ClosesetEdge(vector<vector2>& polytope, vector2& normal,float& distance,int& index)
 {
-	float npts = polytope.size();
 	float dmin = INFINITY;
 	int N = polytope.size();
 	for (int i = 0; i < N; i++)
@@ -154,6 +153,7 @@ void GammaEngine::Collider::ClosesetEdge(vector<vector2>& polytope, vector2& nor
 				dmin = dist;
 				normal = n;
 				distance = dist;
+				index = i;
 			}
 		}
 		
@@ -162,21 +162,44 @@ void GammaEngine::Collider::ClosesetEdge(vector<vector2>& polytope, vector2& nor
 
 void GammaEngine::Collider::EPA(Collider* A, Collider* B, vector<vector2>& polytope, vector2& normal, float& distance)
 {
-	for (;;) 
-	{
-		ClosesetEdge(polytope, normal, distance);
-		vector2 r = Support(A, B, normal);
-		if (abs(vector2::Dot(normal, r) - distance) < 0.001)
-		{
-			break;
+	int minIndex = 0;
+	float minDistance=INFINITY;
+	vector2 minNormal;
+
+	while (minDistance == INFINITY) {
+		for (int i = 0; i < polytope.size(); i++) {
+			int j = (i + 1) % polytope.size();
+
+			vector2 vertexI = polytope[i];
+			vector2 vertexJ = polytope[j];
+
+			vector2 ij = vertexJ - vertexI;
+
+			vector2 n = vector2(ij.y, -ij.x).Normalize();
+			float dist = vector2::Dot(n,vertexI);
+
+			if (dist < 0) {
+				dist *= -1;
+				n = -n;
+			}
+
+			if (dist < minDistance) {
+				minDistance = dist;
+				minNormal = n;
+				minIndex = j;
+			}
 		}
-		auto it2 = find(polytope.begin(), polytope.end(), r);
-		if (it2 != polytope.end())
-		{
-			break;
+		vector2 support = Support(A, B, minNormal);
+		float sDistance = vector2::Dot(minNormal,support);
+
+		if (abs(sDistance - minDistance) > 0.001) {
+			minDistance = INFINITY;
+			auto iter = polytope.begin();
+			polytope.insert(iter + minIndex, support);
 		}
-		polytope.push_back(r);
 	}
+	normal = minNormal;
+	distance = minDistance;
 }
 
 GammaEngine::Collider::Collider(GameObject* t) : Component(t)

@@ -5,19 +5,20 @@ using namespace GammaEngine;
 
 Box::Box()
 {
-	AddComponent<BoxCollider>();
 	AddComponent<BoxScript>();
-	GetComponent<BoxCollider>()->SetBounds(vector2(80, 80));
-	AddComponent<RectangleRenderer>();
-	GetComponent<RectangleRenderer>()->size=vector2(80, 80);
+
+	vector<vector2> points;
+	points.push_back(vector2(-100, -100));
+	points.push_back(vector2(100, -100));
+	points.push_back(vector2(0, 100));
+
 
 	AddComponent<PolygonRenderer>();
-	GetComponent<PolygonRenderer>()->AddPoints(vector2(- 100, -100));
-	GetComponent<PolygonRenderer>()->AddPoints(vector2(100, -100));
-	GetComponent<PolygonRenderer>()->AddPoints(vector2(0, 100));
+	GetComponent<PolygonRenderer>()->SetPoints(points);
 	GetComponent<PolygonRenderer>()->MakePolygon(wstring(L"triangle"));
-	AddComponent<Animation>();
 
+	AddComponent<PolygonCollider>();
+	GetComponent<PolygonCollider>()->SetPoints(points);
 
 	tag = string("box");
 }

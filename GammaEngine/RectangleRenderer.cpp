@@ -12,7 +12,7 @@ GammaEngine::RectangleRenderer::~RectangleRenderer()
 
 void GammaEngine::RectangleRenderer::Render()
 {
-	Matrix3x3 matrix = transform->GetWorldMatrix() * Matrix3x3::Translation(offset.x, offset.y) * Camera::main->Projection();
+	Matrix3x3 matrix = Camera::main->Projection()*transform->GetWorldMatrix() * Matrix3x3::Translation(offset.x, offset.y);
 
 	GraphicSystem::DrawRectangle(size, matrix, material);
 }

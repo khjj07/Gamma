@@ -51,9 +51,9 @@ void GammaEngine::GraphicSystem::Resize(int width, int height)
 	render->Resize(width, height);
 }
 
-void GammaEngine::GraphicSystem::DrawRectangle(vector2 size, Matrix3x3 matrix, Material* meterial)
+void GammaEngine::GraphicSystem::DrawRectangle(vector2 size, Matrix3x3 matrix, Material* material)
 {
-	render->DrawRectangle(size, matrix, meterial);
+	render->DrawRectangle(size, matrix, material);
 }
 
 

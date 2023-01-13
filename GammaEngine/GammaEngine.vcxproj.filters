@@ -126,9 +126,6 @@
     <ClInclude Include="BitmapRenderer.h">
       <Filter>Framework\Component\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="Physics.h">
-      <Filter>Framework\System\Physics</Filter>
-    </ClInclude>
     <ClInclude Include="GammaEngine.h" />
     <ClInclude Include="Animation.h">
       <Filter>Framework\Component</Filter>
@@ -144,6 +141,9 @@
     </ClInclude>
     <ClInclude Include="PolygonRenderer.h">
       <Filter>Framework\Component\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="PolygonCollider.h">
+      <Filter>Framework\Component\Collider</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -207,9 +207,6 @@
     <ClCompile Include="Tween.cpp">
       <Filter>Framework\System\Tween</Filter>
     </ClCompile>
-    <ClCompile Include="Physics.cpp">
-      <Filter>Framework\System\Physics</Filter>
-    </ClCompile>
     <ClCompile Include="CollisionSystem.cpp">
       <Filter>Framework\System\Physics</Filter>
     </ClCompile>
@@ -236,6 +233,9 @@
     </ClCompile>
     <ClCompile Include="PolygonRenderer.cpp">
       <Filter>Framework\Component\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="PolygonCollider.cpp">
+      <Filter>Framework\Component\Collider</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -32,11 +32,6 @@ CollisionResponse GammaEngine::BoxCollider::Collide(Collider* other, bool collid
 		result.normal = normal;
 		result.distance = distance;
 	}
-#if DEBUG
-	vector2 position = transform->position;
-	this->GetComponent<RectangleRenderer>()->Adjust(position);
-	Debug::DrawLine(position, position +result.normal*result.distance,2,debug);
-#endif
 	DecideCollisionState(result,collided, detect);
 	return result;
 }
@@ -50,13 +45,17 @@ vector<vector2> GammaEngine::BoxCollider::ComputePoints()
 		vector2 scale = transform->scale;
 
 		float theta = transform->rotation / 180 * PI;
-		vector2 up = vector2(-sin(theta), cos(theta));
-		vector2 right = vector2(cos(theta), sin(theta));
+		Matrix3x3 worldMatrix = transform->GetWorldMatrix();
+		vector2 leftUp = (worldMatrix*vector2(-bounds.x/2,-bounds.y / 2).ToMatrix3x1()).tovector2();
+		vector2 leftDown = (worldMatrix * vector2(-bounds.x / 2, bounds.y / 2).ToMatrix3x1()).tovector2();
+		vector2 rightUp = (worldMatrix * vector2(bounds.x / 2, -bounds.y / 2).ToMatrix3x1()).tovector2();
+		vector2 rightDown = (worldMatrix * vector2(bounds.x / 2, bounds.y / 2).ToMatrix3x1()).tovector2();
 
-		simplex.push_back(position + up * bounds.y * scale.y / 2 + right * bounds.x * scale.x / 2);
-		simplex.push_back(position + up * bounds.y * scale.y / 2 - right * bounds.x * scale.x / 2);
-		simplex.push_back(position - up * bounds.y * scale.y / 2 + right * bounds.x * scale.x / 2);
-		simplex.push_back(position - up * bounds.y * scale.y / 2 - right * bounds.x * scale.x / 2);
+		simplex.push_back(leftUp);
+		simplex.push_back(leftDown);
+		simplex.push_back(rightUp);
+		simplex.push_back(rightDown);
+	
 		return simplex;
 	}
 	else

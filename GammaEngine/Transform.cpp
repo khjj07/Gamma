@@ -26,7 +26,7 @@ vector2 GammaEngine::Transform::GetWorldPosition()
 Matrix3x3 GammaEngine::Transform::GetWorldMatrix()
 {
 	Matrix3x3 localMatrix;
-	localMatrix = Matrix3x3::Scale(scale.x, scale.y)* Matrix3x3::Rotate(rotation) * Matrix3x3::Translation(position.x,position.y) ;
+	localMatrix = Matrix3x3::Translation(position.x, position.y) *Matrix3x3::Scale(scale.x, scale.y)*Matrix3x3::Rotate(rotation);
 	
 	if (parent)
 	{

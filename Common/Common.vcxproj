@@ -19,14 +19,20 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Matrix.h" />
     <ClInclude Include="Render.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="Type.h" />
     <ClInclude Include="Util.h" />
+    <ClInclude Include="vector2.h" />
+    <ClInclude Include="vector4.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="Type.cpp" />
     <ClCompile Include="Util.cpp" />
+    <ClCompile Include="vector2.cpp" />
+    <ClCompile Include="vector4.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

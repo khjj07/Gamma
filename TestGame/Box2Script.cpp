@@ -1,5 +1,6 @@
 #include "GammaEngine.h"
 #include "Box2Script.h"
+#include "Circle.h"
 using namespace GammaEngine;
 
 Box2Script::Box2Script(GameObject* t) :Component(t)
