@@ -88,6 +88,11 @@ struct vector2
 		return *this;
 	}
 
+	float operator *(const vector2& b)
+	{
+		return x * b.y - y * x;
+	}
+
 	static float Dot(vector2 v1, vector2 v2)
 	{
 		float result = v1.x * v2.x + v1.y * v2.y;
@@ -144,3 +149,5 @@ struct vector2
 	Matrix1x3 ToMatrix1x3();
 	Matrix3x3 ToMatrix3x3();
 };
+
+vector2 operator *(float a, vector2 b);

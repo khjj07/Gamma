@@ -8,11 +8,12 @@ Box2::Box2()
 	AddComponent<BoxCollider>();
 	AddComponent<RectangleRenderer>();
 	AddComponent<LineRenderer>();
-	AddComponent<Box2Script>();
+	//AddComponent<Box2Script>();
 	GetComponent<BoxCollider>()->SetBounds(vector2(500,100));
 	GetComponent<RectangleRenderer>()->size = vector2(500, 100);
 	GetComponent<RectangleRenderer>()->order = -1;
-
+	//AddComponent<Rigidbody>();
+	//GetComponent<Rigidbody>()->mass=10000;
 	transform->position.x = 300;
 	transform->position.y = 300;
 	tag = string("box");

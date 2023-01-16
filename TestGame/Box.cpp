@@ -13,12 +13,21 @@ Box::Box()
 	points.push_back(vector2(0, 100));
 
 
-	AddComponent<PolygonRenderer>();
-	GetComponent<PolygonRenderer>()->SetPoints(points);
-	GetComponent<PolygonRenderer>()->MakePolygon(wstring(L"triangle"));
+	//AddComponent<PolygonRenderer>();
+	//GetComponent<PolygonRenderer>()->SetPoints(points);
+	//GetComponent<PolygonRenderer>()->MakePolygon(wstring(L"triangle"));
+	AddComponent<RectangleRenderer>();
+	GetComponent<RectangleRenderer>()->size=vector2(50,50);
 
-	AddComponent<PolygonCollider>();
-	GetComponent<PolygonCollider>()->SetPoints(points);
 
+	//AddComponent<PolygonCollider>();
+	//GetComponent<PolygonCollider>()->SetPoints(points);
+	AddComponent<BoxCollider>();
+	GetComponent<BoxCollider>()->SetBounds(vector2(50,50));
+
+
+	AddComponent<Rigidbody>();
+	GetComponent<Rigidbody>()->useGravity=true;
+	transform->rotation = 10;
 	tag = string("box");
 }

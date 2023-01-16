@@ -21,7 +21,7 @@ CollisionResponse GammaEngine::LineCollider::Collide(Collider* other, bool colli
 	result.other = other;
 	if (detect)
 	{
-		EPA(this, other, polytope, result.normal, result.distance);
+		EPA(this, other, polytope, result.normal, result.distance, result.contactPoint);
 	}
 	DecideCollisionState(result, collided, detect);
 	return result;

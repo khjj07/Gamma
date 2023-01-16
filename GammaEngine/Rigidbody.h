@@ -6,7 +6,7 @@
 #endif
 
 /// <summary>
-/// 위치 크기 회전 정보를 포함하는 컴포넌트
+/// 강체
 /// </summary>
 namespace GammaEngine {
 	class GammaEngineAPI Rigidbody : public Component
@@ -16,7 +16,34 @@ namespace GammaEngine {
 		~Rigidbody();
 
 	public:
+		void ApplyForce(vector2);
+		virtual void Update();
+		virtual void OnCollisionEnter(CollisionResponse);
+		virtual void OnCollisionStay(CollisionResponse);
+		virtual void OnCollisionExit(CollisionResponse);
+
+	private:
+		static vector2 ResolveCollision(Rigidbody* A, Rigidbody* B, CollisionResponse res);
+		static vector2 ResolveCollision(Rigidbody* A, CollisionResponse res);
+		static void PositionalCorrection(Rigidbody* A, Rigidbody* B, CollisionResponse res);
+		static void PositionalCorrection(Rigidbody* A, CollisionResponse res);
+	public:
+		float mass;
+		float drag;
+		float staticFriction;
+		float dynamicFriction;
+		float angularDrag;
+		float restitution;
 		vector2 velocity;
+		vector2 acceleration;
+		vector2 orient;
+		vector2 torque;
+		vector2 angularVelocity;
+		vector2 angularAcceleration;
+		vector2 gravity;
+		float momentOfInertia;
+		bool useGravity;
+
 	};
 }
 

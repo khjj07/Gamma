@@ -34,3 +34,8 @@ Matrix3x3 vector2::ToMatrix3x3()
 	result[2][2] = 1;
 	return result;
 }
+
+vector2 operator *(float a, vector2 b)
+{
+	return vector2(a * b.x, a * b.y);
+}

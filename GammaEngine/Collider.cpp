@@ -160,12 +160,11 @@ void GammaEngine::Collider::ClosesetEdge(vector<vector2>& polytope, vector2& nor
 	}
 }
 
-void GammaEngine::Collider::EPA(Collider* A, Collider* B, vector<vector2>& polytope, vector2& normal, float& distance)
+void GammaEngine::Collider::EPA(Collider* A, Collider* B, vector<vector2>& polytope, vector2& normal, float& distance, vector2& contactPoint)
 {
 	int minIndex = 0;
 	float minDistance=INFINITY;
 	vector2 minNormal;
-
 	while (minDistance == INFINITY) {
 		for (int i = 0; i < polytope.size(); i++) {
 			int j = (i + 1) % polytope.size();
@@ -200,6 +199,7 @@ void GammaEngine::Collider::EPA(Collider* A, Collider* B, vector<vector2>& polyt
 	}
 	normal = minNormal;
 	distance = minDistance;
+	contactPoint = A->FarthestPoint(minNormal);
 }
 
 GammaEngine::Collider::Collider(GameObject* t) : Component(t)

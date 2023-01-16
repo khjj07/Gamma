@@ -25,7 +25,7 @@ namespace GammaEngine
 		static void DecideCollisionState(CollisionResponse&, bool, bool);
 		static bool GJK(Collider* pointA, Collider* pointB, vector<vector2>& result);
 		static bool GJK(Collider* pointA, vector2 v);
-		static void EPA(Collider* A, Collider* B, vector<vector2>& polytope, vector2& normal, float& distance);
+		static void EPA(Collider* A, Collider* B, vector<vector2>& polytope, vector2& normal, float& distance,vector2& contactPoint);
 		static vector2 FarthestPoint(vector<vector2>, vector2);
 
 	private:

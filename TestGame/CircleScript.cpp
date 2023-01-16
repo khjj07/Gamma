@@ -19,21 +19,12 @@ void CircleScript::Start()
 
 void CircleScript::Update()
 {
-	transform->position += velocity * Time::deltaTime;
-	correction = vector2();
+
 }
 
 void CircleScript::OnCollisionStay(CollisionResponse response)
 {
-	if (response.other->CompareTag("box"))
-	{
-		if (vector2::Dot(velocity, response.normal) < 0)
-		{
-			velocity = velocity - response.normal * vector2::Dot(velocity, response.normal);
-		}
-		transform->position = transform->position - response.normal * (response.distance + 1);
 
-	}
 }
 
 void CircleScript::OnCollisionExit(CollisionResponse response)

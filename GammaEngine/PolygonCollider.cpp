@@ -23,14 +23,10 @@ CollisionResponse GammaEngine::PolygonCollider::Collide(Collider* other, bool co
 	ResetPoints();
 	bool detect = GJK(this, other, polytope);
 	result.other = other;
-	vector2 normal;
-	float distance;
 
 	if (detect)
 	{
-		EPA(this, other, polytope, normal, distance);
-		result.normal = normal;
-		result.distance = distance;
+		EPA(this, other, polytope, result.normal, result.distance, result.contactPoint);
 	}
 	DecideCollisionState(result, collided, detect);
 	return result;

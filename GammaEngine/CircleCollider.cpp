@@ -20,7 +20,7 @@ GammaEngine::CollisionResponse CircleCollider::Collide(Collider* other, bool col
 	result.other = other;
 	if (detect)
 	{
-		EPA(this, other, polytope, result.normal, result.distance);
+		EPA(this, other, polytope, result.normal, result.distance, result.contactPoint);
 	}
 	DecideCollisionState(result, collided, detect);
 	return result;
