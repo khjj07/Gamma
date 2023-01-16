@@ -28,6 +28,5 @@ Box::Box()
 
 	AddComponent<Rigidbody>();
 	GetComponent<Rigidbody>()->useGravity=true;
-	transform->rotation = 10;
 	tag = string("box");
 }

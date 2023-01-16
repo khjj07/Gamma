@@ -27,6 +27,7 @@ namespace GammaEngine {
 		static vector2 ResolveCollision(Rigidbody* A, CollisionResponse res);
 		static void PositionalCorrection(Rigidbody* A, Rigidbody* B, CollisionResponse res);
 		static void PositionalCorrection(Rigidbody* A, CollisionResponse res);
+
 	public:
 		float mass;
 		float drag;
@@ -35,11 +36,9 @@ namespace GammaEngine {
 		float angularDrag;
 		float restitution;
 		vector2 velocity;
-		vector2 acceleration;
 		vector2 orient;
 		vector2 torque;
 		vector2 angularVelocity;
-		vector2 angularAcceleration;
 		vector2 gravity;
 		float momentOfInertia;
 		bool useGravity;

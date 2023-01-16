@@ -31,7 +31,6 @@ namespace GammaEngine
 	private:
 		static vector2 Support(Collider*, Collider*, vector2);
 		static vector2 Support(Collider* A, vector2 v, vector2 direction);
-		static void ClosesetEdge(vector<vector2>& polytope, vector2& normal, float& distance, int& index);
 
 	public:
 		bool CompareTag(string str);

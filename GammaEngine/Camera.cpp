@@ -42,8 +42,7 @@ vector2 GammaEngine::Camera::ScreenToWorldScale(vector2 s)
 
 Matrix3x3 GammaEngine::Camera::Projection()
 {
-	vector2 center = vector2(Screen::width / 2, Screen::height / 2) - Camera::main->transform->position;
-	
+	vector2 center = vector2(Screen::width / 2, Screen::height / 2);
 	vector2 size =vector2(1 / Camera::main->orthoScale , 1 / Camera::main->orthoScale);
-	return Matrix3x3::Translation(center.x, center.y) * Matrix3x3::Scale(size.x, size.y);
+	return Matrix3x3::Translation(center.x, center.y) * Matrix3x3::Scale(size.x, size.y)* Matrix3x3::Translation(-transform->position.x, -transform->position.y);
 }

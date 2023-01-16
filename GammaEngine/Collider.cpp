@@ -135,31 +135,6 @@ bool GammaEngine::Collider::GJK(Collider* A, vector2 vv)
 	}
 }
 
-void GammaEngine::Collider::ClosesetEdge(vector<vector2>& polytope, vector2& normal,float& distance,int& index)
-{
-	float dmin = INFINITY;
-	int N = polytope.size();
-	for (int i = 0; i < N; i++)
-	{
-		vector2 a = polytope[i];
-		vector2 b = polytope[(i + 1) % N];
-		vector2 l = b - a;
-		vector2 n = vector2::Normalize(vector2::TripleProduct(l,a,l));
-		if (n.Length()!=0)
-		{
-			float dist = vector2::Dot(n, a);
-			if (dist < dmin)
-			{
-				dmin = dist;
-				normal = n;
-				distance = dist;
-				index = i;
-			}
-		}
-		
-	}
-}
-
 void GammaEngine::Collider::EPA(Collider* A, Collider* B, vector<vector2>& polytope, vector2& normal, float& distance, vector2& contactPoint)
 {
 	int minIndex = 0;
