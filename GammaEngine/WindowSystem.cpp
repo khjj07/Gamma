@@ -1,7 +1,9 @@
 #include "stdafx.h"
 #include "WindowSystem.h"
 using namespace GammaEngine;
-GammaEngine::WindowSystem::WindowSystem():hWnd(0),applicationName(0),hInstance(0)
+
+HWND GammaEngine::WindowSystem::hWnd = 0;
+GammaEngine::WindowSystem::WindowSystem():applicationName(0),hInstance(0)
 {
 
 }
@@ -91,18 +93,11 @@ void GammaEngine::WindowSystem::Initialize(int& screenWidth,int& screenHeight)
 	ShowWindow(hWnd, SW_SHOW);
 	SetForegroundWindow(hWnd);
 	SetFocus(hWnd);
-	
-	GraphicSystem* graphic = GraphicSystem::Instance();
-	Input* input = Input::Instance();
-
-	graphic->Initialize(hWnd);
-	input->Initialize(hWnd);
+	time = new Time();
 }
 
 void GammaEngine::WindowSystem::Run(Engine* engine)
 {
-	Time* time = Time::Instance();
-	
 	MSG msg;
 	ZeroMemory(&msg, sizeof(MSG));
 	while (true)

@@ -56,7 +56,8 @@
 //Entity
 #include "GameObject.h"
 #include "Scene.h"
+#include "SceneManager.h"
+#include "ObjectManager.h"
+#include "Engine.h"
 
 #include "Debug.h"
-
-#include "Engine.h"

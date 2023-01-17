@@ -16,6 +16,7 @@ namespace GammaEngine
 	{
 	public:
 		GameObject();
+		GameObject(const GameObject& obj);
 		~GameObject();
 
 	public:
@@ -41,7 +42,6 @@ namespace GammaEngine
 
 	public:
 		vector<Component*> componentList;
-		vector<Component*>::iterator componentIter;
 
 	public:
 		template<typename T>

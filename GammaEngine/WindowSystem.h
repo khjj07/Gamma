@@ -9,7 +9,7 @@
 namespace GammaEngine
 {
 	class Engine;
-
+	class Time;
 	/// <summary>
 	/// winapi의 기본 구성을 포함하는 class
 	/// </summary>
@@ -26,7 +26,8 @@ namespace GammaEngine
 		void Run(Engine* engine);
 
 	public:
-		HWND hWnd;
+		static HWND hWnd;
+		Time* time;
 
 	private:
 		LPCWSTR applicationName;

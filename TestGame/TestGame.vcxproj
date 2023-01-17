@@ -139,31 +139,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\GammaEngine\BoxScript.cpp" />
-    <ClCompile Include="Box.cpp" />
-    <ClCompile Include="Box2.cpp" />
-    <ClCompile Include="Box2Script.cpp" />
-    <ClCompile Include="Cam1.cpp" />
-    <ClCompile Include="Cam1Script.cpp" />
-    <ClCompile Include="Circle.cpp" />
-    <ClCompile Include="CircleScript.cpp" />
-    <ClCompile Include="Cursor.cpp" />
-    <ClCompile Include="CursorSript.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Scene1.cpp" />
+    <ClCompile Include="WorkSpace.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\GammaEngine\BoxScript.h" />
-    <ClInclude Include="Box.h" />
-    <ClInclude Include="Box2.h" />
-    <ClInclude Include="Box2Script.h" />
-    <ClInclude Include="Cam1.h" />
-    <ClInclude Include="Cam1Script.h" />
-    <ClInclude Include="Circle.h" />
-    <ClInclude Include="CircleScript.h" />
-    <ClInclude Include="Cursor.h" />
-    <ClInclude Include="CursorSript.h" />
-    <ClInclude Include="Scene1.h" />
+    <ClInclude Include="WorkSpace.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

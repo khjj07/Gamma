@@ -145,6 +145,12 @@
     <ClInclude Include="PolygonCollider.h">
       <Filter>Framework\Component\Collider</Filter>
     </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>Framework\System</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectManager.h">
+      <Filter>Framework\System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GraphicSystem.cpp">
@@ -236,6 +242,12 @@
     </ClCompile>
     <ClCompile Include="PolygonCollider.cpp">
       <Filter>Framework\Component\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>Framework\System</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectManager.cpp">
+      <Filter>Framework\System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

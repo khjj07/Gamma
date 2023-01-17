@@ -1,11 +1,15 @@
 ﻿// GammaEngine.cpp : 애플리케이션에 대한 진입점을 정의합니다.
 #include "GammaEngine.h"
-#include "Scene1.h"
+#include "WorkSpace.h"
+
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     _In_opt_ HINSTANCE hPrevInstance,
     _In_ LPWSTR    lpCmdLine,
     _In_ int       nCmdShow)
 {
+    //workspaces
+    WorkSpace* workspace = new WorkSpace();
+
     GammaEngine::WindowSystem* system = GammaEngine::WindowSystem::Instance();
     if (!system)
     {
@@ -14,7 +18,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     GammaEngine::Engine* engine = GammaEngine::Engine::Instance();
     GammaEngine::Screen* screen = GammaEngine::Screen::Instance();
     system->Initialize(GammaEngine::Screen::width, GammaEngine::Screen::height);
-    engine->Initialize(new Scene1());
+    engine->Initialize();
     system->Run(engine);
 
     return 0;

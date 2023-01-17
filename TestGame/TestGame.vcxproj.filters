@@ -8,97 +8,24 @@
     <Filter Include="Game">
       <UniqueIdentifier>{afa3d7b8-24f8-49b1-bfad-d34d7c2a7809}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Scene">
-      <UniqueIdentifier>{1f2cf177-900a-4f4f-a0c0-5819bd45afd7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game\Prefab">
-      <UniqueIdentifier>{694d3538-e0d1-40a4-93d9-21759fe9a800}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game\Scripts">
-      <UniqueIdentifier>{78929905-f323-4538-8fbc-953f8409db9e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game\Debug">
-      <UniqueIdentifier>{5cd22c02-b01d-47ca-a268-625db4fe3e58}</UniqueIdentifier>
-    </Filter>
     <Filter Include="main">
       <UniqueIdentifier>{da9029c2-ac88-419d-8c88-bb4741efb5be}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Resource">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="Game\WorkSpace">
+      <UniqueIdentifier>{3339ab92-dc1d-4dce-a309-f61e50aa27c9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\GammaEngine\BoxScript.cpp">
-      <Filter>Game\Scripts</Filter>
-    </ClCompile>
-    <ClCompile Include="Box.cpp">
-      <Filter>Game\Prefab</Filter>
-    </ClCompile>
-    <ClCompile Include="Box2.cpp">
-      <Filter>Game\Prefab</Filter>
-    </ClCompile>
-    <ClCompile Include="Cam1.cpp">
-      <Filter>Game\Prefab</Filter>
-    </ClCompile>
-    <ClCompile Include="Circle.cpp">
-      <Filter>Game\Prefab</Filter>
-    </ClCompile>
-    <ClCompile Include="Cursor.cpp">
-      <Filter>Game\Prefab</Filter>
-    </ClCompile>
-    <ClCompile Include="CursorSript.cpp">
-      <Filter>Game\Scripts</Filter>
-    </ClCompile>
-    <ClCompile Include="CircleScript.cpp">
-      <Filter>Game\Scripts</Filter>
-    </ClCompile>
-    <ClCompile Include="Cam1Script.cpp">
-      <Filter>Game\Scripts</Filter>
-    </ClCompile>
-    <ClCompile Include="Box2Script.cpp">
-      <Filter>Game\Scripts</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene1.cpp">
-      <Filter>Game\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>main</Filter>
     </ClCompile>
+    <ClCompile Include="WorkSpace.cpp">
+      <Filter>Game\WorkSpace</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\GammaEngine\BoxScript.h">
-      <Filter>Game\Scripts</Filter>
-    </ClInclude>
-    <ClInclude Include="Box.h">
-      <Filter>Game\Prefab</Filter>
-    </ClInclude>
-    <ClInclude Include="Box2.h">
-      <Filter>Game\Prefab</Filter>
-    </ClInclude>
-    <ClInclude Include="Cam1.h">
-      <Filter>Game\Prefab</Filter>
-    </ClInclude>
-    <ClInclude Include="Circle.h">
-      <Filter>Game\Prefab</Filter>
-    </ClInclude>
-    <ClInclude Include="Cursor.h">
-      <Filter>Game\Prefab</Filter>
-    </ClInclude>
-    <ClInclude Include="CursorSript.h">
-      <Filter>Game\Scripts</Filter>
-    </ClInclude>
-    <ClInclude Include="CircleScript.h">
-      <Filter>Game\Scripts</Filter>
-    </ClInclude>
-    <ClInclude Include="Cam1Script.h">
-      <Filter>Game\Scripts</Filter>
-    </ClInclude>
-    <ClInclude Include="Box2Script.h">
-      <Filter>Game\Scripts</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene1.h">
-      <Filter>Game\Scene</Filter>
+    <ClInclude Include="WorkSpace.h">
+      <Filter>Game\WorkSpace</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

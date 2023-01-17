@@ -30,21 +30,12 @@ namespace GammaEngine
 		void Remove(GameObject* gameObject);//¾À¿¡¼­ Á¦°Å
 
 	public:
-		template<typename T>
-		void Hold(); //GameObject¸¦ »ó¼Ó¹Þ´Â °³Ã¼¸¦ ¾ÀÀÇ ¹­¾îµÒ
+		void Hold(GameObject* obj); //GameObject¸¦ »ó¼Ó¹Þ´Â °³Ã¼¸¦ ¾ÀÀÇ ¹­¾îµÒ
 
 	public:
 		vector<GameObject*> gameObjectList;
-		vector<GameObject*>::iterator gameObjectIter;
-		vector<function<void()> >holdList;
-		vector<function<void()> >::iterator holdIter;
+		vector<GameObject*> holdList;
 	};
 
-	template<typename T>
-	void Scene::Hold()
-	{
-		holdList.push_back([this]() {
-			Add(new T());
-			});
-	};
+	
 }

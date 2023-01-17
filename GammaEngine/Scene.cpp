@@ -12,58 +12,60 @@ GammaEngine::Scene::~Scene()
 
 void GammaEngine::Scene::Start()
 {
-	for (gameObjectIter = gameObjectList.begin(); gameObjectIter < gameObjectList.end(); gameObjectIter++)
+	for (auto iter = gameObjectList.begin(); iter < gameObjectList.end(); iter++)
 	{
-		if ((*gameObjectIter)->isEnabled)
-			(*gameObjectIter)->Start();
+		if ((*iter)->isEnabled)
+			(*iter)->Start();
 	}
 }
 
 void GammaEngine::Scene::Frame()
 {
-	for (gameObjectIter = gameObjectList.begin(); gameObjectIter < gameObjectList.end(); gameObjectIter++)
+	for (auto iter = gameObjectList.begin(); iter < gameObjectList.end(); iter++)
 	{
-		if ((*gameObjectIter)->isEnabled)
-			(*gameObjectIter)->Update();
+		if ((*iter)->isEnabled)
+			(*iter)->Update();
 	}
-	for (gameObjectIter = gameObjectList.begin(); gameObjectIter < gameObjectList.end(); gameObjectIter++)
+
+	for (auto iter = gameObjectList.begin(); iter < gameObjectList.end(); iter++)
 	{
-		if ((*gameObjectIter)->isEnabled)
-			(*gameObjectIter)->LateUpdate();
+		if ((*iter)->isEnabled)
+			(*iter)->LateUpdate();
 	}
 }
 
 void GammaEngine::Scene::OnDestroy()
 {
-	for (gameObjectIter = gameObjectList.begin(); gameObjectIter < gameObjectList.end(); gameObjectIter++)
+	for (auto iter = gameObjectList.begin(); iter < gameObjectList.end(); iter++)
 	{
-		(*gameObjectIter)->OnDestroy();
+		(*iter)->OnDestroy();
 	}
 }
 
 void GammaEngine::Scene::OnDisable()
 {
-	for (gameObjectIter = gameObjectList.begin(); gameObjectIter < gameObjectList.end(); gameObjectIter++)
+	for (auto iter = gameObjectList.begin(); iter < gameObjectList.end(); iter++)
 	{
-		if ((*gameObjectIter)->isEnabled)
-			(*gameObjectIter)->OnDisable();
+		if ((*iter)->isEnabled)
+			(*iter)->OnDisable();
 	}
 }
 
 void GammaEngine::Scene::OnEnable()
 {
-	for (gameObjectIter = gameObjectList.begin(); gameObjectIter < gameObjectList.end(); gameObjectIter++)
+	for (auto iter = gameObjectList.begin(); iter < gameObjectList.end(); iter++)
 	{
-		if((*gameObjectIter)->isEnabled)
-			(*gameObjectIter)->OnEnable();
+		if((*iter)->isEnabled)
+			(*iter)->OnEnable();
 	}
 }
 
 void GammaEngine::Scene::Enable()
 {
-	for (holdIter=holdList.begin(); holdIter < holdList.end(); holdIter++)
+	for (auto iter =holdList.begin(); iter < holdList.end(); iter++)
 	{
-		(*holdIter)();
+		GameObject* newObj = new GameObject(**iter);
+		Add(newObj);
 	}
 	OnEnable();
 }
@@ -72,9 +74,9 @@ void GammaEngine::Scene::Disable()
 {
 	OnDisable();
 	OnDestroy();
-	for (gameObjectIter = gameObjectList.begin(); gameObjectIter < gameObjectList.end(); gameObjectIter++)
+	for (auto iter = gameObjectList.begin(); iter < gameObjectList.end(); iter++)
 	{
-		delete (*gameObjectIter);
+		delete (*iter);
 	}
 }
 
@@ -92,3 +94,8 @@ void GammaEngine::Scene::Remove(GameObject* obj)
 	obj->OnDestroy();
 	delete obj;
 }
+void GammaEngine::Scene::Hold(GameObject* obj)
+{
+	GameObject* newObj = new GameObject(*obj);
+	holdList.push_back(newObj);
+};

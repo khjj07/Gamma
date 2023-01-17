@@ -18,7 +18,10 @@
 #include <tchar.h>
 #include <vector>
 #include <functional>
-#include  <algorithm>
+#include <algorithm>
+#include <cassert>
+#include <cmath>
+
 #include "Type.h"
 #include "Util.h"
 //base
@@ -61,10 +64,12 @@
 //Entity
 #include "GameObject.h"
 #include "Scene.h"
+#include "SceneManager.h"
+#include "ObjectManager.h"
+#include "Engine.h"
 
 #include "Debug.h"
 
-#include "Engine.h"
 
 
 

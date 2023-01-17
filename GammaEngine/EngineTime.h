@@ -5,7 +5,7 @@ namespace GammaEngine
 	/// <summary>
 	/// deltaTime을 계산하기위한 Time class  
 	/// </summary>
-	class GammaEngineAPI Time : public Singleton<Time>
+	class GammaEngineAPI Time
 	{
 	public:
 		Time();

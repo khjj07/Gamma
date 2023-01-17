@@ -7,11 +7,18 @@ GammaEngine::GameObject::GameObject()
 	transform = new Transform(this);
 }
 
+GammaEngine::GameObject::GameObject(const GameObject& obj)
+{
+	transform = obj.transform;
+	tag = obj.tag;
+	componentList = obj.componentList;
+}
+
 GammaEngine::GameObject::~GameObject()
 {
-	for (componentIter = componentList.begin(); componentIter < componentList.end(); componentIter++)
+	for (auto iter = componentList.begin(); iter < componentList.end(); iter++)
 	{
-		delete	(*componentIter);
+		delete	(*iter);
 	}
 	componentList.clear();
 	delete transform;
@@ -21,9 +28,9 @@ void GammaEngine::GameObject::Start()
 {
 	if (!isStarted)
 	{
-		for (componentIter= componentList.begin(); componentIter < componentList.end(); componentIter++)
+		for (auto iter = componentList.begin(); iter < componentList.end(); iter++)
 		{
-			(*componentIter)->Start();
+			(*iter)->Start();
 		}
 		isStarted = true;
 	}
@@ -31,66 +38,66 @@ void GammaEngine::GameObject::Start()
 
 void GammaEngine::GameObject::Update()
 {
-	for (componentIter = componentList.begin(); componentIter < componentList.end(); componentIter++)
+	for (auto iter = componentList.begin(); iter < componentList.end(); iter++)
 	{
-		(*componentIter)->Update();
+		(*iter)->Update();
 	}
 }
 
 void GammaEngine::GameObject::LateUpdate()
 {
-	for (componentIter = componentList.begin(); componentIter < componentList.end(); componentIter++)
+	for (auto iter = componentList.begin(); iter < componentList.end(); iter++)
 	{
-		(*componentIter)->LateUpdate();
+		(*iter)->LateUpdate();
 	}
 }
 
 
 void GammaEngine::GameObject::OnDestroy()
 {
-	for (componentIter = componentList.begin(); componentIter < componentList.end(); componentIter++)
+	for (auto iter = componentList.begin(); iter < componentList.end(); iter++)
 	{
-		(*componentIter)->OnDestroy();
+		(*iter)->OnDestroy();
 	}
 }
 
 void GammaEngine::GameObject::OnDisable()
 {
-	for (componentIter = componentList.begin(); componentIter < componentList.end(); componentIter++)
+	for (auto iter = componentList.begin(); iter < componentList.end(); iter++)
 	{
-		(*componentIter)->OnDisable();
+		(*iter)->OnDisable();
 	}
 }
 
 void GammaEngine::GameObject::OnEnable()
 {
-	for (componentIter = componentList.begin(); componentIter < componentList.end(); componentIter++)
+	for (auto iter = componentList.begin(); iter < componentList.end(); iter++)
 	{
-		(*componentIter)->OnEnable();
+		(*iter)->OnEnable();
 	}
 }
 
 void GammaEngine::GameObject::OnCollisionEnter(CollisionResponse response)
 {
-	for (componentIter = componentList.begin(); componentIter < componentList.end(); componentIter++)
+	for (auto iter = componentList.begin(); iter < componentList.end(); iter++)
 	{
-		(*componentIter)->OnCollisionEnter(response);
+		(*iter)->OnCollisionEnter(response);
 	}
 }
 
 void GammaEngine::GameObject::OnCollisionStay(CollisionResponse response)
 {
-	for (componentIter = componentList.begin(); componentIter < componentList.end(); componentIter++)
+	for (auto iter = componentList.begin(); iter < componentList.end(); iter++)
 	{
-		(*componentIter)->OnCollisionStay(response);
+		(*iter)->OnCollisionStay(response);
 	}
 }
 
 void GammaEngine::GameObject::OnCollisionExit(CollisionResponse response)
 {
-	for (componentIter = componentList.begin(); componentIter < componentList.end(); componentIter++)
+	for (auto iter = componentList.begin(); iter < componentList.end(); iter++)
 	{
-		(*componentIter)->OnCollisionExit(response);
+		(*iter)->OnCollisionExit(response);
 	}
 }
 
