@@ -31,6 +31,9 @@
     <ClCompile Include="Troops.cpp">
       <Filter>Game\Script</Filter>
     </ClCompile>
+    <ClCompile Include="GameManager.cpp">
+      <Filter>Game\Script</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WorkSpace.h">
@@ -40,6 +43,9 @@
       <Filter>Game\Script</Filter>
     </ClInclude>
     <ClInclude Include="Troops.h">
+      <Filter>Game\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="GameManager.h">
       <Filter>Game\Script</Filter>
     </ClInclude>
   </ItemGroup>
