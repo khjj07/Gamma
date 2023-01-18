@@ -139,14 +139,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="DragArea.cpp" />
+    <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Troops.cpp" />
     <ClCompile Include="WorkSpace.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DragArea.h" />
+    <ClInclude Include="Mouse.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Troops.h" />
     <ClInclude Include="WorkSpace.h" />

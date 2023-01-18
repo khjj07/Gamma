@@ -3,6 +3,10 @@
 #include "Troops.h"
 using namespace GammaEngine;
 
+vector<Troops*> GameManager::tempSelected;
+vector<Troops*> GameManager::selected;
+Subject<Troops*> GameManager::selectSubject;
+ Subject<Troops*> GameManager::unselectSubject;
 GameManager::GameManager(GameObject* t) : Component(t)
 {
 
@@ -20,15 +24,16 @@ void GameManager::Update()
 
 void GameManager::ConfirmUnit()
 {
-
+	selected = tempSelected;
 }
 
 void GameManager::Hand(Troops* troops)
 {
-	hand.push_back(troops);
+	selectSubject.OnNext(troops);
+	tempSelected.push_back(troops);
 }
 
 void  GameManager::Unhand(Troops* troops)
 {
-	hand.erase(remove(hand.begin(), hand.end(), troops), hand.end());
+	tempSelected.erase(remove(tempSelected.begin(), tempSelected.end(), troops), tempSelected.end());
 }

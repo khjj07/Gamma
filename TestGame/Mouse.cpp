@@ -1,21 +1,21 @@
 #include "GammaEngine.h"
-#include "DragArea.h"
+#include "Mouse.h"
 #include "GameManager.h"
 #include "Troops.h"
 
 using namespace GammaEngine;
 
-DragArea::DragArea(GameObject* t) : Component(t)
+Mouse::Mouse(GameObject* t) : Component(t)
 {
 
 }
 
-DragArea::~DragArea()
+Mouse::~Mouse()
 {
 
 }
 
- void DragArea::Update()
+ void Mouse::Update()
 {
 	 vector2 mousePos = Camera::main->ScreenToWorldPoint(Input::GetMousePosition());
 	 if (Input::GetMouseButtonDown(0))
@@ -38,15 +38,17 @@ DragArea::~DragArea()
 	 }
 
 	 GetComponent<RectangleRenderer>()->size = (endpoint - startpoint);
+	 GetComponent<BoxCollider>()->SetBounds((endpoint - startpoint)/2);
 	 transform->position = (endpoint + startpoint) / 2;
 }
 
-void DragArea::OnCollisionEnter(CollisionResponse res)
+void Mouse::OnCollisionEnter(CollisionResponse res)
 {
-	GameManager::Hand(res.other->GetComponent<Troops>());
+// 	if (this->GetComponent<BoxCollider>()->InBound(res.other->transform->position));
+		GameManager::Hand(res.other->GetComponent<Troops>());
 }
 
-void DragArea::OnCollisionExit(CollisionResponse)
+void Mouse::OnCollisionExit(CollisionResponse res)
 {
 	GameManager::Unhand(res.other->GetComponent<Troops>());
 }

@@ -16,7 +16,11 @@ public:
 	static void Unhand(Troops* troops);
 
 private:
-	static vector<Troops*> hand;
+	static vector<Troops*> tempSelected;
+	static vector<Troops*> selected;
+public:
+	static Subject<Troops*> selectSubject;
+	static Subject<Troops*> unselectSubject;
 };
 
 

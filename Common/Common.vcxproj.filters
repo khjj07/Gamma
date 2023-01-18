@@ -31,6 +31,9 @@
     <ClInclude Include="Type.h">
       <Filter>Common\Type</Filter>
     </ClInclude>
+    <ClInclude Include="Observable.h" />
+    <ClInclude Include="Subject.h" />
+    <ClInclude Include="Observer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Util.cpp">
@@ -48,5 +51,8 @@
     <ClCompile Include="Type.cpp">
       <Filter>Common\Type</Filter>
     </ClCompile>
+    <ClCompile Include="Subject.cpp" />
+    <ClCompile Include="Observer.cpp" />
+    <ClCompile Include="Observable.cpp" />
   </ItemGroup>
 </Project>

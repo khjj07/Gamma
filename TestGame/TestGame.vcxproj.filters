@@ -25,7 +25,7 @@
     <ClCompile Include="WorkSpace.cpp">
       <Filter>Game\WorkSpace</Filter>
     </ClCompile>
-    <ClCompile Include="DragArea.cpp">
+    <ClCompile Include="Mouse.cpp">
       <Filter>Game\Script</Filter>
     </ClCompile>
     <ClCompile Include="Troops.cpp">
@@ -39,7 +39,7 @@
     <ClInclude Include="WorkSpace.h">
       <Filter>Game\WorkSpace</Filter>
     </ClInclude>
-    <ClInclude Include="DragArea.h">
+    <ClInclude Include="Mouse.h">
       <Filter>Game\Script</Filter>
     </ClInclude>
     <ClInclude Include="Troops.h">
