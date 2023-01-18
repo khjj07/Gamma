@@ -14,6 +14,9 @@
     <Filter Include="Game\WorkSpace">
       <UniqueIdentifier>{3339ab92-dc1d-4dce-a309-f61e50aa27c9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Script">
+      <UniqueIdentifier>{3930b502-98af-432e-882e-49d2f9b8ed17}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -22,10 +25,22 @@
     <ClCompile Include="WorkSpace.cpp">
       <Filter>Game\WorkSpace</Filter>
     </ClCompile>
+    <ClCompile Include="DragArea.cpp">
+      <Filter>Game\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="Troops.cpp">
+      <Filter>Game\Script</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WorkSpace.h">
       <Filter>Game\WorkSpace</Filter>
+    </ClInclude>
+    <ClInclude Include="DragArea.h">
+      <Filter>Game\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="Troops.h">
+      <Filter>Game\Script</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
