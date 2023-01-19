@@ -3,7 +3,7 @@ using namespace GammaEngine;
 
 GammaEngine::CircleCollider::CircleCollider(GameObject* t) :Collider(t)
 {
-
+	radius = 0;
 }
 
 GammaEngine::CircleCollider::~CircleCollider()
@@ -16,7 +16,7 @@ GammaEngine::CollisionResponse CircleCollider::Collide(Collider* other, bool col
 	CollisionResponse result;
 	vector<vector2> polytope;
 
-	bool detect = GJK(this, other, polytope);
+	bool detect = radius != 0 && GJK(this, other, polytope);
 	result.other = other;
 	if (detect)
 	{

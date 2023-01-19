@@ -21,7 +21,7 @@ CollisionResponse GammaEngine::BoxCollider::Collide(Collider* other, bool collid
 	vector<vector2> polytope;
 
 	ResetPoints();
-	bool detect = GJK(this, other, polytope);
+	bool detect = bounds.Length() != 0 && GJK(this, other, polytope);
 	result.other = other;
 
 	if (detect)
@@ -35,7 +35,7 @@ CollisionResponse GammaEngine::BoxCollider::Collide(Collider* other, bool collid
 
 vector<vector2> GammaEngine::BoxCollider::ComputePoints()
 {
-	if (simplex.size()!=4)
+	if (simplex.size() != 4)
 	{
 		vector2 position = transform->position;
 		vector2 scale = transform->scale;
@@ -46,12 +46,10 @@ vector<vector2> GammaEngine::BoxCollider::ComputePoints()
 		vector2 leftDown = (worldMatrix * vector2(-bounds.x / 2, bounds.y / 2).ToMatrix3x1()).tovector2();
 		vector2 rightUp = (worldMatrix * vector2(bounds.x / 2, -bounds.y / 2).ToMatrix3x1()).tovector2();
 		vector2 rightDown = (worldMatrix * vector2(bounds.x / 2, bounds.y / 2).ToMatrix3x1()).tovector2();
-
 		simplex.push_back(leftUp);
 		simplex.push_back(leftDown);
 		simplex.push_back(rightUp);
 		simplex.push_back(rightDown);
-	
 		return simplex;
 	}
 	else

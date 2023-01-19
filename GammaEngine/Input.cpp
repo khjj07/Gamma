@@ -97,7 +97,7 @@ vector2 GammaEngine::Input::GetMousePosition()
 	POINT p;
 	GetWindowRect(hWnd, &rc);
 	GetCursorPos(&p);
-	ScreenToClient(hWnd, &p);
+	//ScreenToClient(hWnd, &p);
 	vector2 vec = vector2(-rc.left+p.x, -rc.top+p.y);
 	return vec;
 }

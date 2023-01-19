@@ -17,7 +17,7 @@ CollisionResponse GammaEngine::LineCollider::Collide(Collider* other, bool colli
 	CollisionResponse result;
 	vector<vector2> polytope;
 
-	bool detect = GJK(this, other, polytope);
+	bool detect = (endPoint-startPoint).Length()!=0 && GJK(this, other, polytope);
 	result.other = other;
 	if (detect)
 	{

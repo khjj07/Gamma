@@ -45,8 +45,13 @@ namespace GammaEngine
 	/// <summary>
 	/// Tween과 관련한 정보를 포함하는 기본 구조체 
 	/// </summary>
-	struct GammaEngineAPI TweenData
+	struct GammaEngineAPI TweenData 
 	{
+		TweenData() : 
+			duration(0), 
+			callback(nullptr), 
+			accumulation(0),
+			handler(0){}
 		float duration;//기간
 		function<void()> callback;//콜백함수
 		float accumulation;//누적
