@@ -96,13 +96,13 @@ struct Matrix3x3
 		return result;
 	}
 
-	static Matrix3x3 Rotate(float p_euler)
+	static Matrix3x3 Rotate(double p_euler)
 	{
-		double rad = p_euler * (3.141592 / 180.f);
+		double rad = p_euler * (3.141592 / 180);
 
 		Matrix3x3 result(
-			cos(rad), sin(rad), 0.f,
-			-sin(rad), cos(rad), 0.f,
+			(float)cos(rad), (float)sin(rad), 0.f,
+			(float)-sin(rad), (float)cos(rad), 0.f,
 			0.f, 0.f, 1.f
 		);
 
@@ -121,6 +121,7 @@ struct Matrix3x3
 	}
 
 	vector2 tovector2();
+	Matrix3x3 inverse();
 };
 
 Matrix3x3 operator*(Matrix3x3 a, Matrix3x3 b);

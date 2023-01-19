@@ -19,22 +19,21 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Observable.h" />
-    <ClInclude Include="Observer.h" />
+    <ClInclude Include="IDisposable.h" />
     <ClInclude Include="Matrix.h" />
+    <ClInclude Include="IObservable.h" />
+    <ClInclude Include="IObserver.h" />
     <ClInclude Include="Render.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="Subject.h" />
+    <ClInclude Include="SubjectObserver.h" />
     <ClInclude Include="Type.h" />
     <ClInclude Include="Util.h" />
     <ClInclude Include="vector2.h" />
     <ClInclude Include="vector4.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Observable.cpp" />
-    <ClCompile Include="Observer.cpp" />
     <ClCompile Include="Matrix.cpp" />
-    <ClCompile Include="Subject.cpp" />
     <ClCompile Include="Type.cpp" />
     <ClCompile Include="Util.cpp" />
     <ClCompile Include="vector2.cpp" />

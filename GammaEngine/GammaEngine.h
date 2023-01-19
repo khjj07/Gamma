@@ -20,8 +20,6 @@
 //base
 #include "Singleton.h"
 #include "Subject.h"
-#include "Observable.h"
-#include "Observer.h"
 #include "resource.h"
 #include "WindowSystem.h"
 #include "GraphicSystem.h"

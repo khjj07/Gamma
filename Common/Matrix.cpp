@@ -40,6 +40,23 @@ Matrix3x1 operator*(Matrix3x3 a, Matrix3x1 b)
 	return result;
 }
 
+Matrix3x3 Matrix3x3::inverse()
+{
+	Matrix3x3 result;
+	result[0][0] = value[2][2];
+	result[0][1] = value[2][1];
+	result[0][2] = value[2][0];
+
+	result[1][0] = value[1][2];
+	result[1][1] = value[1][1];
+	result[1][2] = value[1][0];
+
+	result[0][0] = value[2][2];
+	result[0][1] = value[2][1];
+	result[0][2] = value[2][0];
+	return result;
+};
+
 vector2 Matrix3x3::tovector2()
 {
 	return vector2(value[0][0], value[1][1]);

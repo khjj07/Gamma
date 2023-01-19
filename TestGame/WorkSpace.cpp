@@ -19,7 +19,7 @@ WorkSpace::WorkSpace()
 	mouse->AddComponent<BoxCollider>();
 	mouse->AddComponent<Mouse>();
 
-	for (size_t i = 0; i < 10; i++)
+	for (int i = 0; i < 10; i++)
 	{
 		GameObject* troops = new GameObject();
 		troops->AddComponent<RectangleRenderer>();

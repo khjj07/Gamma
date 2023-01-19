@@ -84,7 +84,6 @@ void GammaEngine::Scene::Add(GameObject* obj)
 {
 	gameObjectList.push_back(obj);
 	obj->isEnabled = true;
-	obj->OnEnable();
 }
 
 void GammaEngine::Scene::Remove(GameObject* obj)

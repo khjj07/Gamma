@@ -18,7 +18,6 @@ void GammaEngine::SceneManager::Initialize()
 {
 	assert(sceneList[0], "Add at least one scene");
 	LoadScene(0);
-	currentScene->Enable();
 }
 
 void GammaEngine::SceneManager::AddScene(Scene* scene)

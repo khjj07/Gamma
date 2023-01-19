@@ -17,11 +17,9 @@ void GammaEngine::Engine::Initialize()
 	Input* input = Input::Instance();
 	SceneManager* sceneManager = new SceneManager();
 
-	sceneManager->Initialize();
 	graphic->Initialize(WindowSystem::hWnd);
 	input->Initialize(WindowSystem::hWnd);
-
-	SceneManager::currentScene->Enable();
+	sceneManager->Initialize();
 }
 
 bool GammaEngine::Engine::Frame()

@@ -5,8 +5,8 @@ using namespace GammaEngine;
 
 vector<Troops*> GameManager::tempSelected;
 vector<Troops*> GameManager::selected;
-Subject<Troops*> GameManager::selectSubject;
- Subject<Troops*> GameManager::unselectSubject;
+Subject<vector<Troops*> > GameManager::selectSubject;
+Subject<Command> GameManager::commandSubject;
 GameManager::GameManager(GameObject* t) : Component(t)
 {
 
@@ -22,15 +22,21 @@ void GameManager::Update()
 
 }
 
+void GameManager::MoveCommand(vector2 point)
+{
+	commandSubject.OnNext(Command(CommandType::Move,point));
+}
+
 void GameManager::ConfirmUnit()
 {
 	selected = tempSelected;
+	selectSubject.OnNext(selected);
 }
 
 void GameManager::Hand(Troops* troops)
 {
-	selectSubject.OnNext(troops);
 	tempSelected.push_back(troops);
+
 }
 
 void  GameManager::Unhand(Troops* troops)

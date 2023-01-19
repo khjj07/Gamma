@@ -17,22 +17,21 @@ GammaEngine::Camera::~Camera()
 
 vector2 GammaEngine::Camera::ScreenToWorldPoint(vector2 p)
 {
-	vector2 position = transform->GetWorldPosition();
-	POINT center = { Screen::width / 2 - position.x, Screen::height / 2 - position.y} ;
-	ScreenToClient(Input::hWnd, &center);
-	vector2 diff = vector2(center.x, center.y) - vector2(center.x, center.y) * orthoScale;
-	vector2 point = diff + p*orthoScale - vector2(center.x, center.y);
-	return point;
+	vector2 center = vector2(Screen::width / 2, Screen::height / 2);
+	vector2 size = vector2(1 / Camera::main->orthoScale, 1 / Camera::main->orthoScale);
+
+	Matrix3x1 result = Matrix3x3::Scale(orthoScale,orthoScale) * Matrix3x3::Translation(-center.x + transform->position.x, -center.y + transform->position.y) * p.ToMatrix3x1();
+
+
+	return result.tovector2();
 }
 
 vector2 GammaEngine::Camera::WorldToScreenPoint(vector2 p)
 {
-	vector2 position = transform->GetWorldPosition();
-	POINT center = { Screen::width / 2 - position.x, Screen::height / 2 - position.y };
-	ScreenToClient(Input::hWnd, &center);
-	vector2 diff = vector2(center.x, center.y) - vector2(center.x, center.y) * orthoScale;
-	vector2 point = diff + p * orthoScale - vector2(center.x, center.y);
-	return point;
+	POINT point = { p.x, p.y };
+	vector2 v = vector2(point.x, point.y);
+	Matrix1x3 result = v.ToMatrix1x3() * Projection();
+	return result.tovector2();
 }
 
 vector2 GammaEngine::Camera::ScreenToWorldScale(vector2 s)
