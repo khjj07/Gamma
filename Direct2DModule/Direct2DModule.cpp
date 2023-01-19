@@ -105,12 +105,13 @@ wstring Direct2DModule::LoadBitmapImage(wstring filename)
 	HRESULT hr;
 	ID2D1Bitmap* bitmap;
 	IWICBitmapDecoder* decoder = 0;
+	IWICBitmapFrameDecode* frameDecode = 0;
+	IWICFormatConverter* converter = 0;
 
 	hr = imageFactory->CreateDecoderFromFilename(filename.c_str(), 0, GENERIC_READ, WICDecodeMetadataCacheOnDemand, &decoder);
 
 	if (FAILED(hr))
 		return nullptr;
-	IWICBitmapFrameDecode* frameDecode = 0;
 
 	hr = decoder->GetFrame(0, &frameDecode);
 
@@ -123,7 +124,6 @@ wstring Direct2DModule::LoadBitmapImage(wstring filename)
 
 	}
 
-	IWICFormatConverter* converter = 0;
 
 	hr = imageFactory->CreateFormatConverter(&converter);
 
@@ -184,6 +184,7 @@ vector2 Direct2DModule::GetBitmapSize(wstring filename)
 	D2D1_SIZE_F size = bitmap->GetSize();
 	return vector2(size.width, size.height);
 }
+
 wstring Direct2DModule::MakePolygon(wstring name, vector<vector2> points)
 {
 	ID2D1PathGeometry* polygon;

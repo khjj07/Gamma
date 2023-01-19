@@ -14,20 +14,17 @@ template <typename T>
 class Observable
 {
 public:
-	friend class Subject<T>;
-
-public:
 	Observable();
 	Observable(Observer<T>*, Observable*);
 
 public:
 	Observable<T> Where(function<bool(T)>);
-	Observable<T> Subscribe(function<void(T)>);
-	Observable<T> Subscribe(function<void(T)>, function<void(T)>);
-	Observable<T> Subscribe(function<void(T)>, function<void(T)>, function<void(T)>);
-	virtual void OnNext(T);
-	virtual void OnComplete(T);
-	virtual void OnError(exception);
+    void Subscribe(function<void(T)>);
+	void Subscribe(function<void(T)>, function<void(T)>);
+	void Subscribe(function<void(T)>, function<void(T)>, function<void(exception)>);
+	void OnNext(T);
+	void OnComplete(T);
+	void OnError(exception);
 
 public:
 	Observer<T>* observer;
@@ -46,36 +43,33 @@ Observable<T>::Observable()
 
 template<typename T>
 Observable<T>::Observable(Observer<T>* observer, Observable* observable)
-	:observer(observer)
+	:observer(observer), observables(observable->observables)
 {
 	condition = observable->condition;
 }
 
 template<typename T>
-Observable<T> Observable<T>::Subscribe(function<void(T)> onNext)
+void Observable<T>::Subscribe(function<void(T)> onNext)
 {
 	Observer<T>* newObserver = new Observer<T>(onNext);
 	Observable<T>* newObservable = new Observable<T>(newObserver, this);
-	observables.push_back(*newObservable);
-	return *newObservable;
+	this->observables.push_back(*newObservable);
 }
 
 template<typename T>
-Observable<T> Observable<T>::Subscribe(function<void(T)> onNext, function<void(T)> onComplete)
+void Observable<T>::Subscribe(function<void(T)> onNext, function<void(T)> onComplete)
 {
 	Observer<T>* newObserver = new Observer<T>(onNext);
 	Observable<T>* newObservable = new Observable<T>(newObserver, this);
-	observables.push_back(*newObservable);
-	return *newObservable;
+	this->observables.push_back(*newObservable);
 }
 
 template<typename T>
-Observable<T> Observable<T>::Subscribe(function<void(T)> onNext, function<void(T)> onComplete, function<void(T)> onError)
+void Observable<T>::Subscribe(function<void(T)> onNext, function<void(T)> onComplete, function<void(exception)> onError)
 {
 	Observer<T>* newObserver = new Observer<T>(onNext, onComplete, onError);
 	Observable<T>* newObservable = new Observable<T>(newObserver, this);
-	observables.push_back(*newObservable);
-	return *newObservable;
+	this->observables.push_back(*newObservable);
 }
 
 template<typename T>
@@ -106,8 +100,6 @@ void Observable<T>::OnError(exception e)
 template<typename T>
 Observable<T> Observable<T>::Where(function<bool(T)> con)
 {
-	Observable<T> ret;
 	condition.push_back(con);
-
-	return ret;
+	return *this;
 }

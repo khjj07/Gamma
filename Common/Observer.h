@@ -14,7 +14,7 @@ public:
 public:
 	Observer(function<void(T)>);
 	Observer(function<void(T)>, function<void(T)>);
-	Observer(function<void(T)>, function<void(T)>, function<void(T)>);
+	Observer(function<void(T)>, function<void(T)>, function<void(exception)>);
 
 private:
 	function<void(T)> OnNext;
@@ -37,7 +37,7 @@ Observer<T>::Observer(function<void(T)> onNext, function<void(T)> onComplete)
 };
 
 template<typename T>
-Observer<T>::Observer(function<void(T)> onNext, function<void(T)> onComplete, function<void(T)> onError)
+Observer<T>::Observer(function<void(T)> onNext, function<void(T)> onComplete, function<void(exception)> onError)
 	: OnNext(onNext), OnComplete(onComplete), OnError(onError)
 {
 

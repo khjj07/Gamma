@@ -16,9 +16,9 @@ public:
 	~Subject();
 
 public:
-	virtual void OnNext(T);
-	virtual void OnComplete(T);
-	virtual void OnError(exception);
+	void OnNext(T);
+	void OnComplete(T);
+	void OnError(exception);
 };
 
 template<typename T>
@@ -33,21 +33,19 @@ Subject<T>::~Subject()
 
 }
 
-
-
 template<typename T>
 void Subject<T>::OnNext(T data)
 {
 	try
 	{
-		for (auto iter = observables.begin(); iter != observables.end(); iter++)
+		for (auto iter = this->observables.begin(); iter != this->observables.end(); iter++)
 		{
 			(*iter).OnNext(data);
 		}
 	}
 	catch (exception& e)
 	{
-		for (auto iter = observables.begin(); iter != observables.end(); iter++)
+		for (auto iter = this->observables.begin(); iter != this->observables.end(); iter++)
 		{
 			(*iter).OnError(e);
 		}
@@ -60,14 +58,14 @@ void Subject<T>::OnComplete(T data)
 {
 	try
 	{
-		for (auto iter = observables.begin(); iter != observables.end(); iter++)
+		for (auto iter = this->observables.begin(); iter != this->observables.end(); iter++)
 		{
 			(*iter).OnComplete(data);
 		}
 	}
 	catch (exception e)
 	{
-		for (auto iter = observables.begin(); iter != observables.end(); iter++)
+		for (auto iter = this->observables.begin(); iter != this->observables.end(); iter++)
 		{
 			(*iter).OnError(e);
 		}
@@ -77,7 +75,7 @@ void Subject<T>::OnComplete(T data)
 template<typename T>
 void Subject<T>::OnError(exception e)
 {
-	for (auto iter = observables.begin(); iter != observables.end(); iter++)
+	for (auto iter = this->observables.begin(); iter != this->observables.end(); iter++)
 	{
 		(*iter).OnError(e);
 	}
