@@ -18,27 +18,11 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Matrix.h" />
-    <ClInclude Include="Render.h" />
-    <ClInclude Include="Singleton.h" />
-    <ClInclude Include="Type.h" />
-    <ClInclude Include="Util.h" />
-    <ClInclude Include="vector2.h" />
-    <ClInclude Include="vector4.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Matrix.cpp" />
-    <ClCompile Include="Type.cpp" />
-    <ClCompile Include="Util.cpp" />
-    <ClCompile Include="vector2.cpp" />
-    <ClCompile Include="vector4.cpp" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{b9a23f42-3915-486a-aa0a-d9f8c268e858}</ProjectGuid>
-    <RootNamespace>Common</RootNamespace>
+    <ProjectGuid>{06277f41-fcf8-44d0-b348-231bb7e3657c}</ProjectGuid>
+    <RootNamespace>GRX</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -122,7 +106,7 @@
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
@@ -142,6 +126,14 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="IDisposable.h" />
+    <ClInclude Include="IObservable.h" />
+    <ClInclude Include="IObserver.h" />
+    <ClInclude Include="ReactiveProperty.h" />
+    <ClInclude Include="Subject.h" />
+    <ClInclude Include="SubjectObserver.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

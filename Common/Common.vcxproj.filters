@@ -31,11 +31,6 @@
     <ClInclude Include="Type.h">
       <Filter>Common\Type</Filter>
     </ClInclude>
-    <ClInclude Include="Subject.h" />
-    <ClInclude Include="IObservable.h" />
-    <ClInclude Include="IObserver.h" />
-    <ClInclude Include="IDisposable.h" />
-    <ClInclude Include="SubjectObserver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Util.cpp">
