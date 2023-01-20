@@ -144,5 +144,5 @@ void GammaEngine::Animation::Play(PLAYBACK playback)
 
 void GammaEngine::Animation::AddFrame(wstring image)
 {
-	images.push_back(image);
+	images.push_back(GraphicSystem::LoadBitmapImage(image));
 }

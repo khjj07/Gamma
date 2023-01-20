@@ -11,12 +11,14 @@ struct Command
 {
 	Command():
 		type(CommandType::None),
-		coordinate(vector2()){}
+		coordinate(vector2()),
+		troops(vector<Troops*>()) {}
 
-	Command(CommandType type, vector2 coordinate) :
+	Command(CommandType type, vector2 coordinate, vector<Troops*> troops) :
 		type(type),
-		coordinate(coordinate) {}
-
+		coordinate(coordinate),
+		troops(troops) {}
+	vector<Troops*> troops;
 	CommandType type;
 	vector2 coordinate;
 };

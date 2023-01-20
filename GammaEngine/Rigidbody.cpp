@@ -5,7 +5,7 @@ GammaEngine::Rigidbody::Rigidbody(GameObject* t) :Component(t),
 mass(1), velocity(vector2()), 
 drag(0.1), momentOfInertia(10), restitution(0.01),
 angularDrag(0.01), angularVelocity(vector2()),torque(vector2()),
-staticFriction(1), dynamicFriction(1),
+staticFriction(0.2), dynamicFriction(0.01),
 useGravity(false), gravity(vector2::Down * 10)
 {
 
@@ -36,33 +36,39 @@ void GammaEngine::Rigidbody::ApplyForce(vector2 force)
 
 void GammaEngine::Rigidbody::OnCollisionEnter(CollisionResponse response)
 {
-	Rigidbody* otherRig = response.other->GetComponent<Rigidbody>();
-	vector2 impulse;
-	if (otherRig)
+	if (!response.isKinematic)
 	{
-		impulse = ResolveCollision(this, otherRig, response);
-		PositionalCorrection(this, otherRig, response);
-	}
-	else
-	{
-		impulse = ResolveCollision(this, response);
-		PositionalCorrection(this, response);
+		Rigidbody* otherRig = response.other->GetComponent<Rigidbody>();
+		vector2 impulse;
+		if (otherRig)
+		{
+			impulse = ResolveCollision(this, otherRig, response);
+			PositionalCorrection(this, otherRig, response);
+		}
+		else
+		{
+			impulse = ResolveCollision(this, response);
+			PositionalCorrection(this, response);
+		}
 	}
 }
 
 void GammaEngine::Rigidbody::OnCollisionStay(CollisionResponse response)
 {
-	Rigidbody* otherRig = response.other->GetComponent<Rigidbody>();
-	vector2 impulse;
-	if (otherRig)
+	if (!response.isKinematic)
 	{
-		impulse = ResolveCollision(this, otherRig, response);
-		PositionalCorrection(this, otherRig, response);
-	}
-	else
-	{
-		impulse = ResolveCollision(this, response);
-		PositionalCorrection(this, response);
+		Rigidbody* otherRig = response.other->GetComponent<Rigidbody>();
+		vector2 impulse;
+		if (otherRig)
+		{
+			impulse = ResolveCollision(this, otherRig, response);
+			PositionalCorrection(this, otherRig, response);
+		}
+		else
+		{
+			impulse = ResolveCollision(this, response);
+			PositionalCorrection(this, response);
+		}
 	}
 }
 
@@ -87,7 +93,13 @@ vector2 GammaEngine::Rigidbody::ResolveCollision(Rigidbody* A, Rigidbody* B, Col
 
 	float j = -(1 + e) * velAlongNormal;
 	vector2 frictionImpulse;
-	frictionImpulse = jt * res.normal;
+	if (abs(jt) < j * mu)
+		frictionImpulse = jt * res.normal;
+	else
+	{
+		float dynamicFriction = pow(A->dynamicFriction, 2) + pow(B->dynamicFriction, 2);
+		frictionImpulse = -j * res.normal * dynamicFriction;
+	}
 
 	A->velocity -= (1 / A->mass) * frictionImpulse;
 	B->velocity += (1 / B->mass) * frictionImpulse;
@@ -111,7 +123,17 @@ vector2 GammaEngine::Rigidbody::ResolveCollision(Rigidbody* A, CollisionResponse
 	float e = A->restitution;
 
 	float j = -(1 + e) * velAlongNormal;
-	vector2 frictionImpulse = jt * res.normal;
+	vector2 frictionImpulse; 
+	
+	if (abs(jt) < j * mu)
+		frictionImpulse = jt * res.normal;
+	else
+	{
+		float dynamicFriction = pow(A->dynamicFriction, 2);
+		frictionImpulse = -j * res.normal * dynamicFriction;
+	}
+
+
 	A->velocity -= (1 / A->mass) * frictionImpulse;
 	return frictionImpulse;
 }

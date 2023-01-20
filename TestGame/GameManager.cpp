@@ -24,7 +24,7 @@ void GameManager::Update()
 
 void GameManager::MoveCommand(vector2 point)
 {
-	commandSubject.OnNext(Command(CommandType::Move,point));
+	commandSubject.OnNext(Command(CommandType::Move,point,selected));
 }
 
 void GameManager::ConfirmUnit()

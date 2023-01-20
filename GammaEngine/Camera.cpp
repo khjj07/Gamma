@@ -20,7 +20,7 @@ vector2 GammaEngine::Camera::ScreenToWorldPoint(vector2 p)
 	vector2 center = vector2(Screen::width / 2, Screen::height / 2);
 	vector2 size = vector2(1 / Camera::main->orthoScale, 1 / Camera::main->orthoScale);
 
-	Matrix3x1 result = Matrix3x3::Scale(orthoScale,orthoScale) * Matrix3x3::Translation(-center.x + transform->position.x, -center.y + transform->position.y) * p.ToMatrix3x1();
+	Matrix3x1 result = Matrix3x3::Translation(transform->position.x, transform->position.y) * Matrix3x3::Scale(orthoScale,orthoScale) * Matrix3x3::Translation(-center.x, -center.y) * p.ToMatrix3x1();
 
 
 	return result.tovector2();

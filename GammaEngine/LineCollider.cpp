@@ -19,6 +19,7 @@ CollisionResponse GammaEngine::LineCollider::Collide(Collider* other, bool colli
 
 	bool detect = (endPoint-startPoint).Length()!=0 && GJK(this, other, polytope);
 	result.other = other;
+	result.isKinematic = isKinematic || other->isKinematic;
 	if (detect)
 	{
 		EPA(this, other, polytope, result.normal, result.distance, result.contactPoint);

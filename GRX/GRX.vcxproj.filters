@@ -30,7 +30,7 @@
     <ClInclude Include="IObserver.h">
       <Filter>repo\Interface</Filter>
     </ClInclude>
-    <ClInclude Include="SubjectObserver.h">
+    <ClInclude Include="Observer.h">
       <Filter>repo\Class</Filter>
     </ClInclude>
     <ClInclude Include="Subject.h">
@@ -39,5 +39,16 @@
     <ClInclude Include="ReactiveProperty.h">
       <Filter>repo\Class</Filter>
     </ClInclude>
+    <ClInclude Include="Observable.h">
+      <Filter>repo\Class</Filter>
+    </ClInclude>
+    <ClInclude Include="Action.h">
+      <Filter>repo\Class</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>repo</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

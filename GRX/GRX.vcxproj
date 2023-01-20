@@ -127,12 +127,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Action.h" />
     <ClInclude Include="IDisposable.h" />
     <ClInclude Include="IObservable.h" />
     <ClInclude Include="IObserver.h" />
+    <ClInclude Include="Observable.h" />
     <ClInclude Include="ReactiveProperty.h" />
     <ClInclude Include="Subject.h" />
-    <ClInclude Include="SubjectObserver.h" />
+    <ClInclude Include="Observer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

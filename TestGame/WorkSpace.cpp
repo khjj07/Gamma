@@ -19,16 +19,23 @@ WorkSpace::WorkSpace()
 	mouse->AddComponent<BoxCollider>();
 	mouse->AddComponent<Mouse>();
 
-	for (int i = 0; i < 10; i++)
+	mouse->GetComponent<BoxCollider>()->isKinematic=true;
+
+	for (int i = 0; i < 400; i++)
 	{
 		GameObject* troops = new GameObject();
-		troops->AddComponent<RectangleRenderer>();
-		troops->AddComponent<BoxCollider>();
+		troops->AddComponent<EllipseRenderer>();
+		troops->AddComponent<CircleCollider>();
+		troops->AddComponent<Rigidbody>();
 		troops->AddComponent<Troops>();
-		
-		troops->GetComponent<RectangleRenderer>()->size = vector2(20, 20);
-		troops->GetComponent<BoxCollider>()->SetBounds(vector2(20, 20));
-		troops->transform->position = vector2(30 * i, 10);
+		troops->AddComponent<BitmapRenderer>();
+		troops->AddComponent<Animation>();
+
+		troops->GetComponent<Rigidbody>()->useGravity = false;
+		troops->GetComponent<EllipseRenderer>()->size = vector2(20, 20);
+		troops->GetComponent<CircleCollider>()->radius=10;
+		troops->GetComponent<Troops>()->speed = 100;
+		troops->transform->position = vector2(30 * (i%10), 30 * (i/10));
 		scene1->Hold(troops);
 	}
 	

@@ -5,10 +5,8 @@
 #include "IObservable.h"
 #include "IObserver.h"
 #include "IDisposable.h"
-#include "SubjectObserver.h"
+#include "Observer.h"
 using namespace std;
-
-
 
 template <typename T>
 class ReactiveProperty : public IObservable<T>

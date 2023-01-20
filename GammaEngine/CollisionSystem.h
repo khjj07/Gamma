@@ -24,12 +24,14 @@ namespace GammaEngine
 			other(nullptr), 
 			distance(0.0f),
 			normal(vector2()),
-			contactPoint(vector2()) {}
+			contactPoint(vector2()),
+			isKinematic(false) {}
 		CollisionState state; //상태
 		Collider* other; //다른 충돌체
 		vector2 normal; //법선벡터
 		vector2 contactPoint; //충돌 지점
 		float distance; //침투 거리
+		bool isKinematic;
 	};
 
 	/// <summary>

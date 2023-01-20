@@ -1,5 +1,11 @@
 using namespace GammaEngine;
 
+enum class TroopState
+{
+	Wait,
+	MoveToTarget,
+};
+
 class Troops : public GammaEngine::Component
 {
 public:
@@ -10,8 +16,10 @@ public:
 	virtual void Update();
 	virtual void OnCollisionStay(CollisionResponse);
 	virtual void OnCollisionExit(CollisionResponse);
-private:
-	
+public:
+	float speed;
+	vector2 targetPoint;
+	TroopState state=TroopState::Wait;
 
 };
 

@@ -42,6 +42,8 @@ namespace GammaEngine
 		virtual bool InBound(vector2) = 0;
 		virtual vector2 FarthestPoint(vector2 v) = 0;
 		virtual CollisionResponse Collide(Collider*, bool) = 0;
+	public:
+		bool isKinematic=false;
 	};
 
 

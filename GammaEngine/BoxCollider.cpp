@@ -23,7 +23,7 @@ CollisionResponse GammaEngine::BoxCollider::Collide(Collider* other, bool collid
 	ResetPoints();
 	bool detect = bounds.Length() != 0 && GJK(this, other, polytope);
 	result.other = other;
-
+	result.isKinematic = isKinematic || other->isKinematic;
 	if (detect)
 	{
  		EPA(this, other, polytope, result.normal, result.distance,result.contactPoint);
