@@ -23,6 +23,6 @@ namespace GammaEngine {
 			vector2 center;
 			int depth;
 			static int maxDepth;
-			static float padding;
+			static float minAreaSize;
 	};
 };

@@ -21,13 +21,13 @@ GammaEngine::Debug::~Debug()
 
 void GammaEngine::Debug::DrawRectangle(vector2 size, vector2 pos, float rotation, Material* material)
 {
-	DebugRect* debugShape = new DebugRect(size, Camera::main->Projection()*Matrix3x3::Rotate(rotation)* Matrix3x3::Translation(pos.x,pos.y), material);
+	DebugRect* debugShape = new DebugRect(size, Camera::main->Projection()* Matrix3x3::Translation(pos.x,pos.y) * Matrix3x3::Scale(1, 1)* Matrix3x3::Rotate(rotation), material);
 	rect->push_back(debugShape);
 }
 
 void GammaEngine::Debug::DrawEllipse(vector2 size, vector2 pos, float rotation, Material* material)
 {
-	DebugEllipse* debugShape = new DebugEllipse(size, Matrix3x3::Rotate(rotation) * Matrix3x3::Translation(pos.x, pos.y) * Camera::main->Projection(), material);
+	DebugEllipse* debugShape = new DebugEllipse(size, Camera::main->Projection() * Matrix3x3::Translation(pos.x, pos.y) * Matrix3x3::Scale(1, 1) * Matrix3x3::Rotate(rotation), material);
 	ellipse->push_back(debugShape);
 }
 

@@ -50,6 +50,7 @@ void Troops::Start()
 				targetPoint = x.coordinate;
 				state = TroopState::MoveToTarget;
 		});
+		Tween::Animate(transform->rotation, PLAYBACK::LOOP_PINGPONG, 180, EASING::INBOUNCE, 1.5);
 }
 
 void Troops::Update()
@@ -68,7 +69,7 @@ void Troops::Update()
 
 void Troops::OnCollisionStay(CollisionResponse)
 {
-	//GetComponent<RectangleRenderer>()->SetPen(vector4(1, 1, 0, 1));
+	//GetComponent<EllipseRenderer>()->SetPen(vector4(1, 1, 0, 1));
 }
 
 void Troops::OnCollisionExit(CollisionResponse)

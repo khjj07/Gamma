@@ -1,4 +1,5 @@
 #pragma once
+#include <unordered_map>
 namespace GammaEngine
 {
 	class Collider;
@@ -34,19 +35,6 @@ namespace GammaEngine
 		bool isKinematic;
 	};
 
-	/// <summary>
-	/// 이전 프레임에서의 충돌관계를 저장하는 구조체
-	/// </summary>
-	struct GammaEngineAPI Collided
-	{
-		Collider* self;
-		vector<Collider*>* list;
-		Collided(Collider* s)
-		{
-			self = s;
-			list = new vector<Collider*>();
-		}
-	};
 
 	/// <summary>
 	/// 콜리전을 관리하는 class
@@ -63,6 +51,6 @@ namespace GammaEngine
 
 	public:
 		vector<Collider*>* colliderList;
-		static vector<Collided>* collidedList;
+		static unordered_map<Collider*, vector<Collider*>* >* collidedMap;
 	};
 }

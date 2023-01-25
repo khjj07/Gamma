@@ -17,6 +17,7 @@
 #include <memory.h>
 #include <tchar.h>
 #include <vector>
+#include <unordered_map>
 #include <functional>
 #include <algorithm>
 #include <cassert>

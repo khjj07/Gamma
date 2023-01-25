@@ -54,7 +54,7 @@ vector2 GammaEngine::Collider::Support(Collider* A, vector2 v, vector2 direction
 
 bool GammaEngine::Collider::GJK(Collider* A, Collider* B, vector<vector2>& result)
 {
-	vector2 direction = vector2(1,1);
+	vector2 direction = B->transform->position- A->transform->position;
 	vector2 a = Support(A, B, direction);
 
 	vector2 v = -a;
@@ -180,7 +180,7 @@ void GammaEngine::Collider::EPA(Collider* A, Collider* B, vector<vector2>& polyt
 GammaEngine::Collider::Collider(GameObject* t) : Component(t)
 {
 	CollisionSystem::Instance()->colliderList->push_back(this);
-	CollisionSystem::Instance()->collidedList->push_back(Collided(this));
+	CollisionSystem::Instance()->collidedMap->insert(make_pair(this, new vector<Collider*>()));
 }
 
 GammaEngine::Collider::~Collider()
