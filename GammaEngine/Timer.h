@@ -6,7 +6,6 @@ using namespace std;
 namespace GammaEngine
 {
 	class TimerHandler;
-
 	/// <summary>
 	/// 타이머를 생성 제거 관리하는 클래스
 	/// </summary>
@@ -24,8 +23,7 @@ namespace GammaEngine
 		static void Cancel(TimerHandler* handler);//타이머를 제거하는 함수
 
 	public:
-		static vector<TimerHandler*> timerHandlerList;
-		static vector<TimerHandler*>::iterator iter;
+		static vector<TimerHandler*>* timerHandlerList;
 	};
 
 }

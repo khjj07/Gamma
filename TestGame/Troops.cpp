@@ -58,7 +58,7 @@ void Troops::Update()
 	{
 		vector2 direction = vector2::Normalize(targetPoint - transform->position);
 		float distance = vector2::Distance(targetPoint, transform->position);
-		GetComponent<Rigidbody>()->ApplyForce(direction * speed / pow(distance,0.3));
+		GetComponent<Rigidbody>()->ApplyForce(direction * speed / (float)pow(distance,0.3));
 		if (vector2::Distance(targetPoint, transform->position) < 20)
 		{
 			state = TroopState::Wait;

@@ -3,7 +3,10 @@ using namespace GammaEngine;
 
 GammaEngine::Transform::Transform(GameObject* t):Component(t)
 {
-
+	position=vector2();
+	rotation=0;
+	scale=vector2(1.0f, 1.0f);
+	parent=nullptr;
 }
 
 GammaEngine::Transform::~Transform()

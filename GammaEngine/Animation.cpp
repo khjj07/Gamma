@@ -12,7 +12,7 @@ function<void(AnimationData*)> GammaEngine::Animation::PlayFunction[6] = {
 
 GammaEngine::Animation::Animation(GameObject* t) :Component(t)
 {
-
+	images = new vector<wstring>();
 }
 
 GammaEngine::Animation::~Animation()
@@ -37,7 +37,7 @@ void GammaEngine::Animation::PlayOnceForward(AnimationData* data)
 
 void GammaEngine::Animation::PlayOnceBackward(AnimationData* data)
 {
-	data->count = data->images.size() - 1;
+	data->count = (int)data->images.size() - 1;
 	data->handler = Timer::Delay(data->playtime / data->images.size(), true, [data]() {
 		data->image = GraphicSystem::LoadBitmapImage(data->images[data->count]);
 		if (data->count == 0)
@@ -55,7 +55,7 @@ void GammaEngine::Animation::PlayOncePingpong(AnimationData* data)
 {
 	data->forward = true;
 	data->count = 0;
-	data->handler = Timer::Delay(data->playtime / data->images.size() * 0.5, true, [data]() {
+	data->handler = Timer::Delay(data->playtime / (float)data->images.size() * 0.5f, true, [data]() {
 		data->image = GraphicSystem::LoadBitmapImage(data->images[data->count]);
 		if (data->forward && data->count == data->images.size() - 1)
 		{
@@ -95,12 +95,12 @@ void GammaEngine::Animation::PlayLoopForward(AnimationData* data)
 
 void GammaEngine::Animation::PlayLoopBackward(AnimationData* data)
 {
-	data->count = data->images.size() - 1;
+	data->count = (int)data->images.size() - 1;
 	data->handler = Timer::Delay(data->playtime / data->images.size(), true, [data]() {
 		data->image = GraphicSystem::LoadBitmapImage(data->images[data->count]);
 		if (data->count == 0)
 		{
-			data->count = data->images.size() - 1;
+			data->count = (int)data->images.size() - 1;
 		}
 		else
 		{
@@ -113,7 +113,7 @@ void GammaEngine::Animation::PlayLoopPingpong(AnimationData* data)
 {
 	data->count = 0;
 	data->forward = true;
-	data->handler = Timer::Delay(data->playtime / data->images.size() * 0.5, true, [data]() {
+	data->handler = Timer::Delay(data->playtime / (int)data->images.size() * 0.5f, true, [data]() {
 		data->image = GraphicSystem::LoadBitmapImage(data->images[data->count]);
 		if (data->forward && data->count == data->images.size() - 1)
 		{
@@ -138,11 +138,11 @@ void GammaEngine::Animation::PlayLoopPingpong(AnimationData* data)
 void GammaEngine::Animation::Play(PLAYBACK playback)
 {
 	BitmapRenderer* bitmapRenderer = GetComponent<BitmapRenderer>();
-	AnimationData* data = new AnimationData(bitmapRenderer->bitmap, images);
+	AnimationData* data = new AnimationData((* bitmapRenderer->bitmap), *images);
 	PlayFunction[playback](data);
 }
 
 void GammaEngine::Animation::AddFrame(wstring image)
 {
-	images.push_back(GraphicSystem::LoadBitmapImage(image));
+	images->push_back(GraphicSystem::LoadBitmapImage(image));
 }

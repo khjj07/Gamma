@@ -22,7 +22,7 @@ namespace GammaEngine
 		static void LoadScene(int number);
 
 	private:
-		static vector<Scene*> sceneList;
+		static vector<Scene*>* sceneList;
 
 	private:
 		static Scene* currentScene;

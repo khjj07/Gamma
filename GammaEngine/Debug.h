@@ -13,6 +13,7 @@ class Material;
 
 namespace GammaEngine
 {
+
 	struct DebugShape
 	{
 		Material* material;
@@ -24,38 +25,32 @@ namespace GammaEngine
 
 	struct DebugRect : public DebugShape
 	{
-		vector2 pos;
 		vector2 size;
-		float rotation;
-		DebugRect(vector2 pos, vector2 size, float rotation, Material* material)
-			: pos(pos), size(size), rotation(rotation), DebugShape(material)
-		{
-
-		};
+		Matrix3x3 matrix;
+		DebugRect( vector2 size, Matrix3x3 matrix, Material* material) :
+			DebugShape(material),
+			size(size),
+			matrix(matrix) { };
 	};
 
 	struct DebugEllipse : public DebugShape
 	{
-		vector2 pos;
 		vector2 size;
-		float rotation;
-		DebugEllipse(vector2 pos, vector2 size, float rotation, Material* material)
-			: pos(pos), size(size), rotation(rotation), DebugShape(material)
-		{
-
-		};
+		Matrix3x3 matrix;
+		DebugEllipse(vector2 pos, Matrix3x3 matrix,  Material* material): 
+			DebugShape(material),
+			size(size),
+			matrix(matrix) { };
 	};
 
 	struct DebugLine: public DebugShape
 	{
 		vector2 start;
 		vector2 end;
-		float thickness;
-		DebugLine(vector2 start, vector2 end, float thickness, Material* material)
-			: start(start), end(end), thickness(thickness), DebugShape(material)
-		{
-
-		};
+		DebugLine(vector2 start, vector2 end, Material* material):
+			DebugShape(material),
+			start(start),
+			end(end) { };
 	};
 
 	/// <summary>
@@ -78,11 +73,11 @@ namespace GammaEngine
 	public:
 		static void DrawRectangle(vector2 pos, vector2 size, float rotation, Material* meterial);
 		static void DrawEllipse(vector2 pos, vector2 size, float rotation, Material* meterial);
-		static void DrawLine(vector2 start, vector2 end, float thickness, Material* meterial);
+		static void DrawLine(vector2 start, vector2 end, Material* meterial);
 
 	public:
-		static vector<GammaEngine::DebugRect*> rect;
-		static vector<GammaEngine::DebugEllipse*> ellipse;
-		static vector<GammaEngine::DebugLine*> line;
+		static vector<DebugRect*>* rect;
+		static vector<DebugEllipse*>* ellipse;
+		static vector<DebugLine*>* line;
 	};
 }

@@ -121,7 +121,7 @@ struct Matrix3x3
 	}
 
 	vector2 tovector2();
-	Matrix3x3 inverse();
+	Matrix3x3 Inverse();
 };
 
 Matrix3x3 operator*(Matrix3x3 a, Matrix3x3 b);

@@ -8,6 +8,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     _In_ LPWSTR    lpCmdLine,
     _In_ int       nCmdShow)
 {
+    GammaEngine::Engine* engine = GammaEngine::Engine::Instance();
+    GammaEngine::Screen* screen = GammaEngine::Screen::Instance();
+
     //workspaces
     WorkSpace* workspace = new WorkSpace();
 
@@ -16,8 +19,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     {
         return -1;
     }
-    GammaEngine::Engine* engine = GammaEngine::Engine::Instance();
-    GammaEngine::Screen* screen = GammaEngine::Screen::Instance();
+   
     system->Initialize(GammaEngine::Screen::width, GammaEngine::Screen::height);
     engine->Initialize();
     system->Run(engine);

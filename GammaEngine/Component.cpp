@@ -1,7 +1,7 @@
 #include "stdafx.h"
 using namespace GammaEngine;
 
-GammaEngine::Component::Component(GameObject* g):componentList(g->componentList)
+GammaEngine::Component::Component(GameObject* g):componentList((* g->componentList))
 {
 	gameObject = g;
 	transform = g->transform;

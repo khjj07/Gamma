@@ -21,7 +21,7 @@ WorkSpace::WorkSpace()
 
 	mouse->GetComponent<BoxCollider>()->isKinematic=true;
 
-	for (int i = 0; i < 400; i++)
+	for (int i = 0; i < 100; i++)
 	{
 		GameObject* troops = new GameObject();
 		troops->AddComponent<EllipseRenderer>();
@@ -35,7 +35,7 @@ WorkSpace::WorkSpace()
 		troops->GetComponent<EllipseRenderer>()->size = vector2(20, 20);
 		troops->GetComponent<CircleCollider>()->radius=10;
 		troops->GetComponent<Troops>()->speed = 100;
-		troops->transform->position = vector2(30 * (i%10), 30 * (i/10));
+		troops->transform->position = vector2((float)(30 * (i%10)), (float)(30 * (i/10)));
 		scene1->Hold(troops);
 	}
 	

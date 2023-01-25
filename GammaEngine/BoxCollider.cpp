@@ -3,6 +3,7 @@ using namespace GammaEngine;
 GammaEngine::BoxCollider::BoxCollider(GameObject* t) :Collider(t)
 {
 	debug = new Material(vector4(0,1,0,1));
+	simplex = new vector<vector2>();
 }
 
 GammaEngine::BoxCollider::~BoxCollider()
@@ -35,32 +36,32 @@ CollisionResponse GammaEngine::BoxCollider::Collide(Collider* other, bool collid
 
 vector<vector2> GammaEngine::BoxCollider::ComputePoints()
 {
-	if (simplex.size() != 4)
+	if (simplex->size() != 4)
 	{
 		vector2 position = transform->position;
 		vector2 scale = transform->scale;
 
-		float theta = transform->rotation / 180 * PI;
+		float theta = transform->rotation / 180 * (float)PI;
 		Matrix3x3 worldMatrix = transform->GetWorldMatrix();
 		vector2 leftUp = (worldMatrix*vector2(-bounds.x/2,-bounds.y / 2).ToMatrix3x1()).tovector2();
 		vector2 leftDown = (worldMatrix * vector2(-bounds.x / 2, bounds.y / 2).ToMatrix3x1()).tovector2();
 		vector2 rightUp = (worldMatrix * vector2(bounds.x / 2, -bounds.y / 2).ToMatrix3x1()).tovector2();
 		vector2 rightDown = (worldMatrix * vector2(bounds.x / 2, bounds.y / 2).ToMatrix3x1()).tovector2();
-		simplex.push_back(leftUp);
-		simplex.push_back(leftDown);
-		simplex.push_back(rightUp);
-		simplex.push_back(rightDown);
-		return simplex;
+		simplex->push_back(leftUp);
+		simplex->push_back(leftDown);
+		simplex->push_back(rightUp);
+		simplex->push_back(rightDown);
+		return *simplex;
 	}
 	else
 	{
-		return simplex;
+		return *simplex;
 	}
 }
 
 void GammaEngine::BoxCollider::ResetPoints()
 {
-	simplex.clear();
+	simplex->clear();
 }
 
 vector2 GammaEngine::BoxCollider::FarthestPoint(vector2 v)

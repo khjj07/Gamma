@@ -5,6 +5,8 @@ using namespace GammaEngine;
 GammaEngine::GameObject::GameObject()
 {
 	transform = new Transform(this);
+	tag = new string();
+	componentList = new vector<Component*>();
 }
 
 GammaEngine::GameObject::GameObject(const GameObject& obj)
@@ -16,11 +18,11 @@ GammaEngine::GameObject::GameObject(const GameObject& obj)
 
 GammaEngine::GameObject::~GameObject()
 {
-	for (auto iter = componentList.begin(); iter < componentList.end(); iter++)
+	for (auto iter = componentList->begin(); iter < componentList->end(); iter++)
 	{
 		delete	(*iter);
 	}
-	componentList.clear();
+	componentList->clear();
 	delete transform;
 }
 
@@ -28,7 +30,7 @@ void GammaEngine::GameObject::Start()
 {
 	if (!isStarted)
 	{
-		for (auto iter = componentList.begin(); iter < componentList.end(); iter++)
+		for (auto iter = componentList->begin(); iter < componentList->end(); iter++)
 		{
 			(*iter)->Start();
 		}
@@ -38,7 +40,7 @@ void GammaEngine::GameObject::Start()
 
 void GammaEngine::GameObject::Update()
 {
-	for (auto iter = componentList.begin(); iter < componentList.end(); iter++)
+	for (auto iter = componentList->begin(); iter < componentList->end(); iter++)
 	{
 		(*iter)->Update();
 	}
@@ -46,7 +48,7 @@ void GammaEngine::GameObject::Update()
 
 void GammaEngine::GameObject::LateUpdate()
 {
-	for (auto iter = componentList.begin(); iter < componentList.end(); iter++)
+	for (auto iter = componentList->begin(); iter < componentList->end(); iter++)
 	{
 		(*iter)->LateUpdate();
 	}
@@ -55,7 +57,7 @@ void GammaEngine::GameObject::LateUpdate()
 
 void GammaEngine::GameObject::OnDestroy()
 {
-	for (auto iter = componentList.begin(); iter < componentList.end(); iter++)
+	for (auto iter = componentList->begin(); iter < componentList->end(); iter++)
 	{
 		(*iter)->OnDestroy();
 	}
@@ -63,7 +65,7 @@ void GammaEngine::GameObject::OnDestroy()
 
 void GammaEngine::GameObject::OnDisable()
 {
-	for (auto iter = componentList.begin(); iter < componentList.end(); iter++)
+	for (auto iter = componentList->begin(); iter < componentList->end(); iter++)
 	{
 		(*iter)->OnDisable();
 	}
@@ -71,7 +73,7 @@ void GammaEngine::GameObject::OnDisable()
 
 void GammaEngine::GameObject::OnEnable()
 {
-	for (auto iter = componentList.begin(); iter < componentList.end(); iter++)
+	for (auto iter = componentList->begin(); iter < componentList->end(); iter++)
 	{
 		(*iter)->OnEnable();
 	}
@@ -79,7 +81,7 @@ void GammaEngine::GameObject::OnEnable()
 
 void GammaEngine::GameObject::OnCollisionEnter(CollisionResponse response)
 {
-	for (auto iter = componentList.begin(); iter < componentList.end(); iter++)
+	for (auto iter = componentList->begin(); iter < componentList->end(); iter++)
 	{
 		(*iter)->OnCollisionEnter(response);
 	}
@@ -87,7 +89,7 @@ void GammaEngine::GameObject::OnCollisionEnter(CollisionResponse response)
 
 void GammaEngine::GameObject::OnCollisionStay(CollisionResponse response)
 {
-	for (auto iter = componentList.begin(); iter < componentList.end(); iter++)
+	for (auto iter = componentList->begin(); iter < componentList->end(); iter++)
 	{
 		(*iter)->OnCollisionStay(response);
 	}
@@ -95,7 +97,7 @@ void GammaEngine::GameObject::OnCollisionStay(CollisionResponse response)
 
 void GammaEngine::GameObject::OnCollisionExit(CollisionResponse response)
 {
-	for (auto iter = componentList.begin(); iter < componentList.end(); iter++)
+	for (auto iter = componentList->begin(); iter < componentList->end(); iter++)
 	{
 		(*iter)->OnCollisionExit(response);
 	}
@@ -103,7 +105,7 @@ void GammaEngine::GameObject::OnCollisionExit(CollisionResponse response)
 
 bool GammaEngine::GameObject::CompareTag(string str)
 {
-	if (this->tag == str)
+	if (strcmp(this->tag->c_str(), str.c_str()) == 0)
 	{
 		return true;
 	}
@@ -115,7 +117,7 @@ bool GammaEngine::GameObject::CompareTag(string str)
 
 bool GammaEngine::GameObject::CompareTag(char* str)
 {
-	if (strcmp(this->tag.c_str(), str)==0)
+	if (strcmp(this->tag->c_str(), str)==0)
 	{
 		return true;
 	}

@@ -106,9 +106,9 @@ TweenData* GammaEngine::Tween::Animate(vector2& src, PLAYBACK playback, vector2 
 
 void GammaEngine::StepOnceForwardF(TweenDataF* data)
 {
-	data->handler=Timer::Delay(TWEEN_STEP, true, [data]() {
+	data->handler=Timer::Delay((float)TWEEN_STEP, true, [data]() {
 		data->src = data->original + data->difference*data->easingFunc(data->accumulation / data->duration);
-		data->accumulation += Time::deltaTime;
+		data->accumulation += (float)Time::deltaTime;
 		if (data->accumulation >= data->duration)
 		{
 			data->src = data->dst;
@@ -121,9 +121,9 @@ void GammaEngine::StepOnceForwardF(TweenDataF* data)
 
 void GammaEngine::StepOnceForwardV(TweenDataV* data)
 {
-	data->handler = Timer::Delay(TWEEN_STEP, true, [data]() {
+	data->handler = Timer::Delay((float)TWEEN_STEP, true, [data]() {
 		data->src = data->original + data->difference * data->easingFunc(data->accumulation / data->duration);
-		data->accumulation += Time::deltaTime;
+		data->accumulation += (float)Time::deltaTime;
 		if (data->accumulation >= data->duration)
 		{
 			data->src = data->dst;
@@ -137,9 +137,9 @@ void GammaEngine::StepOnceForwardV(TweenDataV* data)
 void GammaEngine::StepOnceBackwardF(TweenDataF* data)
 {
 	data->src = data->dst;
-	data->handler = Timer::Delay(TWEEN_STEP, true, [data]() {
+	data->handler = Timer::Delay((float)TWEEN_STEP, true, [data]() {
 		data->src = data->dst - data->difference*data->easingFunc(data->accumulation / data->duration);
-		data->accumulation += Time::deltaTime;
+		data->accumulation += (float)Time::deltaTime;
 		if (data->accumulation >= data->duration)
 		{
 			data->src = data->original;
@@ -153,9 +153,9 @@ void GammaEngine::StepOnceBackwardF(TweenDataF* data)
 void GammaEngine::StepOnceBackwardV(TweenDataV* data)
 {
 	data->src = data->dst;
-	data->handler = Timer::Delay(TWEEN_STEP, true, [data]() {
+	data->handler = Timer::Delay((float)TWEEN_STEP, true, [data]() {
 		data->src = data->dst - data->difference * data->easingFunc(data->accumulation / data->duration);
-		data->accumulation += Time::deltaTime;
+		data->accumulation += (float)Time::deltaTime;
 		if (data->accumulation >= data->duration)
 		{
 			data->src = data->original;
@@ -168,7 +168,7 @@ void GammaEngine::StepOnceBackwardV(TweenDataV* data)
 
 void GammaEngine::StepOncePingpongF(TweenDataF* data)
 {
-	data->handler = Timer::Delay(TWEEN_STEP, true, [data]() {
+	data->handler = Timer::Delay((float)TWEEN_STEP, true, [data]() {
 		if (data->accumulation < (data->duration / 2))
 		{
 			data->src = data->original + data->difference*data->easingFunc(data->accumulation / (data->duration / 2));
@@ -177,7 +177,7 @@ void GammaEngine::StepOncePingpongF(TweenDataF* data)
 		{
 			data->src = data->dst - data->difference * data->easingFunc((data->accumulation- (data->duration / 2)) / (data->duration / 2)) ;
 		}
-		data->accumulation += Time::deltaTime;
+		data->accumulation += (float)Time::deltaTime;
 		if (data->accumulation >= data->duration)
 		{
 			data->src = data->original;
@@ -190,7 +190,7 @@ void GammaEngine::StepOncePingpongF(TweenDataF* data)
 
 void GammaEngine::StepOncePingpongV(TweenDataV* data)
 {
-	data->handler = Timer::Delay(TWEEN_STEP, true, [data]() {
+	data->handler = Timer::Delay((float)TWEEN_STEP, true, [data]() {
 		if (data->accumulation < (data->duration / 2))
 		{
 			data->src = data->original + data->difference * data->easingFunc(data->accumulation / (data->duration / 2));
@@ -199,7 +199,7 @@ void GammaEngine::StepOncePingpongV(TweenDataV* data)
 		{
 			data->src = data->dst - data->difference * data->easingFunc((data->accumulation - (data->duration / 2)) / (data->duration / 2));
 		}
-		data->accumulation += Time::deltaTime;
+		data->accumulation += (float)Time::deltaTime;
 		if (data->accumulation >= data->duration)
 		{
 			data->src = data->original;
@@ -212,9 +212,9 @@ void GammaEngine::StepOncePingpongV(TweenDataV* data)
 
 void GammaEngine::StepLoopForwardF(TweenDataF* data)
 {
-	data->handler = Timer::Delay(TWEEN_STEP, true, [data]() {
+	data->handler = Timer::Delay((float)TWEEN_STEP, true, [data]() {
 		data->src = data->original + data->difference * data->easingFunc(data->accumulation / data->duration) ;
-		data->accumulation += Time::deltaTime;
+		data->accumulation += (float)Time::deltaTime;
 		if (data->accumulation >= data->duration)
 		{
 			data->src = data->dst;
@@ -228,9 +228,9 @@ void GammaEngine::StepLoopForwardF(TweenDataF* data)
 
 void GammaEngine::StepLoopForwardV(TweenDataV* data)
 {
-	data->handler = Timer::Delay(TWEEN_STEP, true, [data]() {
+	data->handler = Timer::Delay((float)TWEEN_STEP, true, [data]() {
 		data->src = data->original + data->difference * data->easingFunc(data->accumulation / data->duration);
-		data->accumulation += Time::deltaTime;
+		data->accumulation += (float)Time::deltaTime;
 		if (data->accumulation >= data->duration)
 		{
 			data->src = data->dst;
@@ -245,9 +245,9 @@ void GammaEngine::StepLoopForwardV(TweenDataV* data)
 void GammaEngine::StepLoopBackwardF(TweenDataF* data)
 {
 	data->src = data->dst;
-	data->handler = Timer::Delay(TWEEN_STEP, true, [data]() {
+	data->handler = Timer::Delay((float)TWEEN_STEP, true, [data]() {
 		data->src = data->dst - data->difference * data->easingFunc(data->accumulation / data->duration);
-		data->accumulation += Time::deltaTime;
+		data->accumulation += (float)Time::deltaTime;
 		if (data->accumulation >= data->duration)
 		{
 			data->src = data->original;
@@ -261,9 +261,9 @@ void GammaEngine::StepLoopBackwardF(TweenDataF* data)
 void GammaEngine::StepLoopBackwardV(TweenDataV* data)
 {
 	data->src = data->dst;
-	data->handler = Timer::Delay(TWEEN_STEP, true, [data]() {
+	data->handler = Timer::Delay((float)TWEEN_STEP, true, [data]() {
 		data->src = data->dst - data->difference * data->easingFunc(data->accumulation / data->duration);
-		data->accumulation += Time::deltaTime;
+		data->accumulation += (float)Time::deltaTime;
 		if (data->accumulation >= data->duration)
 		{
 			data->src = data->original;
@@ -276,7 +276,7 @@ void GammaEngine::StepLoopBackwardV(TweenDataV* data)
 
 void GammaEngine::StepLoopPingpongF(TweenDataF* data)
 {
-	data->handler = Timer::Delay(TWEEN_STEP, true, [data]() {
+	data->handler = Timer::Delay((float)TWEEN_STEP, true, [data]() {
 		if (data->accumulation < (data->duration / 2))
 		{
 			data->src = data->original + data->difference * data->easingFunc(data->accumulation / (data->duration / 2));
@@ -285,7 +285,7 @@ void GammaEngine::StepLoopPingpongF(TweenDataF* data)
 		{
 			data->src = data->dst - data->difference * data->easingFunc((data->accumulation - (data->duration / 2)) / (data->duration / 2));
 		}
-		data->accumulation += Time::deltaTime;
+		data->accumulation += (float)Time::deltaTime;
 		if (data->accumulation >= data->duration)
 		{
 			data->src = data->original;
@@ -298,7 +298,7 @@ void GammaEngine::StepLoopPingpongF(TweenDataF* data)
 
 void GammaEngine::StepLoopPingpongV(TweenDataV* data)
 {
-	data->handler = Timer::Delay(TWEEN_STEP, true, [data]() {
+	data->handler = Timer::Delay((float)TWEEN_STEP, true, [data]() {
 		if (data->accumulation < (data->duration / 2))
 		{
 			data->src = data->original + data->difference * data->easingFunc(data->accumulation / (data->duration / 2));
@@ -307,7 +307,7 @@ void GammaEngine::StepLoopPingpongV(TweenDataV* data)
 		{
 			data->src = data->dst - data->difference * data->easingFunc((data->accumulation - (data->duration / 2)) / (data->duration / 2));
 		}
-		data->accumulation += Time::deltaTime;
+		data->accumulation += (float)Time::deltaTime;
 		if (data->accumulation >= data->duration)
 		{
 			data->src = data->original;

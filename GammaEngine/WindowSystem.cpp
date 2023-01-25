@@ -3,7 +3,7 @@
 using namespace GammaEngine;
 
 HWND GammaEngine::WindowSystem::hWnd = 0;
-GammaEngine::WindowSystem::WindowSystem():applicationName(0),hInstance(0)
+GammaEngine::WindowSystem::WindowSystem():applicationName(0),hInstance(0),time(nullptr)
 {
 
 }
@@ -31,7 +31,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
 		return 0;
 	case WM_MOUSEWHEEL:
 		Input::mouseScrollDelta = (SHORT)HIWORD(wparam);
-		break;
+		return 0;
 	case WM_DESTROY:
 		graphic->Release();
 		PostQuitMessage(0);
@@ -60,7 +60,7 @@ void GammaEngine::WindowSystem::Initialize(int& screenWidth,int& screenHeight)
 	wc.hInstance = hInstance;
 	wc.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_GAMMAENGINE));
 	wc.hIconSm = wc.hIcon;
-	wc.hCursor = LoadCursor(NULL, IDI_WINLOGO);
+	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
 	wc.lpszMenuName = (LPCSTR)MAKEINTRESOURCEW(IDC_GAMMAENGINE);
 	wc.lpszClassName = (LPCSTR)applicationName;
@@ -93,6 +93,7 @@ void GammaEngine::WindowSystem::Initialize(int& screenWidth,int& screenHeight)
 	ShowWindow(hWnd, SW_SHOW);
 	SetForegroundWindow(hWnd);
 	SetFocus(hWnd);
+	SetCursor(wc.hCursor);
 	time = new Time();
 }
 

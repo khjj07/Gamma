@@ -7,7 +7,7 @@ RenderModule* GammaEngine::GraphicSystem::render = nullptr;
 
 GammaEngine::GraphicSystem::GraphicSystem()
 {
-
+	renderComponentList = new vector<Renderer*>();
 }
 
 GammaEngine::GraphicSystem::~GraphicSystem()
@@ -31,14 +31,14 @@ void GammaEngine::GraphicSystem::Frame()
 {
 	render->BeginDraw();
 	
-	vector<Renderer*> renderList = renderComponentList;
+	vector<Renderer*> renderList = *renderComponentList;
 	sort(renderList.begin(), renderList.end(), [](Renderer* a, Renderer* b) {
 		return a->order < b->order;
 	});
 
-	for(renderComponentIter = renderList.begin(); renderComponentIter < renderList.end(); renderComponentIter++)
+	for(auto iter = renderList.begin(); iter < renderList.end(); iter++)
 	{
-		(*renderComponentIter)->Render();
+		(*iter)->Render();
 	}
 #if DEBUG
 	Debug::Render();

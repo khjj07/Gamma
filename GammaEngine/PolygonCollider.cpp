@@ -12,7 +12,8 @@ GammaEngine::PolygonCollider::~PolygonCollider()
 
 void GammaEngine::PolygonCollider::SetPoints(vector<vector2>p)
 {
-	points = p;
+	points = new vector<vector2>(p);
+	simplex = new vector<vector2>();
 }
 
 CollisionResponse GammaEngine::PolygonCollider::Collide(Collider* other, bool collided)
@@ -35,28 +36,28 @@ CollisionResponse GammaEngine::PolygonCollider::Collide(Collider* other, bool co
 
 vector<vector2> GammaEngine::PolygonCollider::ComputePoints()
 {
-	if (simplex.size() != points.size())
+	if (simplex->size() != points->size())
 	{
 		vector2 position = transform->position;
 		vector2 scale = transform->scale;
 
 		Matrix3x3 worldMatrix = transform->GetWorldMatrix();
-		for (int i = 0; i < points.size(); i++)
+		for (int i = 0; i < points->size(); i++)
 		{
-			vector2 p = (worldMatrix * points[i].ToMatrix3x1()).tovector2();
-			simplex.push_back(p);
+			vector2 p = (worldMatrix * (*points)[i].ToMatrix3x1()).tovector2();
+			simplex->push_back(p);
 		}
-		return simplex;
+		return *simplex;
 	}
 	else
 	{
-		return simplex;
+		return *simplex;
 	}
 }
 
 void GammaEngine::PolygonCollider::ResetPoints()
 {
-	simplex.clear();
+	simplex->clear();
 }
 
 vector2 GammaEngine::PolygonCollider::FarthestPoint(vector2 v)

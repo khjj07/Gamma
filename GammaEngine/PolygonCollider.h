@@ -34,8 +34,8 @@ namespace GammaEngine
 		void SetPoints(vector<vector2>);
 		void ResetPoints();
 	private:
-		vector<vector2> points;
-		vector<vector2> simplex;
+		vector<vector2>* points;
+		vector<vector2>* simplex;
 		Material* debug;
 	};
 }

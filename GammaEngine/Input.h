@@ -5,7 +5,7 @@ namespace GammaEngine
 	/// <summary>
 	/// 키의 상태를 표현하는 enum 타입
 	/// </summary>
-	static enum KeyState {
+	enum class KeyState {
 		pressed,
 		released,
 		pressing,

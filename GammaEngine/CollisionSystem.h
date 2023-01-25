@@ -40,10 +40,11 @@ namespace GammaEngine
 	struct GammaEngineAPI Collided
 	{
 		Collider* self;
-		vector<Collider*>list;
+		vector<Collider*>* list;
 		Collided(Collider* s)
 		{
 			self = s;
+			list = new vector<Collider*>();
 		}
 	};
 
@@ -58,9 +59,10 @@ namespace GammaEngine
 
 	public:
 		void Frame();
+		void Initialize();
 
 	public:
-		vector<Collider*> colliderList;
-		vector<Collided> collidedList;
+		vector<Collider*>* colliderList;
+		static vector<Collided>* collidedList;
 	};
 }

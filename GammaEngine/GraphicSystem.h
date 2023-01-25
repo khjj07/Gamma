@@ -38,8 +38,7 @@ namespace GammaEngine
 		static RenderModule* render;
 
 	public:
-		vector<Renderer*> renderComponentList;
-		vector<Renderer*>::iterator renderComponentIter;
+		vector<Renderer*>* renderComponentList;
 	};
 }
 

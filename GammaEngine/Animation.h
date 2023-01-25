@@ -6,9 +6,11 @@
 #endif
 
 /// <summary>
-/// 위치 크기 회전 정보를 포함하는 컴포넌트
+/// 애니메이션 컴포넌트
 /// </summary>
 namespace GammaEngine {
+	
+	
 
 	struct GammaEngineAPI AnimationData {
 		TimerHandler* handler;
@@ -26,6 +28,8 @@ namespace GammaEngine {
 			count(0),
 			forward(true){}
 	};
+
+	template class GammaEngineAPI std::function<void(AnimationData*)>;
 
 	class GammaEngineAPI Animation : public Component
 	{
@@ -49,7 +53,7 @@ namespace GammaEngine {
 		static function<void(AnimationData*)> PlayFunction[6];
 		
 	private: 
-		vector<wstring> images;
+		vector<wstring>* images;
 	};
 }
 

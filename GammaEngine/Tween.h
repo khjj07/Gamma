@@ -4,6 +4,11 @@
 
 namespace GammaEngine
 {
+	struct TweenDataF;
+	struct TweenDataV;
+	template class GammaEngineAPI std::function<float(float)>;
+	template class GammaEngineAPI std::function<void(TweenDataF*)>;
+	template class GammaEngineAPI std::function<void(TweenDataV*)>;
 	/// <summary>
 	/// Easing 함수 테이블 인덱스
 	/// </summary>
@@ -45,7 +50,7 @@ namespace GammaEngine
 	/// <summary>
 	/// Tween과 관련한 정보를 포함하는 기본 구조체 
 	/// </summary>
-	struct GammaEngineAPI TweenData 
+	struct TweenData 
 	{
 		TweenData() : 
 			duration(0), 
@@ -61,7 +66,7 @@ namespace GammaEngine
 	/// <summary>
 	/// Float형 TweenData
 	/// </summary>
-	struct GammaEngineAPI TweenDataF :public TweenData
+	struct TweenDataF :public TweenData
 	{
 		function<float(float)> easingFunc;
 		float& src;
@@ -83,7 +88,7 @@ namespace GammaEngine
 	/// <summary>
 	/// vector2형 TweenData
 	/// </summary>
-	struct GammaEngineAPI TweenDataV :public TweenData
+	struct TweenDataV :public TweenData
 	{
 		function<float(float)> easingFunc;
 		vector2& src;
@@ -167,4 +172,5 @@ namespace GammaEngine
 	static float easeOutBounce(float x);
 	static float easeInBounce(float x);
 	static float easeInOutBounce(float x);
+
 }

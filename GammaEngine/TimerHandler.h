@@ -5,10 +5,10 @@
 /// </summary>
 namespace GammaEngine
 {
+	template class GammaEngineAPI std::function<void()>;
 	class GammaEngineAPI TimerHandler
 	{
 	public:
-		TimerHandler();
 		TimerHandler(float, bool, function<void()>);
 		~TimerHandler();
 

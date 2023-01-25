@@ -4,7 +4,7 @@ using namespace GammaEngine;
 GammaEngine::Renderer::Renderer(GameObject* t) : Component(t)
 {
 	GraphicSystem* graphic = GraphicSystem::Instance();
-	graphic->renderComponentList.push_back(this);
+	graphic->renderComponentList->push_back(this);
 	size = vector2();
 	offset = vector2();
 	material = new Material();
@@ -13,7 +13,7 @@ GammaEngine::Renderer::Renderer(GameObject* t) : Component(t)
 GammaEngine::Renderer::~Renderer()
 {
 	GraphicSystem* graphic = GraphicSystem::Instance();
-	graphic->renderComponentList.erase(remove_if(graphic->renderComponentList.begin(), graphic->renderComponentList.end(), [this](Component* x) { if (x == this) return true; else return false; }), graphic->renderComponentList.end());
+	graphic->renderComponentList->erase(remove_if(graphic->renderComponentList->begin(), graphic->renderComponentList->end(), [this](Component* x) { if (x == this) return true; else return false; }), graphic->renderComponentList->end());
 }
 
 void GammaEngine::Renderer::SetBrush(vector4 color)
@@ -31,13 +31,13 @@ void GammaEngine::Renderer::Adjust(vector2& v)
 {
 	if (Camera::main)
 	{
-		vector2 center = vector2(Screen::width / 2, Screen::height / 2) - Camera::main->transform->GetWorldPosition();
+		vector2 center = vector2((float)Screen::width / 2, (float)Screen::height / 2) - Camera::main->transform->GetWorldPosition();
 
 		v = v / Camera::main->orthoScale + center;
 	}
 	else
 	{
-		v = v + vector2(Screen::width / 2, Screen::height / 2);
+		v = v + vector2((float)Screen::width / 2, (float)Screen::height / 2);
 	}
 }
 
@@ -45,7 +45,7 @@ void GammaEngine::Renderer::Adjust(vector2& pos,vector2& size)
 {
 	if (Camera::main)
 	{
-		vector2 center = vector2(Screen::width / 2, Screen::height / 2) - Camera::main->transform->GetWorldPosition();
+		vector2 center = vector2((float)Screen::width / 2, (float)Screen::height / 2) - Camera::main->transform->GetWorldPosition();
 			
 		pos = pos / Camera::main->orthoScale + center;
 		
@@ -54,6 +54,6 @@ void GammaEngine::Renderer::Adjust(vector2& pos,vector2& size)
 	}
 	else
 	{
-		pos = pos + vector2(Screen::width / 2, Screen::height / 2);
+		pos = pos + vector2((float)Screen::width / 2, (float)Screen::height / 2);
 	}
 }

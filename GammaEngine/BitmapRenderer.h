@@ -27,6 +27,6 @@ namespace GammaEngine
 		void LoadBitmapImage(wstring filename);
 
 	public:
-		wstring bitmap;
+		wstring* bitmap;
 	};
 }

@@ -21,7 +21,7 @@ namespace GammaEngine
 		~TextRenderer();
 		virtual void Render();
 	public:
-		wstring text;
+		wstring* text;
 	private:
 
 	};

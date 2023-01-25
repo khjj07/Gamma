@@ -40,7 +40,7 @@ Matrix3x1 operator*(Matrix3x3 a, Matrix3x1 b)
 	return result;
 }
 
-Matrix3x3 Matrix3x3::inverse()
+Matrix3x3 Matrix3x3::Inverse()
 {
 	Matrix3x3 result;
 	result[0][0] = value[2][2];

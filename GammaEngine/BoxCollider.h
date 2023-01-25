@@ -35,7 +35,7 @@ namespace GammaEngine
 		void ResetPoints();
 	private:
 		vector2 bounds;
-		vector<vector2> simplex;
+		vector<vector2>* simplex;
 		Material* debug;
 	};
 }

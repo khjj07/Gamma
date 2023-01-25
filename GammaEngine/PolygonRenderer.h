@@ -5,6 +5,7 @@
 #else
 #define GammaEngineAPI __declspec(dllimport)
 #endif
+
 namespace GammaEngine
 {
 	class Renderer;
@@ -28,7 +29,7 @@ namespace GammaEngine
 		void MakePolygon(wstring name);
 
 	public:
-		vector<vector2> points;
-		wstring name;
+		vector<vector2>* points;
+		wstring* name;
 	};
 }

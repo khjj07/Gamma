@@ -5,6 +5,8 @@
 #define GammaEngineAPI __declspec(dllimport)
 #endif
 
+
+
 namespace GammaEngine 
 {
 	class Component;
@@ -36,12 +38,12 @@ namespace GammaEngine
 
 	public:
 		Transform* transform;
-		string tag = string("");
+		string* tag;
 		bool isStarted = false;
 		bool isEnabled = true;
 
 	public:
-		vector<Component*> componentList;
+		vector<Component*>* componentList;
 
 	public:
 		template<typename T>
@@ -53,8 +55,7 @@ namespace GammaEngine
 	template<typename T>
 	T* GameObject::GetComponent()
 	{
-		vector<Component*>::iterator iter;
-		for (iter = componentList.begin(); iter < componentList.end(); iter++)
+		for (auto iter = componentList->begin(); iter < componentList->end(); iter++)
 		{
 			if (strcmp(typeid(T).name(), typeid(**iter).name()) == 0)
 				return (T*)*iter;
@@ -66,6 +67,6 @@ namespace GammaEngine
 	void GameObject::AddComponent()
 	{
 		T* newComponent = new T(this);
-		componentList.push_back(newComponent);
+		componentList->push_back(newComponent);
 	}
 }

@@ -59,6 +59,7 @@
 #include "CircleCollider.h"
 #include "PolygonCollider.h"
 #include "CollisionSystem.h"
+#include "CollisionSpace.h"
 #include "Rigidbody.h"
 
 //Entity

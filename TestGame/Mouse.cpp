@@ -44,11 +44,11 @@ Mouse::~Mouse()
 	 }
 	 if (Input::mouseScrollDelta > 0)
 	 {
-		 Camera::main->orthoScale -=0.1;
+		 Camera::main->orthoScale -=0.1f;
 	 }
 	 if (Input::mouseScrollDelta < 0)
 	 {
-		 Camera::main->orthoScale += 0.1;
+		 Camera::main->orthoScale += 0.1f;
 	 }
 
 	 GetComponent<RectangleRenderer>()->size = (endpoint - startpoint);

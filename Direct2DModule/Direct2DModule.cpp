@@ -1,13 +1,7 @@
 
 
 #include "Direct2DModule.h"
-
 #include "Util.h"
-
-#pragma comment (lib, "user32.lib")
-#pragma comment (lib, "d3d9.lib")
-#pragma comment(lib, "D2D1.lib")
-#pragma comment(lib, "dwrite.lib")
 
 using namespace std;
 using namespace D2D1;
@@ -19,6 +13,10 @@ Direct2DModule::Direct2DModule()
 	factory = 0;
 	writeFactory = 0;
 	imageFactory = 0;
+	textFormatDictionary = new unordered_map<wstring, IDWriteTextFormat*>();
+	bitmapDictionary = new unordered_map<wstring, ID2D1Bitmap*>();
+	polygonDictionary = new unordered_map<wstring, ID2D1PathGeometry*>();
+	brushDictionary = new unordered_map<vector4, ID2D1SolidColorBrush*>();
 }
 
 Direct2DModule::~Direct2DModule()
@@ -62,33 +60,33 @@ void Direct2DModule::EndDraw()
 	renderTarget->EndDraw();
 }
 
-void Direct2DModule::CreateTextFormat(wstring fontFamilyName, DWRITE_FONT_WEIGHT fontWeight, DWRITE_FONT_STYLE fontStyle, DWRITE_FONT_STRETCH fontStretch, int fontSize) 
+void Direct2DModule::CreateTextFormat(wstring fontFamilyName, DWRITE_FONT_WEIGHT fontWeight, DWRITE_FONT_STYLE fontStyle, DWRITE_FONT_STRETCH fontStretch, float fontSize) 
 {
 	IDWriteTextFormat* result;
 	
 	writeFactory->CreateTextFormat(fontFamilyName.c_str(), NULL, fontWeight, fontStyle, fontStretch, fontSize, L"", &result);
-	textFormatDictionary.insert(make_pair(fontFamilyName, result));
+	textFormatDictionary->insert(make_pair(fontFamilyName, result));
 }
 
 void Direct2DModule::Release()
 {
-	for (auto textFormat : textFormatDictionary)
+	for (auto& textFormat : *textFormatDictionary)
 	{
 		textFormat.second->Release();
 	}
 
-	for (auto bitmap : bitmapDictionary)
+	for (auto& bitmap : *bitmapDictionary)
 	{
 		bitmap.second->Release();
 	}
 
-	for (auto brush : brushDictionary)
+	for (auto& brush : *brushDictionary)
 	{
 		brush.second->Release();
 	}
-	textFormatDictionary.clear();
-	brushDictionary.clear();
-	bitmapDictionary.clear();
+	textFormatDictionary->clear();
+	brushDictionary->clear();
+	bitmapDictionary->clear();
 	renderTarget->Release();
 	writeFactory->Release();
 	imageFactory->Release();
@@ -111,17 +109,14 @@ wstring Direct2DModule::LoadBitmapImage(wstring filename)
 	hr = imageFactory->CreateDecoderFromFilename(filename.c_str(), 0, GENERIC_READ, WICDecodeMetadataCacheOnDemand, &decoder);
 
 	if (FAILED(hr))
-		return nullptr;
+		return wstring();
 
 	hr = decoder->GetFrame(0, &frameDecode);
 
 	if (FAILED(hr))
 	{
-
 		decoder->Release();
-
-		return nullptr;
-
+		return wstring();
 	}
 
 
@@ -130,7 +125,7 @@ wstring Direct2DModule::LoadBitmapImage(wstring filename)
 	if (FAILED(hr))
 	{
 		decoder->Release();
-		return nullptr;
+		return wstring();
 	}
 
 	hr = converter->Initialize(
@@ -145,13 +140,13 @@ wstring Direct2DModule::LoadBitmapImage(wstring filename)
 		decoder->Release();
 		frameDecode->Release();
 		converter->Release();
-		return nullptr;
+		return wstring();
 	}
 
 
 	hr = renderTarget->CreateBitmapFromWicBitmap(converter, 0, &bitmap);
 
-	bitmapDictionary.insert(make_pair(filename, bitmap));
+	bitmapDictionary->insert(make_pair(filename, bitmap));
 
 	decoder->Release();
 	frameDecode->Release();
@@ -164,23 +159,23 @@ void Direct2DModule::AddBrush(vector4 color)
 {
 	ID2D1SolidColorBrush* brush;
 	renderTarget->CreateSolidColorBrush(ColorF(color.x, color.y, color.z, color.w), (ID2D1SolidColorBrush**)&brush);
-	brushDictionary.insert(make_pair(color, brush));
+	brushDictionary->insert(make_pair(color, brush));
 }
 
 ID2D1SolidColorBrush* Direct2DModule::UseBrush(vector4 color)
 {
-	if (brushDictionary.find(color) == brushDictionary.end())
+	if (brushDictionary->find(color) == brushDictionary->end())
 	{
 		AddBrush(color);
 	}
-	ID2D1SolidColorBrush* brush = brushDictionary[color];
+	ID2D1SolidColorBrush* brush = (* brushDictionary)[color];
 	return brush;
 }
 
 
 vector2 Direct2DModule::GetBitmapSize(wstring filename)
 {
-	ID2D1Bitmap* bitmap = bitmapDictionary[filename];
+	ID2D1Bitmap* bitmap = (* bitmapDictionary)[filename];
 	D2D1_SIZE_F size = bitmap->GetSize();
 	return vector2(size.width, size.height);
 }
@@ -217,7 +212,7 @@ wstring Direct2DModule::MakePolygon(wstring name, vector<vector2> points)
 			hr = pSink->Close();
 		}
 		pSink->Release();
-		polygonDictionary.insert(make_pair(name ,polygon));
+		(*polygonDictionary).insert(make_pair(name ,polygon));
 	}
 	return name;
 }
@@ -245,8 +240,8 @@ void Direct2DModule::DrawPolygon(wstring name, Matrix3x3 matrix, Material* mater
 {
 	Matrix3x2F t = Matrix3x2F(matrix[0][0], matrix[1][0], matrix[0][1], matrix[1][1], matrix[0][2], matrix[1][2]);
 	renderTarget->SetTransform(t);
-	renderTarget->DrawGeometry(polygonDictionary[name], UseBrush(material->pen), 1.f);
-	renderTarget->FillGeometry(polygonDictionary[name], UseBrush(material->brush));
+	renderTarget->DrawGeometry((*polygonDictionary)[name], UseBrush(material->pen), 1.f);
+	renderTarget->FillGeometry((*polygonDictionary)[name], UseBrush(material->brush));
 
 	D2D1_POINT_2F centerz = { 0,0 };
 	renderTarget->SetTransform(Matrix3x2F::Rotation(0, centerz));
@@ -290,7 +285,7 @@ void Direct2DModule::DrawTextBox(vector2 size, Matrix3x3 matrix, wstring text, w
 {
 	Matrix3x2F t = Matrix3x2F(matrix[0][0], matrix[1][0], matrix[0][1], matrix[1][1], matrix[0][2], matrix[1][2]);
 	renderTarget->SetTransform(t);
-	renderTarget->DrawText(text.c_str(), text.length() - 1, textFormatDictionary[fontFamily], RectF(0, 0, size.x, size.y), UseBrush(material->pen));
+	renderTarget->DrawText(text.c_str(), (int)text.length() - 1, (*textFormatDictionary)[fontFamily], RectF(0, 0, size.x, size.y), UseBrush(material->pen));
 	D2D1_POINT_2F centerz = { 0,0 };
 	renderTarget->SetTransform(Matrix3x2F::Rotation(0, centerz));
 	renderTarget->SetTransform(Matrix3x2F::Translation(0, 0));
@@ -309,7 +304,7 @@ void Direct2DModule::DrawBitmap(wstring bitmap, vector2 size, Matrix3x3 matrix, 
 	Matrix3x2F t = Matrix3x2F(matrix[0][0], matrix[1][0], matrix[0][1], matrix[1][1], matrix[0][2], matrix[1][2]);
 	renderTarget->SetTransform(t);
 
-	renderTarget->DrawBitmap(bitmapDictionary[bitmap], rectangle, material->brush.w, D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR);
+	renderTarget->DrawBitmap((*bitmapDictionary)[bitmap], rectangle, material->brush.w, D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR);
 
 	D2D1_POINT_2F centerz = { 0,0 };
 	renderTarget->SetTransform(Matrix3x2F::Rotation(0, centerz));

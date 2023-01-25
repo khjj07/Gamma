@@ -98,6 +98,6 @@ vector2 GammaEngine::Input::GetMousePosition()
 	GetWindowRect(hWnd, &rc);
 	GetCursorPos(&p);
 	//ScreenToClient(hWnd, &p);
-	vector2 vec = vector2(-rc.left+p.x, -rc.top+p.y);
+	vector2 vec = vector2((float)(-rc.left+p.x), (float) (- rc.top + p.y));
 	return vec;
 }

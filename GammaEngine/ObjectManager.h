@@ -22,8 +22,8 @@ namespace GammaEngine
 		static void Destroy(GameObject* obj);//현재 씬에 있는 오브젝트를 제거하는 함수
 
 	private:
-		static vector<GameObject*> addBuffer;//오브젝트 생성을 위한 버퍼
-		static vector<GameObject*> removeBuffer;//제거될 오브젝트를 담은 버퍼
+		static vector<GameObject*>* addBuffer;//오브젝트 생성을 위한 버퍼
+		static vector<GameObject*>* removeBuffer;//제거될 오브젝트를 담은 버퍼
 	};
 
 

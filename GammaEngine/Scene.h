@@ -33,8 +33,8 @@ namespace GammaEngine
 		void Hold(GameObject* obj); //GameObject¸¦ »ó¼Ó¹Þ´Â °³Ã¼¸¦ ¾ÀÀÇ ¹­¾îµÒ
 
 	public:
-		vector<GameObject*> gameObjectList;
-		vector<GameObject*> holdList;
+		vector<GameObject*>* gameObjectList;
+		vector<GameObject*>* holdList;
 	};
 
 	

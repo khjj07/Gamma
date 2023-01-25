@@ -179,14 +179,14 @@ void GammaEngine::Collider::EPA(Collider* A, Collider* B, vector<vector2>& polyt
 
 GammaEngine::Collider::Collider(GameObject* t) : Component(t)
 {
-	CollisionSystem::Instance()->colliderList.push_back(this);
-	CollisionSystem::Instance()->collidedList.push_back(Collided(this));
+	CollisionSystem::Instance()->colliderList->push_back(this);
+	CollisionSystem::Instance()->collidedList->push_back(Collided(this));
 }
 
 GammaEngine::Collider::~Collider()
 {
 	CollisionSystem* coll = CollisionSystem::Instance();
-	coll->colliderList.erase(remove_if(coll->colliderList.begin(), coll->colliderList.end(), [this](Collider* x) { if (x == this) return true; else return false; }), coll->colliderList.end());
+	coll->colliderList->erase(remove_if(coll->colliderList->begin(), coll->colliderList->end(), [this](Collider* x) { if (x == this) return true; else return false; }), coll->colliderList->end());
 }
 
 bool GammaEngine::Collider::CompareTag(string str)
