@@ -15,8 +15,8 @@ public:
 private:
 	vector2 startpoint;
 	vector2 endpoint;
-	bool cool = true;
-
+	vector2 altpoint;
+	bool alt = false;
 };
 
 

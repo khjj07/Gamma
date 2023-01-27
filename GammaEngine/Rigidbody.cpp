@@ -3,7 +3,7 @@ using namespace GammaEngine;
 
 GammaEngine::Rigidbody::Rigidbody(GameObject* t) :Component(t), 
 mass(1), velocity(vector2()), 
-drag(0.1f), momentOfInertia(10), restitution(0.01f),
+drag(0.5f), momentOfInertia(10), restitution(0.01f),
 angularDrag(0.01f), angularVelocity(vector2()),torque(vector2()),
 staticFriction(0.2f), dynamicFriction(0.01f),
 useGravity(false), gravity(vector2::Down * 10)

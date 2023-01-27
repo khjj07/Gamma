@@ -2,6 +2,7 @@
 #include "GammaEngine.h"
 #include "Mouse.h"
 #include "Unit.h"
+#include "Troops.h"
 
 using namespace GammaEngine;
 WorkSpace::WorkSpace()
@@ -23,9 +24,13 @@ WorkSpace::WorkSpace()
 	{
 		GameObject* troops = new GameObject();
 		troops->AddComponent<RectangleRenderer>();
+		troops->GetComponent<RectangleRenderer>()->size = vector2(10, 10);
+		troops->AddComponent<BoxCollider>();
+		troops->GetComponent<BoxCollider>()->SetBounds(vector2(10,10));
+		troops->GetComponent<BoxCollider>()->isKinematic = true;
 		troops->AddComponent<Troops>();
 
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < 500; i++)
 		{
 			GameObject* unit = new GameObject();
 			unit->AddComponent<EllipseRenderer>();
@@ -34,18 +39,18 @@ WorkSpace::WorkSpace()
 			unit->AddComponent<Unit>();
 			unit->AddComponent<BitmapRenderer>();
 			unit->AddComponent<Animator>();
-			troops->GetComponent<Troops>()->Join(unit->GetComponent<Unit>());
 			unit->GetComponent<BitmapRenderer>()->offset = vector2(3, -3);
 			unit->GetComponent<Rigidbody>()->useGravity = false;
 			unit->GetComponent<EllipseRenderer>()->size = vector2(15, 15);
 			unit->GetComponent<CircleCollider>()->radius = 7.5f;
-			unit->GetComponent<Unit>()->speed = 50;
 			unit->transform->position = vector2((float)(100 + 30 * (i % 10)), (float)(100 + 30 * (i / 10)));
+
+			troops->GetComponent<Troops>()->Join(unit->GetComponent<Unit>());
 			scene1->Hold(unit);
 		}
+		scene1->Hold(troops);
 	}
-	
-	
+
 	//GameObject* stone = new GameObject();
 	//stone->AddComponent<RectangleRenderer>();
 	//stone->AddComponent<BoxCollider>();
@@ -57,6 +62,7 @@ WorkSpace::WorkSpace()
 	//Hold Object to Scene
 	scene1->Hold(mouse);
 	scene1->Hold(camera);
+
 	
 
 	//AddScene

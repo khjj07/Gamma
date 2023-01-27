@@ -17,6 +17,7 @@
 #include  <algorithm>
 #include "Type.h"
 #include "Util.h"
+#include "Render.h"
 //base
 #include "Singleton.h"
 #include "Subject.h"

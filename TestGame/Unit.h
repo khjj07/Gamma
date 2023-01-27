@@ -1,6 +1,6 @@
 using namespace GammaEngine;
 
-class Troops;
+
 
 enum class UnitState
 {
@@ -8,6 +8,7 @@ enum class UnitState
 	MoveToTarget,
 };
 
+class Troops;
 class Unit : public GammaEngine::Component
 {
 public:
@@ -18,6 +19,7 @@ public:
 	virtual void Update();
 	virtual void OnCollisionStay(CollisionResponse);
 	virtual void OnCollisionExit(CollisionResponse);
+	void Move(vector2);
 public:
 	float speed;
 	vector2 targetPoint;

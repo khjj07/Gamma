@@ -154,12 +154,7 @@ bool GammaEngine::CollisionSpace::RemoveEmptySpace()
 {
 	for (int i = 0; i < 4; i++)
 	{
-		if (division[i] && division[i]->IsEmpty())
-		{
-			delete division[i];
-			division[i] = nullptr;
-		}
-		else if (division[i])
+		if (division[i] && !division[i]->colliderList)
 		{
 			if (division[i]->RemoveEmptySpace())
 			{
@@ -167,8 +162,14 @@ bool GammaEngine::CollisionSpace::RemoveEmptySpace()
 				division[i] = nullptr;
 			}
 		}
+		else if (division[i] && division[i]->IsEmpty())
+		{
+			delete division[i];
+			division[i] = nullptr;
+		}
+		
 	}
-	return division[0] && division[1] && division[2] && division[3];
+	return !division[0] && !division[1] && !division[2] && !division[3];
 }
 bool GammaEngine::CollisionSpace::IsEmpty()
 {

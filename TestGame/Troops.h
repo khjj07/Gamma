@@ -17,13 +17,15 @@ public:
 	virtual void OnCollisionStay(CollisionResponse);
 	virtual void OnCollisionExit(CollisionResponse);
 	void Join(Unit* unit);
-
+	void SetArrangement(int column);
 public:
 	float speed;
 	vector2 targetPoint;
 	vector2 velocity;
 	TroopState state = TroopState::Wait;
-
+	vector<vector<vector2>*>* arrangement;
+	vector<Unit*>* unitList;
+	float offset;
 };
 
 

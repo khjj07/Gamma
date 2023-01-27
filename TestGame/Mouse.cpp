@@ -1,7 +1,7 @@
 #include "GammaEngine.h"
 #include "Mouse.h"
 #include "GameManager.h"
-#include "Unit.h"
+#include "Troops.h"
 
 using namespace GammaEngine;
 
@@ -24,10 +24,6 @@ void Mouse::Update()
 {
 	 vector2 mousePos = Camera::main->ScreenToWorldPoint(Input::GetMousePosition());
 
-	 if (Input::GetMouseButtonDown(1))
-	 {
-		 GameManager::MoveCommand(mousePos);
-	 }
 
 	 if (Input::GetMouseButtonDown(0))
 	 {
@@ -35,7 +31,7 @@ void Mouse::Update()
 		 drag = true;
 	 }
 
-	 if(drag)
+	 if (drag)
 	 {
 		 endpoint = mousePos;
 	 }
@@ -47,6 +43,32 @@ void Mouse::Update()
 		 startpoint = vector2();
 		 endpoint = vector2();
 	 }
+
+	 if (alt && Input::GetMouseButtonUp(1))
+	 {
+		 alt = false;
+	 }
+	 
+	
+	 if (Input::GetKey(VK_LMENU) && Input::GetMouseButton(1))
+	 {
+		 if (alt)
+		 {
+			 GameManager::SetArrangement(abs(floor((mousePos.x - altpoint.x) / 10)));
+		 }
+		 else
+		 {
+			 alt = true;
+			 altpoint = mousePos;
+		 }
+		
+	 }
+	 else if (!Input::GetKey(VK_LMENU) && Input::GetMouseButtonDown(1))
+	 {
+		 GameManager::MoveCommand(mousePos);
+	 }
+
+	
 	 if (Input::mouseScrollDelta > 0)
 	 {
 		 Camera::main->orthoScale -=0.1f;
@@ -64,10 +86,10 @@ void Mouse::Update()
 void Mouse::OnCollisionEnter(CollisionResponse res)
 {
 // 	if (this->GetComponent<BoxCollider>()->InBound(res.other->transform->position));
-		GameManager::Hand(res.other->GetComponent<Unit>());
+		GameManager::Hand(res.other->GetComponent<Troops>());
 }
 
 void Mouse::OnCollisionExit(CollisionResponse res)
 {
-	GameManager::Unhand(res.other->GetComponent<Unit>());
+	GameManager::Unhand(res.other->GetComponent<Troops>());
 }

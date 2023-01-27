@@ -23,7 +23,7 @@ void GammaEngine::CollisionSystem::Frame()
 {
 	CollisionSpace* current = CollisionSpace::root;
 	current->Frame();
-//current->RemoveEmptySpace();
+	current->RemoveEmptySpace();
 // 	vector<Collider*>::iterator iter1, iter2;
 // 	vector<Collided>::iterator collidedIter;
 // 

@@ -7,7 +7,7 @@ using namespace GammaEngine;
 
 Unit::Unit(GameObject* t) :
 	Component(t),
-	speed(10)
+	speed(50)
 {
 
 }
@@ -44,11 +44,19 @@ void Unit::Start()
 	GetComponent<Animator>()->AddAnimation(wstring(L"Run"), run);
 
 	GetComponent<Animator>()->Play(wstring(L"Idle"),PLAYBACK::LOOP_FORWARD);
+}
 
-	troops->moveSubject.Subscribe([this](vector2 x) {
-		targetPoint = x;
+void Unit::Move(vector2 v)
+{
+	if (vector2::Distance(v, transform->position) > 10)
+	{
 		state = UnitState::MoveToTarget;
-	});
+		targetPoint = v;
+	}
+	else
+	{
+		state = UnitState::Wait;
+	}
 }
 
 void Unit::Update()
@@ -66,7 +74,7 @@ void Unit::Update()
 	{
 		vector2 direction = vector2::Normalize(targetPoint - transform->position);
 		float distance = vector2::Distance(targetPoint, transform->position);
-		GetComponent<Rigidbody>()->ApplyForce(direction * speed / (float)pow(distance, 0.3));
+		GetComponent<Rigidbody>()->ApplyForce(direction * speed);
 		if (vector2::Distance(targetPoint, transform->position) < 20)
 		{
 			state = UnitState::Wait;

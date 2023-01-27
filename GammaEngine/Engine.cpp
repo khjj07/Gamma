@@ -18,9 +18,8 @@ void GammaEngine::Engine::Initialize()
 	CollisionSystem* collisionSystem = CollisionSystem::Instance();
 	Input* input = Input::Instance();
 	Timer* timer = new Timer();
-#ifdef DEBUG
 	Debug* debug = new Debug();
-#endif // DEBUG
+
 
 	graphic->Initialize(WindowSystem::hWnd);
 	input->Initialize(WindowSystem::hWnd);
