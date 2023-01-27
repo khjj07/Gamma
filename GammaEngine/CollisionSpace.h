@@ -11,12 +11,11 @@ namespace GammaEngine {
 			void Frame();
 			void Add(Collider*);
 			void Remove(Collider*);
+			bool RemoveEmptySpace();
+			bool IsEmpty();
 		public:
 			static CollisionSpace* root;
-			CollisionSpace* division1;
-			CollisionSpace* division2;
-			CollisionSpace* division3;
-			CollisionSpace* division4;
+			CollisionSpace* division[4];
 			vector<Collider*>* colliderList;
 			vector<Collider*>* removeBuffer;
 			float areaSize;

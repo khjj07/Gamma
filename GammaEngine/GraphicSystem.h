@@ -34,6 +34,7 @@ namespace GammaEngine
 		static wstring LoadBitmapImage(wstring);
 		static wstring MakePolygon(wstring, vector<vector2>);
 		static vector2 GetBitmapSize(wstring);
+
 	public:
 		static RenderModule* render;
 

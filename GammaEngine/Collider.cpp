@@ -137,7 +137,9 @@ bool GammaEngine::Collider::GJK(Collider* A, vector2 vv)
 
 void GammaEngine::Collider::EPA(Collider* A, Collider* B, vector<vector2>& polytope, vector2& normal, float& distance, vector2& contactPoint)
 {
+	int MAX_LOOP = 500;
 	int minIndex = 0;
+	int count=0;
 	float minDistance=INFINITY;
 	vector2 minNormal;
 	while (minDistance == INFINITY) {
@@ -148,8 +150,8 @@ void GammaEngine::Collider::EPA(Collider* A, Collider* B, vector<vector2>& polyt
 			vector2 vertexJ = polytope[j];
 
 			vector2 ij = vertexJ - vertexI;
-
-			vector2 n = vector2(ij.y, -ij.x).Normalize();
+			vector2 n = vector2(ij.y, -ij.x);
+			n = vector2::Normalize(n);
 			float dist = vector2::Dot(n,vertexI);
 
 			if (dist < 0) {
@@ -165,12 +167,17 @@ void GammaEngine::Collider::EPA(Collider* A, Collider* B, vector<vector2>& polyt
 		}
 		vector2 support = Support(A, B, minNormal);
 		float sDistance = vector2::Dot(minNormal,support);
-
+		if (count >= MAX_LOOP)
+		{
+			break;
+		}
 		if (abs(sDistance - minDistance) > 0.001) {
 			minDistance = INFINITY;
 			auto iter = polytope.begin();
 			polytope.insert(iter + minIndex, support);
 		}
+		
+		count++;
 	}
 	normal = minNormal;
 	distance = minDistance;
@@ -223,4 +230,9 @@ bool GammaEngine::Collider::CompareTags(vector<char*> strList)
 		}
 	}
 	return false;
+}
+
+vector<vector2> GammaEngine::Collider::ComputePoints()
+{
+	return vector<vector2>();
 }

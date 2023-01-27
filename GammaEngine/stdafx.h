@@ -22,6 +22,7 @@
 #include <algorithm>
 #include <cassert>
 #include <cmath>
+#include <set>
 
 #include "Type.h"
 #include "Util.h"
@@ -52,6 +53,7 @@
 #include "LineRenderer.h"
 #include "TextRenderer.h"
 #include "Animation.h"
+#include "Animator.h"
 
 //collision
 #include "Collider.h"

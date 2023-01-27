@@ -21,7 +21,8 @@ GammaEngine::Debug::~Debug()
 
 void GammaEngine::Debug::DrawRectangle(vector2 size, vector2 pos, float rotation, Material* material)
 {
-	DebugRect* debugShape = new DebugRect(size, Camera::main->Projection()* Matrix3x3::Translation(pos.x,pos.y) * Matrix3x3::Scale(1, 1)* Matrix3x3::Rotate(rotation), material);
+	Matrix3x3 matrix = Camera::main->Projection() * (Matrix3x3::Translation(pos.x, pos.y) * Matrix3x3::Scale(1, 1) * Matrix3x3::Rotate(rotation));
+	DebugRect* debugShape = new DebugRect(size, matrix, material);
 	rect->push_back(debugShape);
 }
 

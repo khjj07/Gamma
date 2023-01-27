@@ -52,6 +52,7 @@ public:
 	IDWriteFactory* writeFactory;
 	IWICImagingFactory* imageFactory;
 	static ID2D1HwndRenderTarget* renderTarget;
+
 public:
 	unordered_map<wstring, IDWriteTextFormat*>* textFormatDictionary;
 	unordered_map<wstring, ID2D1Bitmap*>* bitmapDictionary;

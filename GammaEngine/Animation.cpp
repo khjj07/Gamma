@@ -10,9 +10,10 @@ function<void(AnimationData*)> GammaEngine::Animation::PlayFunction[6] = {
 	PlayLoopPingpong
 };
 
-GammaEngine::Animation::Animation(GameObject* t) :Component(t)
+GammaEngine::Animation::Animation()
 {
 	images = new vector<wstring>();
+	handler = nullptr;
 }
 
 GammaEngine::Animation::~Animation()
@@ -135,13 +136,23 @@ void GammaEngine::Animation::PlayLoopPingpong(AnimationData* data)
 	});
 }
 
-void GammaEngine::Animation::Play(PLAYBACK playback)
+void GammaEngine::Animation::Play(wstring& bitmap,PLAYBACK playback)
 {
-	BitmapRenderer* bitmapRenderer = GetComponent<BitmapRenderer>();
-	AnimationData* data = new AnimationData((* bitmapRenderer->bitmap), *images);
+	
+	AnimationData* data = new AnimationData(bitmap, *images, fps);
 	PlayFunction[playback](data);
+	handler = data->handler;
 }
 
+void GammaEngine::Animation::Pause()
+{
+	Timer::Cancel(handler);
+}
+
+void GammaEngine::Animation::SetFPS(float time)
+{
+	fps = time;
+}
 void GammaEngine::Animation::AddFrame(wstring image)
 {
 	images->push_back(GraphicSystem::LoadBitmapImage(image));

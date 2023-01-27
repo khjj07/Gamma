@@ -1,7 +1,7 @@
 #include "WorkSpace.h"
 #include "GammaEngine.h"
 #include "Mouse.h"
-#include "Troops.h"
+#include "Unit.h"
 
 using namespace GammaEngine;
 WorkSpace::WorkSpace()
@@ -18,29 +18,40 @@ WorkSpace::WorkSpace()
 	mouse->AddComponent<RectangleRenderer>();
 	mouse->AddComponent<BoxCollider>();
 	mouse->AddComponent<Mouse>();
-
 	mouse->GetComponent<BoxCollider>()->isKinematic=true;
-
-	for (int i = 0; i < 100; i++)
+	for (int k = 0; k < 1; k++)
 	{
 		GameObject* troops = new GameObject();
-		troops->AddComponent<EllipseRenderer>();
-		troops->AddComponent<CircleCollider>();
-		troops->AddComponent<Rigidbody>();
+		troops->AddComponent<RectangleRenderer>();
 		troops->AddComponent<Troops>();
-		troops->AddComponent<BitmapRenderer>();
-		troops->AddComponent<Animation>();
 
-		troops->GetComponent<Rigidbody>()->useGravity = false;
-		troops->GetComponent<EllipseRenderer>()->size = vector2(20, 20);
-		troops->GetComponent<CircleCollider>()->radius=10;
-		troops->GetComponent<Troops>()->speed = 100;
-		troops->transform->position = vector2((float)(30 * (i%10)), (float)(30 * (i/10)));
-		scene1->Hold(troops);
+		for (int i = 0; i < 10; i++)
+		{
+			GameObject* unit = new GameObject();
+			unit->AddComponent<EllipseRenderer>();
+			unit->AddComponent<CircleCollider>();
+			unit->AddComponent<Rigidbody>();
+			unit->AddComponent<Unit>();
+			unit->AddComponent<BitmapRenderer>();
+			unit->AddComponent<Animator>();
+			troops->GetComponent<Troops>()->Join(unit->GetComponent<Unit>());
+			unit->GetComponent<BitmapRenderer>()->offset = vector2(3, -3);
+			unit->GetComponent<Rigidbody>()->useGravity = false;
+			unit->GetComponent<EllipseRenderer>()->size = vector2(15, 15);
+			unit->GetComponent<CircleCollider>()->radius = 7.5f;
+			unit->GetComponent<Unit>()->speed = 50;
+			unit->transform->position = vector2((float)(100 + 30 * (i % 10)), (float)(100 + 30 * (i / 10)));
+			scene1->Hold(unit);
+		}
 	}
 	
-
-
+	
+	//GameObject* stone = new GameObject();
+	//stone->AddComponent<RectangleRenderer>();
+	//stone->AddComponent<BoxCollider>();
+	//stone->GetComponent<BoxCollider>()->SetBounds(vector2(200,200));
+	//stone->GetComponent<RectangleRenderer>()->size=vector2(200,200);
+	//stone->transform->position = vector2(400, 0);
 	
 	
 	//Hold Object to Scene

@@ -1,5 +1,6 @@
 #pragma once
 using namespace GammaEngine;
+class Unit;
 class Troops;
 enum class CommandType
 {
@@ -34,8 +35,8 @@ public:
 	
 public:
 	static void ConfirmUnit();
-	static void Hand(Troops* troops);
-	static void Unhand(Troops* troops);
+	static void Hand(Troops* unit);
+	static void Unhand(Troops* unit);
 	static void MoveCommand(vector2 point);
 private:
 	static vector<Troops*> tempSelected;

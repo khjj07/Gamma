@@ -63,7 +63,7 @@ void GammaEngine::Scene::OnEnable()
 
 void GammaEngine::Scene::Enable()
 {
-	for (auto iter =holdList->begin(); iter < holdList->end(); iter++)
+	for (auto iter = holdList->begin(); iter < holdList->end(); iter++)
 	{
 		GameObject* newObj = new GameObject(**iter);
 		Add(newObj);
@@ -94,6 +94,7 @@ void GammaEngine::Scene::Remove(GameObject* obj)
 	obj->OnDestroy();
 	delete obj;
 }
+
 void GammaEngine::Scene::Hold(GameObject* obj)
 {
 	GameObject* newObj = new GameObject(*obj);

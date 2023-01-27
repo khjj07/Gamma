@@ -1,7 +1,7 @@
 #include "GammaEngine.h"
 #include "Mouse.h"
 #include "GameManager.h"
-#include "Troops.h"
+#include "Unit.h"
 
 using namespace GammaEngine;
 
@@ -15,7 +15,12 @@ Mouse::~Mouse()
 
 }
 
- void Mouse::Update()
+void Mouse::Start()
+{
+	
+}
+
+void Mouse::Update()
 {
 	 vector2 mousePos = Camera::main->ScreenToWorldPoint(Input::GetMousePosition());
 
@@ -59,10 +64,10 @@ Mouse::~Mouse()
 void Mouse::OnCollisionEnter(CollisionResponse res)
 {
 // 	if (this->GetComponent<BoxCollider>()->InBound(res.other->transform->position));
-		GameManager::Hand(res.other->GetComponent<Troops>());
+		GameManager::Hand(res.other->GetComponent<Unit>());
 }
 
 void Mouse::OnCollisionExit(CollisionResponse res)
 {
-	GameManager::Unhand(res.other->GetComponent<Troops>());
+	GameManager::Unhand(res.other->GetComponent<Unit>());
 }

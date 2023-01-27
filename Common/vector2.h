@@ -29,98 +29,98 @@ struct vector2
 		y = b;
 	}
 
-	friend bool operator ==(vector2 a, vector2 b)
+	inline friend bool operator ==(vector2 a, vector2 b)
 	{
 		return a.x == b.x && a.y == b.y;
 	}
 
-	friend bool operator !=(vector2& a, vector2& b)
+	inline friend bool operator !=(vector2& a, vector2& b)
 	{
 		return a.x != b.x || a.y != b.y;
 	}
 
-	vector2 operator -()
+	inline vector2 operator -()
 	{
 		return vector2(-x, -y);
 	}
 
-	vector2 operator +(vector2 a) const
+	inline vector2 operator +(vector2 a) const
 	{
 		return vector2(x + a.x, y + a.y);
 	}
 
-	vector2 operator -(vector2 a) const
+	inline vector2 operator -(vector2 a) const
 	{
 		return vector2(x - a.x, y - a.y);
 	}
 
-	vector2 operator *(float a) const
+	inline vector2 operator *(float a) const
 	{
 		return vector2(x * a, y * a);
 	}
 
-	vector2 operator /(float a) const
+	inline vector2 operator /(float a) const
 	{
 		return vector2(x / a, y / a);
 	}
 
-	vector2& operator +=(vector2& a)
+	inline vector2& operator +=(vector2& a)
 	{
 		(*this) = (*this) + a;
 		return *this;
 	}
 
-	vector2& operator +=(vector2 a)
+	inline vector2& operator +=(vector2 a)
 	{
 		(*this) = (*this) + a;
 		return *this;
 	}
 
-	vector2& operator -=(vector2& a)
+	inline vector2& operator -=(vector2& a)
 	{
 		(*this) = (*this) - a;
 		return *this;
 	}
 
-	vector2& operator -=(vector2 a)
+	inline vector2& operator -=(vector2 a)
 	{
 		(*this) = (*this) - a;
 		return *this;
 	}
 
-	float operator *(const vector2& b)
+	inline float operator *(const vector2& b)
 	{
 		return x * b.y - y * x;
 	}
 
-	static float Dot(vector2 v1, vector2 v2)
+	inline static float Dot(vector2 v1, vector2 v2)
 	{
 		float result = v1.x * v2.x + v1.y * v2.y;
 		return result;
 	}
 
-	static vector2 TripleProduct(vector2 a, vector2 b, vector2 c)
+	inline static vector2 TripleProduct(vector2 a, vector2 b, vector2 c)
 	{
 		return -a * (vector2::Dot(b, c)) + b * (vector2::Dot(a, c));
 	}
 
-	float Length()
+	inline float Length()
 	{
-		return (float)(pow(x * x + y * y, 0.5));
+		return sqrtf(x * x + y * y);
 	}
 
-	static float Length(vector2 v)
+	inline static float Length(vector2 v)
 	{
-		return (float)(pow(v.x * v.x + v.y * v.y, 0.5));
+		return sqrtf(v.x * v.x + v.y * v.y);
 	}
 
-	static float Distance(vector2 v1, vector2 v2)
+	inline static float Distance(vector2 v1, vector2 v2)
 	{
-		float result = (float)pow((v1.x - v2.x) * (v1.x - v2.x) + (v1.y - v2.y) * (v1.y - v2.y), 0.5);
+		float result = sqrtf((v1.x - v2.x) * (v1.x - v2.x) + (v1.y - v2.y) * (v1.y - v2.y));
 		return result;
 	}
 
-	vector2 Normalize()
+	inline vector2 Normalize()
 	{
 		if (Length() == 0)
 		{
@@ -130,7 +130,7 @@ struct vector2
 		return result;
 	}
 
-	static vector2 Normalize(vector2 v)
+	inline static vector2 Normalize(vector2 v)
 	{
 		if (Length(v) == 0)
 		{
@@ -140,7 +140,7 @@ struct vector2
 		return result;
 	}
 
-	static vector2 Reflect(vector2 v, vector2 normal)
+	inline static vector2 Reflect(vector2 v, vector2 normal)
 	{
 		return v - normal * vector2::Dot(v, normal) * 2;
 	}

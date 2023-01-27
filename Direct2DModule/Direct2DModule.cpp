@@ -100,6 +100,10 @@ void Direct2DModule::Resize(int width, int height)
 
 wstring Direct2DModule::LoadBitmapImage(wstring filename)
 {
+	if ((*bitmapDictionary).find(filename) != (*bitmapDictionary).end())
+	{
+		return filename;
+	}
 	HRESULT hr;
 	ID2D1Bitmap* bitmap;
 	IWICBitmapDecoder* decoder = 0;
@@ -176,7 +180,14 @@ ID2D1SolidColorBrush* Direct2DModule::UseBrush(vector4 color)
 vector2 Direct2DModule::GetBitmapSize(wstring filename)
 {
 	ID2D1Bitmap* bitmap = (* bitmapDictionary)[filename];
-	D2D1_SIZE_F size = bitmap->GetSize();
+	D2D1_SIZE_F size;
+	size.width = 0;
+	size.height = 0;
+	if ((*bitmapDictionary).find(filename) != (*bitmapDictionary).end())
+	{
+		size = bitmap->GetSize();
+	}
+	
 	return vector2(size.width, size.height);
 }
 
@@ -227,7 +238,7 @@ void Direct2DModule::DrawRectangle(vector2 size, Matrix3x3 matrix, Material* mat
 	Matrix3x2F t = Matrix3x2F(matrix[0][0], matrix[1][0], matrix[0][1], matrix[1][1], matrix[0][2], matrix[1][2]);
 	renderTarget->SetTransform(t);
 
-	renderTarget->DrawRectangle(rectangle, UseBrush(material->pen));
+	renderTarget->DrawRectangle(rectangle, UseBrush(material->pen), material->thickness);
 	renderTarget->FillRectangle(rectangle, UseBrush(material->brush));
 
 	D2D1_POINT_2F centerz = { 0,0 };
@@ -240,7 +251,7 @@ void Direct2DModule::DrawPolygon(wstring name, Matrix3x3 matrix, Material* mater
 {
 	Matrix3x2F t = Matrix3x2F(matrix[0][0], matrix[1][0], matrix[0][1], matrix[1][1], matrix[0][2], matrix[1][2]);
 	renderTarget->SetTransform(t);
-	renderTarget->DrawGeometry((*polygonDictionary)[name], UseBrush(material->pen), 1.f);
+	renderTarget->DrawGeometry((*polygonDictionary)[name], UseBrush(material->pen), material->thickness);
 	renderTarget->FillGeometry((*polygonDictionary)[name], UseBrush(material->brush));
 
 	D2D1_POINT_2F centerz = { 0,0 };
@@ -261,7 +272,7 @@ void Direct2DModule::DrawEllipse(vector2 size, Matrix3x3 matrix, Material* mater
 	Matrix3x2F t = Matrix3x2F(matrix[0][0], matrix[1][0], matrix[0][1], matrix[1][1], matrix[0][2], matrix[1][2]);
 	renderTarget->SetTransform(t);
 
-	renderTarget->DrawEllipse(ellipse, UseBrush(material->pen));
+	renderTarget->DrawEllipse(ellipse, UseBrush(material->pen), material->thickness);
 	renderTarget->FillEllipse(ellipse, UseBrush(material->brush));
 
 	D2D1_POINT_2F centerz = { 0,0 };

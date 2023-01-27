@@ -21,8 +21,6 @@ public:
 	virtual void OnNext(T);
 	virtual void OnComplete(T);
 	virtual void OnError(exception);
-
-
 };
 
 template<typename T>

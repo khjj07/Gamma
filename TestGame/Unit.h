@@ -1,28 +1,28 @@
 using namespace GammaEngine;
 
-enum class TroopState
+class Troops;
+
+enum class UnitState
 {
 	Wait,
 	MoveToTarget,
 };
-class Unit;
-class Troops : public GammaEngine::Component
+
+class Unit : public GammaEngine::Component
 {
 public:
-	Troops(GameObject* t);
-	~Troops();
+	Unit(GameObject* t);
+	~Unit();
 public:
 	virtual void Start();
 	virtual void Update();
 	virtual void OnCollisionStay(CollisionResponse);
 	virtual void OnCollisionExit(CollisionResponse);
-	void Join(Unit* unit);
-
 public:
 	float speed;
 	vector2 targetPoint;
-	vector2 velocity;
-	TroopState state = TroopState::Wait;
+	UnitState state= UnitState::Wait;
+	Troops* troops;
 
 };
 

@@ -56,7 +56,6 @@ void GammaEngine::GraphicSystem::DrawRectangle(vector2 size, Matrix3x3 matrix, M
 	render->DrawRectangle(size, matrix, material);
 }
 
-
 void GammaEngine::GraphicSystem::DrawEllipse(vector2 size, Matrix3x3 matrix, Material* material)
 {
 	render->DrawEllipse(size, matrix, material);

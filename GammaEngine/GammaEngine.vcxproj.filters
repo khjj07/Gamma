@@ -43,6 +43,9 @@
     <Filter Include="Framework\Debug">
       <UniqueIdentifier>{393ce50f-74c8-4a10-86e1-d65f4f01a626}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Framework\Component\Animation">
+      <UniqueIdentifier>{c1c038d3-043e-40bc-b636-75f341e69cec}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -127,9 +130,6 @@
       <Filter>Framework\Component\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="GammaEngine.h" />
-    <ClInclude Include="Animation.h">
-      <Filter>Framework\Component</Filter>
-    </ClInclude>
     <ClInclude Include="Rigidbody.h">
       <Filter>Framework\Component\Physics</Filter>
     </ClInclude>
@@ -153,6 +153,12 @@
     </ClInclude>
     <ClInclude Include="CollisionSpace.h">
       <Filter>Framework\System\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation.h">
+      <Filter>Framework\Component\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Animator.h">
+      <Filter>Framework\Component\Animation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -228,9 +234,6 @@
     <ClCompile Include="BitmapRenderer.cpp">
       <Filter>Framework\Component\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="Animation.cpp">
-      <Filter>Framework\Component</Filter>
-    </ClCompile>
     <ClCompile Include="Rigidbody.cpp">
       <Filter>Framework\Component\Physics</Filter>
     </ClCompile>
@@ -254,6 +257,12 @@
     </ClCompile>
     <ClCompile Include="CollisionSpace.cpp">
       <Filter>Framework\System\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation.cpp">
+      <Filter>Framework\Component\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Animator.cpp">
+      <Filter>Framework\Component\Animation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

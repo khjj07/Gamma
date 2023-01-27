@@ -20,26 +20,28 @@ namespace GammaEngine {
 		int count;
 		bool forward;
 
-		AnimationData(wstring& img, vector<wstring>& imgs)
+		AnimationData(wstring& img, vector<wstring>& imgs,float fps)
 			:handler(nullptr),
 			image(img),
 			images(imgs),
-			playtime(1.0f),
+			playtime(fps),
 			count(0),
 			forward(true){}
 	};
 
 	template class GammaEngineAPI std::function<void(AnimationData*)>;
 
-	class GammaEngineAPI Animation : public Component
+	class GammaEngineAPI Animation
 	{
 	public:
-		Animation(GameObject* t);
+		Animation();
 		~Animation();
 
 	public:
-		void Play(PLAYBACK);
+		void Play(wstring& ,PLAYBACK);
+		void Pause();
 		void AddFrame(wstring);
+		void SetFPS(float);
 
 	private:
 		static void PlayOnceForward(AnimationData* data);
@@ -48,12 +50,14 @@ namespace GammaEngine {
 		static void PlayLoopForward(AnimationData* data);
 		static void PlayLoopBackward(AnimationData* data);
 		static void PlayLoopPingpong(AnimationData* data);
-
+	public:
+		float fps;
 	private:
 		static function<void(AnimationData*)> PlayFunction[6];
-		
+		TimerHandler* handler;
 	private: 
 		vector<wstring>* images;
+
 	};
 }
 
