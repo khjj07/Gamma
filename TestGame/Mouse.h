@@ -12,11 +12,14 @@ public:
 	virtual void OnCollisionExit(CollisionResponse res);
 	bool drag = false;
 
+public:
+
 private:
 	vector2 startpoint;
 	vector2 endpoint;
 	vector2 altpoint;
 	bool alt = false;
+	
 };
 
 

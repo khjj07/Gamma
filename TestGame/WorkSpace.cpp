@@ -1,10 +1,13 @@
 #include "WorkSpace.h"
 #include "GammaEngine.h"
+
+#include "MainCamera.h"
 #include "Mouse.h"
 #include "Unit.h"
 #include "Troops.h"
 
 using namespace GammaEngine;
+
 WorkSpace::WorkSpace()
 {
 	//Create Scene
@@ -13,6 +16,7 @@ WorkSpace::WorkSpace()
 	//Camera
 	GameObject* camera = new GameObject();
 	camera->AddComponent<Camera>();
+	camera->AddComponent<MainCamera>();
 
 	//Create and Config GameObjects
 	GameObject* mouse =new GameObject();
@@ -30,7 +34,7 @@ WorkSpace::WorkSpace()
 		troops->GetComponent<BoxCollider>()->isKinematic = true;
 		troops->AddComponent<Troops>();
 
-		for (int i = 0; i < 500; i++)
+		for (int i = 0; i < 50; i++)
 		{
 			GameObject* unit = new GameObject();
 			unit->AddComponent<EllipseRenderer>();

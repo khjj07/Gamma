@@ -3,6 +3,7 @@
 #include "GameManager.h"
 #include "Troops.h"
 
+
 using namespace GammaEngine;
 
 Mouse::Mouse(GameObject* t) : Component(t)
@@ -17,7 +18,7 @@ Mouse::~Mouse()
 
 void Mouse::Start()
 {
-	
+
 }
 
 void Mouse::Update()
@@ -66,16 +67,6 @@ void Mouse::Update()
 	 else if (!Input::GetKey(VK_LMENU) && Input::GetMouseButtonDown(1))
 	 {
 		 GameManager::MoveCommand(mousePos);
-	 }
-
-	
-	 if (Input::mouseScrollDelta > 0)
-	 {
-		 Camera::main->orthoScale -=0.1f;
-	 }
-	 if (Input::mouseScrollDelta < 0)
-	 {
-		 Camera::main->orthoScale += 0.1f;
 	 }
 
 	 GetComponent<RectangleRenderer>()->size = (endpoint - startpoint);

@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="MainCamera.cpp" />
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="main.cpp" />
@@ -147,6 +148,7 @@
     <ClCompile Include="WorkSpace.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="MainCamera.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Troops.h" />

@@ -32,7 +32,7 @@ public:
 
 public:
 	vector<IObserver<T>*> observers;
-	vector<function<bool(T)> > predicates;
+	vector<Action<T>*> action;
 };
 
 template<typename T>
@@ -57,37 +57,37 @@ void ReactiveProperty<T>::Notify()
 {
 	for (auto iter = observers.begin(); iter < observers.end(); iter++)
 	{
-		(*iter)->OnNext(T);
+		(*iter)->OnNext(value);
 	}
 }
 
 template<typename T>
 void ReactiveProperty<T>::Subscribe(function<void(T)> onNext)
 {
-	SubjectObserver<T>* newObserver = new SubjectObserver<T>(predicates, onNext);
-	predicates.clear();
+	Observer<T>* newObserver = new Observer<T>(action, onNext);
+	action.clear();
 	observers.push_back(newObserver);
 }
 
 template<typename T>
 void ReactiveProperty<T>::Subscribe(function<void(T)> onNext, function<void(T)> onComplete)
 {
-	SubjectObserver<T>* newObserver = new SubjectObserver<T>(predicates, onNext, onComplete);
-	predicates.clear();
+	Observer<T>* newObserver = new Observer<T>(action, onNext, onComplete);
+	action.clear();
 	observers.push_back(newObserver);
 }
 
 template<typename T>
 void ReactiveProperty<T>::Subscribe(function<void(T)> onNext, function<void(T)> onComplete, function<void(exception)> onError)
 {
-	SubjectObserver<T>* newObserver = new SubjectObserver<T>(predicates, onNext, onComplete, onError);
-	predicates.clear();
+	Observer<T>* newObserver = new Observer<T>(action, onNext, onComplete, onError);
+	action.clear();
 	observers.push_back(newObserver);
 }
 
 template<typename T>
 ReactiveProperty<T>& ReactiveProperty<T>::Where(function<bool(T)> predicate)
 {
-	predicates.push_back(predicate);
+	action.push_back(predicate);
 	return *this;
 }

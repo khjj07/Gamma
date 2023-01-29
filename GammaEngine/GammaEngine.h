@@ -20,7 +20,6 @@
 #include "Render.h"
 //base
 #include "Singleton.h"
-#include "Subject.h"
 #include "resource.h"
 #include "WindowSystem.h"
 #include "GraphicSystem.h"
@@ -63,5 +62,9 @@
 #include "SceneManager.h"
 #include "ObjectManager.h"
 #include "Engine.h"
+
+//GRX
+#include "Subject.h"
+#include "ReactiveProperty.h"
 
 #include "Debug.h"

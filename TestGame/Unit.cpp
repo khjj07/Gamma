@@ -48,7 +48,7 @@ void Unit::Start()
 
 void Unit::Move(vector2 v)
 {
-	if (vector2::Distance(v, transform->position) > 10)
+	if (vector2::Distance(v, transform->position) > 3)
 	{
 		state = UnitState::MoveToTarget;
 		targetPoint = v;
@@ -75,7 +75,7 @@ void Unit::Update()
 		vector2 direction = vector2::Normalize(targetPoint - transform->position);
 		float distance = vector2::Distance(targetPoint, transform->position);
 		GetComponent<Rigidbody>()->ApplyForce(direction * speed);
-		if (vector2::Distance(targetPoint, transform->position) < 20)
+		if (vector2::Distance(targetPoint, transform->position) < 3)
 		{
 			state = UnitState::Wait;
 		}
