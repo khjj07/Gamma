@@ -48,6 +48,7 @@ void Mouse::Update()
 	 if (alt && Input::GetMouseButtonUp(1))
 	 {
 		 alt = false;
+		 alt = false;
 	 }
 	 
 	

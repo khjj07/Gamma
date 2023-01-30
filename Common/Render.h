@@ -44,7 +44,8 @@ public:
 	virtual void DrawEllipse(vector2 size, Matrix3x3 matrix, Material* material) abstract;
 	virtual void DrawLine(vector2 start, vector2 end, Material* material) abstract;
 	virtual void DrawTextBox(vector2 size, Matrix3x3 matrix, wstring text, wstring fontFamily, Material* material) abstract;
-	virtual void DrawBitmap(wstring bitmap, vector2 size, Matrix3x3 matrix, Material* material)abstract;
+	virtual void DrawBitmap(wstring bitmap, vector2 size, Matrix3x3 matrix, Material* material) abstract;
+	virtual void DrawBitmap(wstring bitmap, vector2 size, vector2 leftTop, vector2 rightBottom, Matrix3x3 matrix, Material* material) abstract;
 	virtual wstring LoadBitmapImage(wstring) abstract;
 	virtual wstring MakePolygon(wstring,vector<vector2>) abstract;
 	virtual vector2 GetBitmapSize(wstring) abstract;

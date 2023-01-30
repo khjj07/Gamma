@@ -72,6 +72,10 @@
 #include "ObjectManager.h"
 #include "Engine.h"
 
+//spine
+#include "spinecpp/spinecpp.h"
+#include "SpineModel.h"
+
 #include "Debug.h"
 
 

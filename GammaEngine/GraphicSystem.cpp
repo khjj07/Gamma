@@ -69,10 +69,16 @@ void GammaEngine::GraphicSystem::DrawTextBox(vector2 size, Matrix3x3 matrix, wst
 	render->DrawTextBox(size, matrix,text, fontFamily, material);
 }
 
-void GammaEngine::GraphicSystem::DrawBitmap(wstring bitmap, vector2 size, Matrix3x3 matrix, Material* meterial)
+void GammaEngine::GraphicSystem::DrawBitmap(wstring bitmap, vector2 size, Matrix3x3 matrix, Material* material)
 {
-	render->DrawBitmap(bitmap, size, matrix, meterial);
+	render->DrawBitmap(bitmap, size, matrix, material);
 }
+
+void GammaEngine::GraphicSystem::DrawBitmap(wstring bitmap, vector2 size, vector2 leftTop, vector2 rightBottom, Matrix3x3 matrix, Material* material)
+{
+	render->DrawBitmap(bitmap, size, leftTop, rightBottom, matrix, material);
+}
+
 
 void GammaEngine::GraphicSystem::DrawPolygon(wstring name, Matrix3x3 matrix, Material* material)
 {

@@ -31,6 +31,7 @@ namespace GammaEngine
 		static void DrawLine(vector2 start, vector2 end, Material* material);
 		static void DrawTextBox(vector2 size, Matrix3x3 matrix, wstring text, wstring fontFamily, Material* material);
 		static void DrawBitmap(wstring bitmap,vector2 size, Matrix3x3 matrix, Material* material);
+		static void DrawBitmap(wstring bitmap, vector2 size, vector2 leftTop, vector2 rightBottom, Matrix3x3 matrix, Material* material);
 		static wstring LoadBitmapImage(wstring);
 		static wstring MakePolygon(wstring, vector<vector2>);
 		static vector2 GetBitmapSize(wstring);

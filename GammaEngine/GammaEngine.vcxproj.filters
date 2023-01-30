@@ -46,6 +46,9 @@
     <Filter Include="Framework\Component\Animation">
       <UniqueIdentifier>{c1c038d3-043e-40bc-b636-75f341e69cec}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Framework\Component\Spine">
+      <UniqueIdentifier>{b8544800-68a8-4bc1-9fd4-2ac746e9c9fd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -160,6 +163,9 @@
     <ClInclude Include="Animator.h">
       <Filter>Framework\Component\Animation</Filter>
     </ClInclude>
+    <ClInclude Include="SpineModel.h">
+      <Filter>Framework\Component\Spine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GraphicSystem.cpp">
@@ -263,6 +269,9 @@
     </ClCompile>
     <ClCompile Include="Animator.cpp">
       <Filter>Framework\Component\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="SpineModel.cpp">
+      <Filter>Framework\Component\Spine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

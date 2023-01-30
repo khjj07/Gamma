@@ -322,3 +322,30 @@ void Direct2DModule::DrawBitmap(wstring bitmap, vector2 size, Matrix3x3 matrix, 
 	renderTarget->SetTransform(Matrix3x2F::Translation(0, 0));
 	renderTarget->SetTransform(Matrix3x2F::Scale(0, 0));
 }
+
+
+void Direct2DModule::DrawBitmap(wstring bitmap, vector2 size, vector2 leftTop,vector2 rightBottom,Matrix3x3 matrix, Material* material)
+{
+	D2D1_RECT_F rectangle,srcRectangle;
+
+	rectangle.left = -size.x / 2;
+	rectangle.top = -size.y / 2;
+	rectangle.right = size.x / 2;
+	rectangle.bottom = size.y / 2;
+
+	srcRectangle.left = leftTop.x;
+	srcRectangle.top = leftTop.y;
+	srcRectangle.right = rightBottom.x;
+	srcRectangle.bottom = rightBottom.y;
+	
+
+	Matrix3x2F t = Matrix3x2F(matrix[0][0], matrix[1][0], matrix[0][1], matrix[1][1], matrix[0][2], matrix[1][2]);
+	renderTarget->SetTransform(t);
+
+	renderTarget->DrawBitmap((*bitmapDictionary)[bitmap], rectangle, material->brush.w, D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR, srcRectangle);
+
+	D2D1_POINT_2F centerz = { 0,0 };
+	renderTarget->SetTransform(Matrix3x2F::Rotation(0, centerz));
+	renderTarget->SetTransform(Matrix3x2F::Translation(0, 0));
+	renderTarget->SetTransform(Matrix3x2F::Scale(0, 0));
+}

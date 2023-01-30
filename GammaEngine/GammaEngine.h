@@ -14,7 +14,7 @@
 #include <tchar.h>
 #include <vector>
 #include <functional>
-#include  <algorithm>
+#include <algorithm>
 #include "Type.h"
 #include "Util.h"
 #include "Render.h"
@@ -63,8 +63,12 @@
 #include "ObjectManager.h"
 #include "Engine.h"
 
+
 //GRX
 #include "Subject.h"
 #include "ReactiveProperty.h"
+
+//spine
+#include "SpineModel.h"
 
 #include "Debug.h"
