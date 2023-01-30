@@ -78,7 +78,7 @@ void SkeletonJson::setError(const std::string& e1, const std::string& e2)
     m_error += e2;
 }
 
-SkeletonData* SkeletonJson::readSkeletonDataFile(const std::string& path)
+SkeletonData* SkeletonJson::readSkeletonDataFile(const std::wstring& path)
 {
     string json = Util_readFile(path);
 
