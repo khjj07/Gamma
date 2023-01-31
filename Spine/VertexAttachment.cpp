@@ -1,123 +1,167 @@
-////////////////////////////////////////////////////////////////////////////////
-// Spine Runtimes Software License
-// Version 2.4
-//
-// Copyright (c) 2013-2016, Esoteric Software
-// Copyright (c) 2016, Chobolabs
-// All rights reserved.
-//
-// You are granted a perpetual, non-exclusive, non-sublicensable and
-// non-transferable license to use, install, execute and perform the Spine
-// Runtimes Software (the "Software") and derivative works solely for personal
-// or internal use. Without the written permission of Esoteric Software (see
-// Section 2 of the Spine Software License Agreement), you may not (a) modify,
-// translate, adapt or otherwise create derivative works, improvements of
-// the Software or develop new applications using the Software or (b) remove,
-// delete, alter or obscure any trademarks or any copyright, trademark, patent
-// or other intellectual property or proprietary rights notices on or in the
-// Software, including any copy thereof. Redistributions in binary or source
-// form must include this license and terms.
-//
-// THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE AND CHOBOLABS "AS IS" AND ANY
-// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE OR CHOBOLABS BE LIABLE FOR
-// ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************
+ * Spine Runtimes License Agreement
+ * Last updated September 24, 2021. Replaces all prior versions.
+ *
+ * Copyright (c) 2013-2021, Esoteric Software LLC
+ *
+ * Integration of the Spine Runtimes into software or otherwise creating
+ * derivative works of the Spine Runtimes is permitted under the terms and
+ * conditions of Section 2 of the Spine Editor License Agreement:
+ * http://esotericsoftware.com/spine-editor-license
+ *
+ * Otherwise, it is permitted to integrate the Spine Runtimes into software
+ * or otherwise create derivative works of the Spine Runtimes (collectively,
+ * "Products"), provided that each user of the Products must obtain their own
+ * Spine Editor license and redistribution of the Products in any form must
+ * include this license and copyright notice.
+ *
+ * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
+ * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *****************************************************************************/
 
-#include "spinecpp/VertexAttachment.h"
-#include "spinecpp/Slot.h"
-#include "spinecpp/Bone.h"
-#include "spinecpp/Skeleton.h"
+#include "spine/VertexAttachment.h"
 
-namespace spine
-{
+#include "spine/Slot.h"
 
-VertexAttachment::VertexAttachment(const std::string& name, const Type type)
-    : Attachment(name, type)
-{
-    bones.reset(&m_bones);
-    vertices.reset(&m_vectices);
+#include "spine/Bone.h"
+#include "spine/Skeleton.h"
+
+using namespace spine;
+
+RTTI_IMPL(VertexAttachment, Attachment)
+
+VertexAttachment::VertexAttachment(const String &name) : Attachment(name), _worldVerticesLength(0),
+														 _timelineAttachment(this), _id(getNextID()) {
 }
 
-void VertexAttachment::computeWorldVertices(const Slot& slot, float* outWorldVertices) const
-{
-    computeWorldVertices(0, worldVerticesCount * 2, slot, outWorldVertices, 0);
+VertexAttachment::~VertexAttachment() {
 }
 
-void VertexAttachment::computeWorldVertices(int start, int count, const Slot& slot, float* outWorldVertices, int offset) const
-{
-    count += offset;
-    auto& skeleton = slot.bone.skeleton;
-    auto x = skeleton.translation.x;
-    auto y = skeleton.translation.y;
-    auto deformLength = slot.attachmentVertices.size() * 2;
-    auto fvertices = vertices.data();
-    auto deform = reinterpret_cast<const float*>(slot.attachmentVertices.data());
-    
-    if (bones.empty())
-    {
-        if (deformLength > 0) fvertices = deform;
-        auto& bone = slot.bone;
-        x += bone.worldPos.x;
-        y += bone.worldPos.y;
-        for (int v = start, w = offset; w < count; v += 2, w += 2) {
-            float vx = fvertices[v], vy = fvertices[v + 1];
-            outWorldVertices[w] = vx * bone.a + vy * bone.b + x;
-            outWorldVertices[w + 1] = vx * bone.c + vy * bone.d + y;
-        }
-    }
-    else
-    {
-        int v = 0, skip = 0;
-        for (int i = 0; i < start; i += 2)
-        {
-            int n = bones[v];
-            v += n + 1;
-            skip += n;
-        }
-
-        auto& skeletonBones = skeleton.bones;
-        if (deformLength == 0)
-        {
-            for (int w = offset, b = skip * 3; w < count; w += 2) {
-                float wx = x, wy = y;
-                int n = bones[v++];
-                n += v;
-                for (; v < n; v++, b += 3)
-                {
-                    auto& bone = skeletonBones[bones[v]];
-                    float vx = fvertices[b], vy = fvertices[b + 1], weight = fvertices[b + 2];
-                    wx += (vx * bone.a + vy * bone.b + bone.worldPos.x) * weight;
-                    wy += (vx * bone.c + vy * bone.d + bone.worldPos.y) * weight;
-                }
-                outWorldVertices[w] = wx;
-                outWorldVertices[w + 1] = wy;
-            }
-        }
-        else
-        {
-            for (int w = offset, b = skip * 3, f = skip << 1; w < count; w += 2) {
-                float wx = x, wy = y;
-                int n = bones[v++];
-                n += v;
-                for (; v < n; v++, b += 3, f += 2)
-                {
-                    auto& bone = skeletonBones[bones[v]];
-                    float vx = fvertices[b] + deform[f], vy = fvertices[b + 1] + deform[f + 1], weight = fvertices[b + 2];
-                    wx += (vx * bone.a + vy * bone.b + bone.worldPos.x) * weight;
-                    wy += (vx * bone.c + vy * bone.d + bone.worldPos.y) * weight;
-                }
-                outWorldVertices[w] = wx;
-                outWorldVertices[w + 1] = wy;
-            }
-        }
-    }
+void VertexAttachment::computeWorldVertices(Slot &slot, Vector<float> &worldVertices) {
+	computeWorldVertices(slot, 0, _worldVerticesLength, worldVertices, 0);
 }
 
+void VertexAttachment::computeWorldVertices(Slot &slot, float *worldVertices) {
+	computeWorldVertices(slot, 0, _worldVerticesLength, worldVertices, 0);
+}
+
+void VertexAttachment::computeWorldVertices(Slot &slot, size_t start, size_t count, Vector<float> &worldVertices,
+											size_t offset, size_t stride) {
+	computeWorldVertices(slot, start, count, worldVertices.buffer(), offset, stride);
+}
+
+void VertexAttachment::computeWorldVertices(Slot &slot, size_t start, size_t count, float *worldVertices, size_t offset,
+											size_t stride) {
+	count = offset + (count >> 1) * stride;
+	Skeleton &skeleton = slot._bone._skeleton;
+	Vector<float> *deformArray = &slot.getDeform();
+	Vector<float> *vertices = &_vertices;
+	Vector<size_t> &bones = _bones;
+	if (bones.size() == 0) {
+		if (deformArray->size() > 0) vertices = deformArray;
+
+		Bone &bone = slot._bone;
+		float x = bone._worldX;
+		float y = bone._worldY;
+		float a = bone._a, b = bone._b, c = bone._c, d = bone._d;
+		for (size_t vv = start, w = offset; w < count; vv += 2, w += stride) {
+			float vx = (*vertices)[vv];
+			float vy = (*vertices)[vv + 1];
+			worldVertices[w] = vx * a + vy * b + x;
+			worldVertices[w + 1] = vx * c + vy * d + y;
+		}
+		return;
+	}
+
+	int v = 0, skip = 0;
+	for (size_t i = 0; i < start; i += 2) {
+		int n = (int) bones[v];
+		v += n + 1;
+		skip += n;
+	}
+
+	Vector<Bone *> &skeletonBones = skeleton.getBones();
+	if (deformArray->size() == 0) {
+		for (size_t w = offset, b = skip * 3; w < count; w += stride) {
+			float wx = 0, wy = 0;
+			int n = (int) bones[v++];
+			n += v;
+			for (; v < n; v++, b += 3) {
+				Bone *boneP = skeletonBones[bones[v]];
+				Bone &bone = *boneP;
+				float vx = (*vertices)[b];
+				float vy = (*vertices)[b + 1];
+				float weight = (*vertices)[b + 2];
+				wx += (vx * bone._a + vy * bone._b + bone._worldX) * weight;
+				wy += (vx * bone._c + vy * bone._d + bone._worldY) * weight;
+			}
+			worldVertices[w] = wx;
+			worldVertices[w + 1] = wy;
+		}
+	} else {
+		for (size_t w = offset, b = skip * 3, f = skip << 1; w < count; w += stride) {
+			float wx = 0, wy = 0;
+			int n = (int) bones[v++];
+			n += v;
+			for (; v < n; v++, b += 3, f += 2) {
+				Bone *boneP = skeletonBones[bones[v]];
+				Bone &bone = *boneP;
+				float vx = (*vertices)[b] + (*deformArray)[f];
+				float vy = (*vertices)[b + 1] + (*deformArray)[f + 1];
+				float weight = (*vertices)[b + 2];
+				wx += (vx * bone._a + vy * bone._b + bone._worldX) * weight;
+				wy += (vx * bone._c + vy * bone._d + bone._worldY) * weight;
+			}
+			worldVertices[w] = wx;
+			worldVertices[w + 1] = wy;
+		}
+	}
+}
+
+int VertexAttachment::getId() {
+	return _id;
+}
+
+Vector<size_t> &VertexAttachment::getBones() {
+	return _bones;
+}
+
+Vector<float> &VertexAttachment::getVertices() {
+	return _vertices;
+}
+
+size_t VertexAttachment::getWorldVerticesLength() {
+	return _worldVerticesLength;
+}
+
+void VertexAttachment::setWorldVerticesLength(size_t inValue) {
+	_worldVerticesLength = inValue;
+}
+
+Attachment *VertexAttachment::getTimelineAttachment() {
+	return _timelineAttachment;
+}
+
+void VertexAttachment::setTimelineAttachment(Attachment *attachment) {
+	_timelineAttachment = attachment;
+}
+
+int VertexAttachment::getNextID() {
+	static int nextID = 0;
+	return nextID++;
+}
+
+void VertexAttachment::copyTo(VertexAttachment *other) {
+	other->_bones.clearAndAddAll(this->_bones);
+	other->_vertices.clearAndAddAll(this->_vertices);
+	other->_worldVerticesLength = this->_worldVerticesLength;
+	other->_timelineAttachment = this->_timelineAttachment;
 }

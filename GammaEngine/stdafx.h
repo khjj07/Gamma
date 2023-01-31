@@ -73,8 +73,9 @@
 #include "Engine.h"
 
 //spine
-#include "spinecpp/spinecpp.h"
 #include "SpineModel.h"
+#include "GammaTextureLoader.h"
+
 
 #include "Debug.h"
 

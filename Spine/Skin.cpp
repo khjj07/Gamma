@@ -1,111 +1,196 @@
-////////////////////////////////////////////////////////////////////////////////
-// Spine Runtimes Software License
-// Version 2.4
-//
-// Copyright (c) 2013-2016, Esoteric Software
-// Copyright (c) 2016, Chobolabs
-// All rights reserved.
-//
-// You are granted a perpetual, non-exclusive, non-sublicensable and
-// non-transferable license to use, install, execute and perform the Spine
-// Runtimes Software (the "Software") and derivative works solely for personal
-// or internal use. Without the written permission of Esoteric Software (see
-// Section 2 of the Spine Software License Agreement), you may not (a) modify,
-// translate, adapt or otherwise create derivative works, improvements of
-// the Software or develop new applications using the Software or (b) remove,
-// delete, alter or obscure any trademarks or any copyright, trademark, patent
-// or other intellectual property or proprietary rights notices on or in the
-// Software, including any copy thereof. Redistributions in binary or source
-// form must include this license and terms.
-//
-// THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE AND CHOBOLABS "AS IS" AND ANY
-// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE OR CHOBOLABS BE LIABLE FOR
-// ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-////////////////////////////////////////////////////////////////////////////////
-#include "spinecpp/Skin.h"
-#include "spinecpp/Attachment.h"
-#include "spinecpp/Skeleton.h"
-#include "spinecpp/AttachmentLoader.h"
+/******************************************************************************
+ * Spine Runtimes License Agreement
+ * Last updated September 24, 2021. Replaces all prior versions.
+ *
+ * Copyright (c) 2013-2021, Esoteric Software LLC
+ *
+ * Integration of the Spine Runtimes into software or otherwise creating
+ * derivative works of the Spine Runtimes is permitted under the terms and
+ * conditions of Section 2 of the Spine Editor License Agreement:
+ * http://esotericsoftware.com/spine-editor-license
+ *
+ * Otherwise, it is permitted to integrate the Spine Runtimes into software
+ * or otherwise create derivative works of the Spine Runtimes (collectively,
+ * "Products"), provided that each user of the Products must obtain their own
+ * Spine Editor license and redistribution of the Products in any form must
+ * include this license and copyright notice.
+ *
+ * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
+ * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *****************************************************************************/
 
-namespace spine
-{
+#include "spine/Skin.h"
 
-Skin::Skin(const std::wstring& name)
-    : name(name)
-{
+#include "spine/Attachment.h"
+#include "spine/MeshAttachment.h"
+#include "spine/Skeleton.h"
 
+#include "spine/ConstraintData.h"
+#include "spine/Slot.h"
+
+#include <assert.h>
+
+using namespace spine;
+
+Skin::AttachmentMap::AttachmentMap() {
 }
 
-Skin::~Skin()
-{
-    for (auto& e : m_entries)
-    {
-        if (e.attachment->loader)
-        {
-            e.attachment->loader->onDestroyingAttachment(e.attachment);
-        }
-        delete e.attachment;
-    }
+static void disposeAttachment(Attachment *attachment) {
+	if (!attachment) return;
+	attachment->dereference();
+	if (attachment->getRefCount() == 0) delete attachment;
 }
 
-void Skin::addAttachment(int slotIndex, const std::wstring& name, Attachment* attachment)
-{
-    m_entries.emplace_back(slotIndex, name, attachment);
+void Skin::AttachmentMap::put(size_t slotIndex, const String &attachmentName, Attachment *attachment) {
+	if (slotIndex >= _buckets.size())
+		_buckets.setSize(slotIndex + 1, Vector<Entry>());
+	Vector<Entry> &bucket = _buckets[slotIndex];
+	int existing = findInBucket(bucket, attachmentName);
+	attachment->reference();
+	if (existing >= 0) {
+		disposeAttachment(bucket[existing]._attachment);
+		bucket[existing]._attachment = attachment;
+	} else {
+		bucket.add(Entry(slotIndex, attachmentName, attachment));
+	}
 }
 
-const Attachment* Skin::getAttachment(int slotIndex, const wchar_t* attachmentName) const
-{
-    for (auto& e : m_entries)
-    {
-        if (e.slotIndex == slotIndex && e.name == attachmentName)
-        {
-            return e.attachment;
-        }
-    }
-
-    return nullptr;
+Attachment *Skin::AttachmentMap::get(size_t slotIndex, const String &attachmentName) {
+	if (slotIndex >= _buckets.size()) return NULL;
+	int existing = findInBucket(_buckets[slotIndex], attachmentName);
+	return existing >= 0 ? _buckets[slotIndex][existing]._attachment : NULL;
 }
 
-/* Returns nullptr if the slot or attachment was not found. */
-const wchar_t* Skin::getAttachmentName(int slotIndex, int attachmentIndex) const
-{
-    int i = 0;
-    for (auto& e : m_entries)
-    {
-        if (e.slotIndex == slotIndex)
-        {
-            if (i == attachmentIndex)
-            {
-                return e.name.c_str();
-            }
-            ++i;
-        }
-    }
-
-    return nullptr;
+void Skin::AttachmentMap::remove(size_t slotIndex, const String &attachmentName) {
+	if (slotIndex >= _buckets.size()) return;
+	int existing = findInBucket(_buckets[slotIndex], attachmentName);
+	if (existing >= 0) {
+		disposeAttachment(_buckets[slotIndex][existing]._attachment);
+		_buckets[slotIndex].removeAt(existing);
+	}
 }
 
-void Skin::attachAll(Skeleton& skeleton, const Skin& oldSkin) const
-{
-    for (auto& e : oldSkin.m_entries)
-    {
-        auto& slot = skeleton.slots[e.slotIndex];
-        if (slot.getAttachment() == e.attachment)
-        {
-            auto newAttachment = getAttachment(e.slotIndex, e.name.c_str());
-            if (newAttachment)
-            {
-                slot.setAttachment(newAttachment);
-            }
-        }
-    }
+int Skin::AttachmentMap::findInBucket(Vector<Entry> &bucket, const String &attachmentName) {
+	for (size_t i = 0; i < bucket.size(); i++)
+		if (bucket[i]._name == attachmentName) return (int) i;
+	return -1;
 }
 
+Skin::AttachmentMap::Entries Skin::AttachmentMap::getEntries() {
+	return Skin::AttachmentMap::Entries(_buckets);
+}
+
+Skin::Skin(const String &name) : _name(name), _attachments() {
+	assert(_name.length() > 0);
+}
+
+Skin::~Skin() {
+	Skin::AttachmentMap::Entries entries = _attachments.getEntries();
+	while (entries.hasNext()) {
+		Skin::AttachmentMap::Entry entry = entries.next();
+		disposeAttachment(entry._attachment);
+	}
+}
+
+void Skin::setAttachment(size_t slotIndex, const String &name, Attachment *attachment) {
+	assert(attachment);
+	_attachments.put(slotIndex, name, attachment);
+}
+
+Attachment *Skin::getAttachment(size_t slotIndex, const String &name) {
+	return _attachments.get(slotIndex, name);
+}
+
+void Skin::removeAttachment(size_t slotIndex, const String &name) {
+	_attachments.remove(slotIndex, name);
+}
+
+void Skin::findNamesForSlot(size_t slotIndex, Vector<String> &names) {
+	Skin::AttachmentMap::Entries entries = _attachments.getEntries();
+	while (entries.hasNext()) {
+		Skin::AttachmentMap::Entry &entry = entries.next();
+		if (entry._slotIndex == slotIndex) {
+			names.add(entry._name);
+		}
+	}
+}
+
+void Skin::findAttachmentsForSlot(size_t slotIndex, Vector<Attachment *> &attachments) {
+	Skin::AttachmentMap::Entries entries = _attachments.getEntries();
+	while (entries.hasNext()) {
+		Skin::AttachmentMap::Entry &entry = entries.next();
+		if (entry._slotIndex == slotIndex) attachments.add(entry._attachment);
+	}
+}
+
+const String &Skin::getName() {
+	return _name;
+}
+
+Skin::AttachmentMap::Entries Skin::getAttachments() {
+	return _attachments.getEntries();
+}
+
+void Skin::attachAll(Skeleton &skeleton, Skin &oldSkin) {
+	Vector<Slot *> &slots = skeleton.getSlots();
+	Skin::AttachmentMap::Entries entries = oldSkin.getAttachments();
+	while (entries.hasNext()) {
+		Skin::AttachmentMap::Entry &entry = entries.next();
+		int slotIndex = (int) entry._slotIndex;
+		Slot *slot = slots[slotIndex];
+
+		if (slot->getAttachment() == entry._attachment) {
+			Attachment *attachment = getAttachment(slotIndex, entry._name);
+			if (attachment) slot->setAttachment(attachment);
+		}
+	}
+}
+
+void Skin::addSkin(Skin *other) {
+	for (size_t i = 0; i < other->getBones().size(); i++)
+		if (!_bones.contains(other->getBones()[i])) _bones.add(other->getBones()[i]);
+
+	for (size_t i = 0; i < other->getConstraints().size(); i++)
+		if (!_constraints.contains(other->getConstraints()[i])) _constraints.add(other->getConstraints()[i]);
+
+	AttachmentMap::Entries entries = other->getAttachments();
+	while (entries.hasNext()) {
+		AttachmentMap::Entry &entry = entries.next();
+		entry._attachment->reference();
+		setAttachment(entry._slotIndex, entry._name, entry._attachment);
+	}
+}
+
+void Skin::copySkin(Skin *other) {
+	for (size_t i = 0; i < other->getBones().size(); i++)
+		if (!_bones.contains(other->getBones()[i])) _bones.add(other->getBones()[i]);
+
+	for (size_t i = 0; i < other->getConstraints().size(); i++)
+		if (!_constraints.contains(other->getConstraints()[i])) _constraints.add(other->getConstraints()[i]);
+
+	AttachmentMap::Entries entries = other->getAttachments();
+	while (entries.hasNext()) {
+		AttachmentMap::Entry &entry = entries.next();
+		if (entry._attachment->getRTTI().isExactly(MeshAttachment::rtti))
+			setAttachment(entry._slotIndex, entry._name,
+						  static_cast<MeshAttachment *>(entry._attachment)->newLinkedMesh());
+		else
+			setAttachment(entry._slotIndex, entry._name, entry._attachment->copy());
+	}
+}
+
+Vector<ConstraintData *> &Skin::getConstraints() {
+	return _constraints;
+}
+
+Vector<BoneData *> &Skin::getBones() {
+	return _bones;
 }

@@ -1,110 +1,86 @@
-////////////////////////////////////////////////////////////////////////////////
-// Spine Runtimes Software License
-// Version 2.4
-//
-// Copyright (c) 2013-2016, Esoteric Software
-// Copyright (c) 2016, Chobolabs
-// All rights reserved.
-//
-// You are granted a perpetual, non-exclusive, non-sublicensable and
-// non-transferable license to use, install, execute and perform the Spine
-// Runtimes Software (the "Software") and derivative works solely for personal
-// or internal use. Without the written permission of Esoteric Software (see
-// Section 2 of the Spine Software License Agreement), you may not (a) modify,
-// translate, adapt or otherwise create derivative works, improvements of
-// the Software or develop new applications using the Software or (b) remove,
-// delete, alter or obscure any trademarks or any copyright, trademark, patent
-// or other intellectual property or proprietary rights notices on or in the
-// Software, including any copy thereof. Redistributions in binary or source
-// form must include this license and terms.
-//
-// THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE AND CHOBOLABS "AS IS" AND ANY
-// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE OR CHOBOLABS BE LIABLE FOR
-// ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-////////////////////////////////////////////////////////////////////////////////
-#include "spinecpp/AnimationStateData.h"
-#include "spinecpp/Animation.h"
-#include "spinecpp/SkeletonData.h"
+/******************************************************************************
+ * Spine Runtimes License Agreement
+ * Last updated September 24, 2021. Replaces all prior versions.
+ *
+ * Copyright (c) 2013-2021, Esoteric Software LLC
+ *
+ * Integration of the Spine Runtimes into software or otherwise creating
+ * derivative works of the Spine Runtimes is permitted under the terms and
+ * conditions of Section 2 of the Spine Editor License Agreement:
+ * http://esotericsoftware.com/spine-editor-license
+ *
+ * Otherwise, it is permitted to integrate the Spine Runtimes into software
+ * or otherwise create derivative works of the Spine Runtimes (collectively,
+ * "Products"), provided that each user of the Products must obtain their own
+ * Spine Editor license and redistribution of the Products in any form must
+ * include this license and copyright notice.
+ *
+ * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
+ * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *****************************************************************************/
 
-namespace spine
-{
+#include "spine/AnimationStateData.h"
+#include "spine/SpineAnimation.h"
+#include "spine/SkeletonData.h"
 
-AnimationStateData::AnimationStateData(const SkeletonData& skeletonData)
-    : skeletonData(skeletonData)
-{
+using namespace spine;
+
+AnimationStateData::AnimationStateData(SkeletonData *skeletonData) : _skeletonData(skeletonData), _defaultMix(0) {
 }
 
-void AnimationStateData::setMixByName(const std::string& fromName, const std::string& toName, float duration)
-{
-    auto from = skeletonData.findAnimation(fromName.c_str());
-    if (!from) return;
-    auto to = skeletonData.findAnimation(toName.c_str());
-    if (!to) return;
+void AnimationStateData::setMix(const String &fromName, const String &toName, float duration) {
+	SpineAnimation*from = _skeletonData->findAnimation(fromName);
+	SpineAnimation*to = _skeletonData->findAnimation(toName);
 
-    setMix(from, to, duration);
+	setMix(from, to, duration);
 }
 
-void AnimationStateData::setMix(const Animation* from, const Animation* to, float duration)
-{
-    /* Find existing FromEntry. */
-    FromEntry* fromEntry = nullptr;
-    for (auto& fe : m_fromEntries)
-    {
-        if (fe.animation == from)
-        {
-            for (auto& te : fe.toEntries)
-            {
-                if (te.animation == to)
-                {
-                    te.duration = duration;
-                    return;
-                }
-            }
+void AnimationStateData::setMix(SpineAnimation*from, SpineAnimation*to, float duration) {
+	assert(from != NULL);
+	assert(to != NULL);
 
-            fromEntry = &fe;
-            break; /* Add new ToEntry to the existing FromEntry. */
-        }
-    }
-
-    if (!fromEntry)
-    {
-        m_fromEntries.resize(m_fromEntries.size() + 1);
-        fromEntry = &m_fromEntries.back();
-        fromEntry->animation = from;
-    }
-
-    auto& toEntries = fromEntry->toEntries;
-    toEntries.resize(toEntries.size() + 1);
-    toEntries.back().animation = to;
-    toEntries.back().duration = duration;
+	AnimationPair key(from, to);
+	_animationToMixTime.put(key, duration);
 }
 
-float AnimationStateData::getMix(const Animation* from, const Animation* to) const
-{
-    for (auto& fe : m_fromEntries)
-    {
-        if (fe.animation == from)
-        {
-            for (auto& te : fe.toEntries)
-            {
-                if (te.animation == to)
-                {
-                    return te.duration;
-                }
-            }
+float AnimationStateData::getMix(SpineAnimation*from, SpineAnimation*to) {
+	assert(from != NULL);
+	assert(to != NULL);
 
-            break; /* we shouldn't have two entries for the same animation */
-        }
-    }
+	AnimationPair key(from, to);
 
-    return defaultMix;
+	if (_animationToMixTime.containsKey(key)) return _animationToMixTime[key];
+	return _defaultMix;
 }
 
+SkeletonData *AnimationStateData::getSkeletonData() {
+	return _skeletonData;
+}
+
+float AnimationStateData::getDefaultMix() {
+	return _defaultMix;
+}
+
+void AnimationStateData::setDefaultMix(float inValue) {
+	_defaultMix = inValue;
+}
+
+void AnimationStateData::clear() {
+	_defaultMix = 0;
+	_animationToMixTime.clear();
+}
+
+AnimationStateData::AnimationPair::AnimationPair(SpineAnimation*a1, SpineAnimation*a2) : _a1(a1), _a2(a2) {
+}
+
+bool AnimationStateData::AnimationPair::operator==(const AnimationPair &other) const {
+	return _a1->_name == other._a1->_name && _a2->_name == other._a2->_name;
 }

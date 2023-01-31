@@ -74,9 +74,9 @@ void GammaEngine::GraphicSystem::DrawBitmap(wstring bitmap, vector2 size, Matrix
 	render->DrawBitmap(bitmap, size, matrix, material);
 }
 
-void GammaEngine::GraphicSystem::DrawBitmap(wstring bitmap, vector2 size, vector2 leftTop, vector2 rightBottom, Matrix3x3 matrix, Material* material)
+void GammaEngine::GraphicSystem::DrawBitmap(wstring bitmap, vector2 size, vector2 offset, Matrix3x3 matrix, Material* material)
 {
-	render->DrawBitmap(bitmap, size, leftTop, rightBottom, matrix, material);
+	render->DrawBitmap(bitmap, size, offset, matrix, material);
 }
 
 

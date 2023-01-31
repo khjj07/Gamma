@@ -1,347 +1,535 @@
-////////////////////////////////////////////////////////////////////////////////
-// Spine Runtimes Software License
-// Version 2.4
-//
-// Copyright (c) 2013-2016, Esoteric Software
-// Copyright (c) 2016, Chobolabs
-// All rights reserved.
-//
-// You are granted a perpetual, non-exclusive, non-sublicensable and
-// non-transferable license to use, install, execute and perform the Spine
-// Runtimes Software (the "Software") and derivative works solely for personal
-// or internal use. Without the written permission of Esoteric Software (see
-// Section 2 of the Spine Software License Agreement), you may not (a) modify,
-// translate, adapt or otherwise create derivative works, improvements of
-// the Software or develop new applications using the Software or (b) remove,
-// delete, alter or obscure any trademarks or any copyright, trademark, patent
-// or other intellectual property or proprietary rights notices on or in the
-// Software, including any copy thereof. Redistributions in binary or source
-// form must include this license and terms.
-//
-// THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE AND CHOBOLABS "AS IS" AND ANY
-// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE OR CHOBOLABS BE LIABLE FOR
-// ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-////////////////////////////////////////////////////////////////////////////////
-#include "spinecpp/Bone.h"
-#include "spinecpp/Skeleton.h"
-#include "spinecpp/extension.h"
+/******************************************************************************
+ * Spine Runtimes License Agreement
+ * Last updated September 24, 2021. Replaces all prior versions.
+ *
+ * Copyright (c) 2013-2021, Esoteric Software LLC
+ *
+ * Integration of the Spine Runtimes into software or otherwise creating
+ * derivative works of the Spine Runtimes is permitted under the terms and
+ * conditions of Section 2 of the Spine Editor License Agreement:
+ * http://esotericsoftware.com/spine-editor-license
+ *
+ * Otherwise, it is permitted to integrate the Spine Runtimes into software
+ * or otherwise create derivative works of the Spine Runtimes (collectively,
+ * "Products"), provided that each user of the Products must obtain their own
+ * Spine Editor license and redistribution of the Products in any form must
+ * include this license and copyright notice.
+ *
+ * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
+ * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *****************************************************************************/
 
-#include <cmath>
+#include "spine/Bone.h"
 
-using namespace std;
+#include "spine/BoneData.h"
+#include "spine/Skeleton.h"
 
-namespace
-{
+using namespace spine;
 
-inline float sin_deg(float f)
-{
-    return sin(f * DEG_RAD);
+RTTI_IMPL(Bone, Updatable)
+
+bool Bone::yDown = false;
+
+void Bone::setYDown(bool inValue) {
+	yDown = inValue;
 }
 
-inline float cos_deg(float f)
-{
-    return cos(f * DEG_RAD);
+bool Bone::isYDown() {
+	return yDown;
 }
 
+Bone::Bone(BoneData &data, Skeleton &skeleton, Bone *parent) : Updatable(),
+															   _data(data),
+															   _skeleton(skeleton),
+															   _parent(parent),
+															   _x(0),
+															   _y(0),
+															   _rotation(0),
+															   _scaleX(0),
+															   _scaleY(0),
+															   _shearX(0),
+															   _shearY(0),
+															   _ax(0),
+															   _ay(0),
+															   _arotation(0),
+															   _ascaleX(0),
+															   _ascaleY(0),
+															   _ashearX(0),
+															   _ashearY(0),
+															   _a(1),
+															   _b(0),
+															   _worldX(0),
+															   _c(0),
+															   _d(1),
+															   _worldY(0),
+															   _sorted(false),
+															   _active(false) {
+	setToSetupPose();
 }
 
-namespace spine
-{
-
-bool Bone::m_isYDown = false;
-
-void Bone::setYDown(bool yDown)
-{
-    m_isYDown = yDown;
+void Bone::update() {
+	updateWorldTransform(_ax, _ay, _arotation, _ascaleX, _ascaleY, _ashearX, _ashearY);
 }
 
-bool Bone::isYDown()
-{
-    return m_isYDown;
+void Bone::updateWorldTransform() {
+	updateWorldTransform(_x, _y, _rotation, _scaleX, _scaleY, _shearX, _shearY);
 }
 
-Bone::Bone(const BoneData& data, const Skeleton& skeleton, Bone* parent)
-    : data(data)
-    , skeleton(skeleton)
-    , parent(parent)
-{
-    setToSetupPose();
+void Bone::updateWorldTransform(float x, float y, float rotation, float scaleX, float scaleY, float shearX, float shearY) {
+	float cosine, sine;
+	float pa, pb, pc, pd;
+	Bone *parent = _parent;
+
+	_ax = x;
+	_ay = y;
+	_arotation = rotation;
+	_ascaleX = scaleX;
+	_ascaleY = scaleY;
+	_ashearX = shearX;
+	_ashearY = shearY;
+
+	if (!parent) { /* Root bone. */
+		float rotationY = rotation + 90 + shearY;
+		float sx = _skeleton.getScaleX();
+		float sy = _skeleton.getScaleY();
+		_a = MathUtil::cosDeg(rotation + shearX) * scaleX * sx;
+		_b = MathUtil::cosDeg(rotationY) * scaleY * sx;
+		_c = MathUtil::sinDeg(rotation + shearX) * scaleX * sy;
+		_d = MathUtil::sinDeg(rotationY) * scaleY * sy;
+		_worldX = x * sx + _skeleton.getX();
+		_worldY = y * sy + _skeleton.getY();
+		return;
+	}
+
+	pa = parent->_a;
+	pb = parent->_b;
+	pc = parent->_c;
+	pd = parent->_d;
+
+	_worldX = pa * x + pb * y + parent->_worldX;
+	_worldY = pc * x + pd * y + parent->_worldY;
+
+	switch (_data.getTransformMode()) {
+		case TransformMode_Normal: {
+			float rotationY = rotation + 90 + shearY;
+			float la = MathUtil::cosDeg(rotation + shearX) * scaleX;
+			float lb = MathUtil::cosDeg(rotationY) * scaleY;
+			float lc = MathUtil::sinDeg(rotation + shearX) * scaleX;
+			float ld = MathUtil::sinDeg(rotationY) * scaleY;
+			_a = pa * la + pb * lc;
+			_b = pa * lb + pb * ld;
+			_c = pc * la + pd * lc;
+			_d = pc * lb + pd * ld;
+			return;
+		}
+		case TransformMode_OnlyTranslation: {
+			float rotationY = rotation + 90 + shearY;
+			_a = MathUtil::cosDeg(rotation + shearX) * scaleX;
+			_b = MathUtil::cosDeg(rotationY) * scaleY;
+			_c = MathUtil::sinDeg(rotation + shearX) * scaleX;
+			_d = MathUtil::sinDeg(rotationY) * scaleY;
+			break;
+		}
+		case TransformMode_NoRotationOrReflection: {
+			float s = pa * pa + pc * pc;
+			float prx, rx, ry, la, lb, lc, ld;
+			if (s > 0.0001f) {
+				s = MathUtil::abs(pa * pd - pb * pc) / s;
+				pa /= _skeleton.getScaleX();
+				pc /= _skeleton.getScaleY();
+				pb = pc * s;
+				pd = pa * s;
+				prx = MathUtil::atan2(pc, pa) * MathUtil::Rad_Deg;
+			} else {
+				pa = 0;
+				pc = 0;
+				prx = 90 - MathUtil::atan2(pd, pb) * MathUtil::Rad_Deg;
+			}
+			rx = rotation + shearX - prx;
+			ry = rotation + shearY - prx + 90;
+			la = MathUtil::cosDeg(rx) * scaleX;
+			lb = MathUtil::cosDeg(ry) * scaleY;
+			lc = MathUtil::sinDeg(rx) * scaleX;
+			ld = MathUtil::sinDeg(ry) * scaleY;
+			_a = pa * la - pb * lc;
+			_b = pa * lb - pb * ld;
+			_c = pc * la + pd * lc;
+			_d = pc * lb + pd * ld;
+			break;
+		}
+		case TransformMode_NoScale:
+		case TransformMode_NoScaleOrReflection: {
+			float za, zc, s;
+			float r, zb, zd, la, lb, lc, ld;
+			cosine = MathUtil::cosDeg(rotation);
+			sine = MathUtil::sinDeg(rotation);
+			za = (pa * cosine + pb * sine) / _skeleton.getScaleX();
+			zc = (pc * cosine + pd * sine) / _skeleton.getScaleY();
+			s = MathUtil::sqrt(za * za + zc * zc);
+			if (s > 0.00001f) s = 1 / s;
+			za *= s;
+			zc *= s;
+			s = MathUtil::sqrt(za * za + zc * zc);
+			if (_data.getTransformMode() == TransformMode_NoScale &&
+				(pa * pd - pb * pc < 0) != (_skeleton.getScaleX() < 0 != _skeleton.getScaleY() < 0))
+				s = -s;
+			r = MathUtil::Pi / 2 + MathUtil::atan2(zc, za);
+			zb = MathUtil::cos(r) * s;
+			zd = MathUtil::sin(r) * s;
+			la = MathUtil::cosDeg(shearX) * scaleX;
+			lb = MathUtil::cosDeg(90 + shearY) * scaleY;
+			lc = MathUtil::sinDeg(shearX) * scaleX;
+			ld = MathUtil::sinDeg(90 + shearY) * scaleY;
+			_a = za * la + zb * lc;
+			_b = za * lb + zb * ld;
+			_c = zc * la + zd * lc;
+			_d = zc * lb + zd * ld;
+			break;
+		}
+	}
+	_a *= _skeleton.getScaleX();
+	_b *= _skeleton.getScaleX();
+	_c *= _skeleton.getScaleY();
+	_d *= _skeleton.getScaleY();
 }
 
-void Bone::setToSetupPose()
-{
-    translation = data.translation;
-    rotation = data.rotation;
-    scale = data.scale;
-    shear = data.shear;
+void Bone::setToSetupPose() {
+	BoneData &data = _data;
+	_x = data.getX();
+	_y = data.getY();
+	_rotation = data.getRotation();
+	_scaleX = data.getScaleX();
+	_scaleY = data.getScaleY();
+	_shearX = data.getShearX();
+	_shearY = data.getShearY();
 }
 
-void Bone::updateWorldTransform()
-{
-    updateWorldTransformWith(translation, rotation, scale, shear);
+void Bone::worldToLocal(float worldX, float worldY, float &outLocalX, float &outLocalY) {
+	float a = _a;
+	float b = _b;
+	float c = _c;
+	float d = _d;
+
+	float invDet = 1 / (a * d - b * c);
+	float x = worldX - _worldX;
+	float y = worldY - _worldY;
+
+	outLocalX = (x * d * invDet - y * b * invDet);
+	outLocalY = (y * a * invDet - x * c * invDet);
 }
 
-void Bone::updateWorldTransformWith(Vector translation, float rotation, Vector scale, Vector shear)
-{
-    appliedRotation = rotation;
-
-    float rotationY = rotation + 90 + shear.y;
-    float la = cos_deg(rotation + shear.x) * scale.x, lb = cos_deg(rotationY) * scale.y;
-    float lc = sin_deg(rotation + shear.x) * scale.x, ld = sin_deg(rotationY) * scale.y;
-
-    if (!parent) // Root bone.
-    {
-        if (skeleton.flipX)
-        {
-            translation.x = -translation.x;
-            la = -la;
-            lb = -lb;
-        }
-
-        if (skeleton.flipY != m_isYDown)
-        {
-            translation.y = -translation.y;
-            lc = -lc;
-            ld = -ld;
-        }
-
-        a = la;
-        b = lb;
-        c = lc;
-        d = ld;
-        worldPos = translation;
-        worldSign.x = scale.x > 0 ? 1.f : -1.f;
-        worldSign.y = scale.y > 0 ? 1.f : -1.f;
-
-        return;
-    }
-
-    float pa = parent->a;
-    float pb = parent->b;
-    float pc = parent->c;
-    float pd = parent->d;
-
-    worldPos.x = pa * translation.x + pb * translation.y + parent->worldPos.x;
-    worldPos.y = pc * translation.x + pd * translation.y + parent->worldPos.y;
-
-    worldSign.x = parent->worldSign.x * (scale.x > 0 ? 1.f : -1.f);
-    worldSign.y = parent->worldSign.y * (scale.y > 0 ? 1.f : -1.f);
-
-    if (data.inheritRotation && data.inheritScale)
-    {
-        a = pa * la + pb * lc;
-        b = pa * lb + pb * ld;
-        c = pc * la + pd * lc;
-        d = pc * lb + pd * ld;
-    }
-    else 
-    {
-        if (data.inheritRotation) /* No scale inheritance. */
-        {
-            pa = 1;
-            pb = 0;
-            pc = 0;
-            pd = 1;
-
-            auto p = parent;
-
-            do
-            {
-                float cosine = cos_deg(p->appliedRotation); 
-                float sine = sin_deg(p->appliedRotation);
-                float temp = pa * cosine + pb * sine;
-                pb = pb * cosine - pa * sine;
-                pa = temp;
-                temp = pc * cosine + pd * sine;
-                pd = pd * cosine - pc * sine;
-                pc = temp;
-
-                if (!p->data.inheritRotation) break;
-                p = p->parent;
-            } while (p);
-
-            a = pa * la + pb * lc;
-            b = pa * lb + pb * ld;
-            c = pc * la + pd * lc;
-            d = pc * lb + pd * ld;
-        }
-        else if (data.inheritScale) /* No rotation inheritance. */
-        {
-            pa = 1;
-            pb = 0;
-            pc = 0;
-            pd = 1;
-
-            auto p = parent;
-
-            do {
-                float za, zb, zc, zd;
-
-                float psx = p->scale.x, psy = p->scale.y;
-                float cosine = cos_deg(p->appliedRotation);
-                float sine = sin_deg(p->appliedRotation);
-                za = cosine * psx; zb = sine * psy; zc = sine * psx; zd = cosine * psy;
-                float temp = pa * za + pb * zc;
-                pb = pb * zd - pa * zb;
-                pa = temp;
-                temp = pc * za + pd * zc;
-                pd = pd * zd - pc * zb;
-                pc = temp;
-
-                if (psx >= 0) sine = -sine;
-                temp = pa * cosine + pb * sine;
-                pb = pb * cosine - pa * sine;
-                pa = temp;
-                temp = pc * cosine + pd * sine;
-                pd = pd * cosine - pc * sine;
-                pc = temp;
-
-                if (!p->data.inheritScale) break;
-                p = p->parent;
-            } while (p);
-
-
-            a = pa * la + pb * lc;
-            b = pa * lb + pb * ld;
-            c = pc * la + pd * lc;
-            d = pc * lb + pd * ld;
-        }
-        else
-        {
-            a = la;
-            b = lb;
-            c = lc;
-            d = ld;
-        }
-
-        if (skeleton.flipX)
-        {
-            a = -a;
-            b = -b;
-        }
-
-        if (skeleton.flipY != m_isYDown)
-        {
-            c = -c;
-            d = -d;
-        }
-    }
+void Bone::localToWorld(float localX, float localY, float &outWorldX, float &outWorldY) {
+	outWorldX = localX * _a + localY * _b + _worldX;
+	outWorldY = localX * _c + localY * _d + _worldY;
 }
 
-float Bone::getWorldRotationX() const
-{
-    return atan2(c, a) * RAD_DEG;
+float Bone::worldToLocalRotation(float worldRotation) {
+	float sin = MathUtil::sinDeg(worldRotation);
+	float cos = MathUtil::cosDeg(worldRotation);
+
+	return MathUtil::atan2(_a * sin - _c * cos, _d * cos - _b * sin) * MathUtil::Rad_Deg + this->_rotation -
+		   this->_shearX;
 }
 
-float Bone::getWorldRotationY() const
-{
-    return atan2(d, b) * RAD_DEG;
+float Bone::localToWorldRotation(float localRotation) {
+	localRotation -= this->_rotation - this->_shearX;
+	float sin = MathUtil::sinDeg(localRotation);
+	float cos = MathUtil::cosDeg(localRotation);
+
+	return MathUtil::atan2(cos * _c + sin * _d, cos * _a + sin * _b) * MathUtil::Rad_Deg;
 }
 
-float Bone::getWorldScaleX() const
-{
-    return sqrt(a * a + c * c) * worldSign.x;
+void Bone::rotateWorld(float degrees) {
+	float a = _a;
+	float b = _b;
+	float c = _c;
+	float d = _d;
+
+	float cos = MathUtil::cosDeg(degrees);
+	float sin = MathUtil::sinDeg(degrees);
+
+	_a = cos * a - sin * c;
+	_b = cos * b - sin * d;
+	_c = sin * a + cos * c;
+	_d = sin * b + cos * d;
 }
 
-float Bone::getWorldScaleY() const
-{
-    return sqrt(b * b + d * d) * worldSign.y;
+float Bone::getWorldToLocalRotationX() {
+	Bone *parent = _parent;
+	if (!parent) {
+		return _arotation;
+	}
+
+	float pa = parent->_a;
+	float pb = parent->_b;
+	float pc = parent->_c;
+	float pd = parent->_d;
+	float a = _a;
+	float c = _c;
+
+	return MathUtil::atan2(pa * c - pc * a, pd * a - pb * c) * MathUtil::Rad_Deg;
 }
 
-float Bone::worldToLocalRotationX() const
-{
-    if (!parent) return rotation;
-    return atan2(parent->a * c - parent->c * a, parent->d * a - parent->b * c) * RAD_DEG;
+float Bone::getWorldToLocalRotationY() {
+	Bone *parent = _parent;
+	if (!parent) {
+		return _arotation;
+	}
+
+	float pa = parent->_a;
+	float pb = parent->_b;
+	float pc = parent->_c;
+	float pd = parent->_d;
+	float b = _b;
+	float d = _d;
+
+	return MathUtil::atan2(pa * d - pc * b, pd * b - pb * d) * MathUtil::Rad_Deg;
 }
 
-float Bone::worldToLocalRotationY() const
-{
-    if (!parent) return rotation;
-    return atan2(parent->a * d - parent->c * b, parent->d * b - parent->b * d) * RAD_DEG;
+BoneData &Bone::getData() {
+	return _data;
 }
 
-void Bone::rotateWorld(float degrees)
-{
-    float cosine = cos_deg(degrees), sine = sin_deg(degrees);
-
-    float a = this->a, b = this->b, c = this->c, d = this->d;
-
-    this->a = cosine * a - sine * c;
-    this->b = cosine * b - sine * d;
-    this->c = sine * a + cosine * c;
-    this->d = sine * b + cosine * d;
+Skeleton &Bone::getSkeleton() {
+	return _skeleton;
 }
 
-/** Computes the local transform from the world transform. This can be useful to perform processing on the local transform
-* after the world transform has been modified directly (eg, by a constraint).
-* <p>
-* Some redundant information is lost by the world transform, such as -1,-1 scale versus 180 rotation. The computed local
-* transform values may differ from the original values but are functionally the same. */
-void Bone::updateLocalTransform()
-{
-    if (!parent)
-    {
-        float det = a * d - b * c;
-        translation = worldPos;
-        rotation = atan2(c, a) * RAD_DEG;
-        scale.x = sqrt(a * a + c * c);
-        scale.y = sqrt(b * b + d * d);
-        shear.x = 0;
-        shear.y = atan2(a * b + c * d, det) * RAD_DEG;
-    }
-    else {
-        float pa = parent->a, pb = parent->b, pc = parent->c, pd = parent->d;
-        float pid = 1 / (pa * pd - pb * pc);
-        float dx = worldPos.x - parent->worldPos.x, dy = worldPos.y - parent->worldPos.y;
-        float ia = pid * pd;
-        float id = pid * pa;
-        float ib = pid * pb;
-        float ic = pid * pc;
-        float ra = ia * a - ib * c;
-        float rb = ia * b - ib * d;
-        float rc = id * c - ic * a;
-        float rd = id * d - ic * b;
-        translation.x = (dx * pd * pid - dy * pb * pid);
-        translation.y = (dy * pa * pid - dx * pc * pid);
-        shear.x = 0;
-        scale.x = sqrt(ra * ra + rc * rc);
-        if (scale.x > 0.0001f)
-        {
-            float det = ra * rd - rb * rc;
-            scale.y = det / scale.x;
-            shear.y = atan2(ra * rb + rc * rd, det) * RAD_DEG;
-            rotation = atan2(rc, ra) * RAD_DEG;
-        }
-        else
-        {
-            scale.x = 0;
-            scale.y = sqrt(rb * rb + rd * rd);
-            shear.y = 0;
-            rotation = 90 - atan2(rd, rb) * RAD_DEG;
-        }
-        appliedRotation = rotation;
-    }
+Bone *Bone::getParent() {
+	return _parent;
 }
 
-void Bone::worldToLocal(Vector world, Vector& outLocal)
-{
-    float invDet = 1 / (a * d - b * c);
-    float x = world.x - worldPos.x, y = world.y - worldPos.y;
-    outLocal.x = (x * d * invDet - y * b * invDet);
-    outLocal.y = (y * a * invDet - x * c * invDet);
+Vector<Bone *> &Bone::getChildren() {
+	return _children;
 }
 
-void Bone::localToWorld(Vector local, Vector& outWorld)
-{
-    outWorld.x = local.x * a + local.y * b + worldPos.x;
-    outWorld.y = local.x * c + local.y * d + worldPos.y;
+float Bone::getX() {
+	return _x;
 }
 
+void Bone::setX(float inValue) {
+	_x = inValue;
+}
+
+float Bone::getY() {
+	return _y;
+}
+
+void Bone::setY(float inValue) {
+	_y = inValue;
+}
+
+float Bone::getRotation() {
+	return _rotation;
+}
+
+void Bone::setRotation(float inValue) {
+	_rotation = inValue;
+}
+
+float Bone::getScaleX() {
+	return _scaleX;
+}
+
+void Bone::setScaleX(float inValue) {
+	_scaleX = inValue;
+}
+
+float Bone::getScaleY() {
+	return _scaleY;
+}
+
+void Bone::setScaleY(float inValue) {
+	_scaleY = inValue;
+}
+
+float Bone::getShearX() {
+	return _shearX;
+}
+
+void Bone::setShearX(float inValue) {
+	_shearX = inValue;
+}
+
+float Bone::getShearY() {
+	return _shearY;
+}
+
+void Bone::setShearY(float inValue) {
+	_shearY = inValue;
+}
+
+float Bone::getAppliedRotation() {
+	return _arotation;
+}
+
+void Bone::setAppliedRotation(float inValue) {
+	_arotation = inValue;
+}
+
+float Bone::getAX() {
+	return _ax;
+}
+
+void Bone::setAX(float inValue) {
+	_ax = inValue;
+}
+
+float Bone::getAY() {
+	return _ay;
+}
+
+void Bone::setAY(float inValue) {
+	_ay = inValue;
+}
+
+float Bone::getAScaleX() {
+	return _ascaleX;
+}
+
+void Bone::setAScaleX(float inValue) {
+	_ascaleX = inValue;
+}
+
+float Bone::getAScaleY() {
+	return _ascaleY;
+}
+
+void Bone::setAScaleY(float inValue) {
+	_ascaleY = inValue;
+}
+
+float Bone::getAShearX() {
+	return _ashearX;
+}
+
+void Bone::setAShearX(float inValue) {
+	_ashearX = inValue;
+}
+
+float Bone::getAShearY() {
+	return _ashearY;
+}
+
+void Bone::setAShearY(float inValue) {
+	_ashearY = inValue;
+}
+
+float Bone::getA() {
+	return _a;
+}
+
+void Bone::setA(float inValue) {
+	_a = inValue;
+}
+
+float Bone::getB() {
+	return _b;
+}
+
+void Bone::setB(float inValue) {
+	_b = inValue;
+}
+
+float Bone::getC() {
+	return _c;
+}
+
+void Bone::setC(float inValue) {
+	_c = inValue;
+}
+
+float Bone::getD() {
+	return _d;
+}
+
+void Bone::setD(float inValue) {
+	_d = inValue;
+}
+
+float Bone::getWorldX() {
+	return _worldX;
+}
+
+void Bone::setWorldX(float inValue) {
+	_worldX = inValue;
+}
+
+float Bone::getWorldY() {
+	return _worldY;
+}
+
+void Bone::setWorldY(float inValue) {
+	_worldY = inValue;
+}
+
+float Bone::getWorldRotationX() {
+	return MathUtil::atan2(_c, _a) * MathUtil::Rad_Deg;
+}
+
+float Bone::getWorldRotationY() {
+	return MathUtil::atan2(_d, _b) * MathUtil::Rad_Deg;
+}
+
+float Bone::getWorldScaleX() {
+	return MathUtil::sqrt(_a * _a + _c * _c);
+}
+
+float Bone::getWorldScaleY() {
+	return MathUtil::sqrt(_b * _b + _d * _d);
+}
+
+void Bone::updateAppliedTransform() {
+	Bone *parent = _parent;
+	if (!parent) {
+		_ax = _worldX - _skeleton.getX();
+		_ay = _worldY - _skeleton.getY();
+		_arotation = MathUtil::atan2(_c, _a) * MathUtil::Rad_Deg;
+		_ascaleX = MathUtil::sqrt(_a * _a + _c * _c);
+		_ascaleY = MathUtil::sqrt(_b * _b + _d * _d);
+		_ashearX = 0;
+		_ashearY = MathUtil::atan2(_a * _b + _c * _d, _a * _d - _b * _c) * MathUtil::Rad_Deg;
+	} else {
+		float pa = parent->_a, pb = parent->_b, pc = parent->_c, pd = parent->_d;
+		float pid = 1 / (pa * pd - pb * pc);
+		float dx = _worldX - parent->_worldX, dy = _worldY - parent->_worldY;
+		float ia = pid * pd;
+		float id = pid * pa;
+		float ib = pid * pb;
+		float ic = pid * pc;
+		float ra = ia * _a - ib * _c;
+		float rb = ia * _b - ib * _d;
+		float rc = id * _c - ic * _a;
+		float rd = id * _d - ic * _b;
+		_ax = (dx * pd * pid - dy * pb * pid);
+		_ay = (dy * pa * pid - dx * pc * pid);
+		_ashearX = 0;
+		_ascaleX = MathUtil::sqrt(ra * ra + rc * rc);
+		if (_ascaleX > 0.0001f) {
+			float det = ra * rd - rb * rc;
+			_ascaleY = det / _ascaleX;
+			_ashearY = MathUtil::atan2(ra * rb + rc * rd, det) * MathUtil::Rad_Deg;
+			_arotation = MathUtil::atan2(rc, ra) * MathUtil::Rad_Deg;
+		} else {
+			_ascaleX = 0;
+			_ascaleY = MathUtil::sqrt(rb * rb + rd * rd);
+			_ashearY = 0;
+			_arotation = 90 - MathUtil::atan2(rd, rb) * MathUtil::Rad_Deg;
+		}
+	}
+}
+
+bool Bone::isActive() {
+	return _active;
+}
+
+void Bone::setActive(bool inValue) {
+	_active = inValue;
 }

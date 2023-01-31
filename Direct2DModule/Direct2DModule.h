@@ -41,7 +41,7 @@ public:
 	virtual void DrawLine(vector2 start, vector2 end, Material* material);
 	virtual void DrawTextBox(vector2 size, Matrix3x3 matrix, wstring text, wstring fontFamily, Material* material);
 	virtual void DrawBitmap(wstring bitmap,vector2 size, Matrix3x3 matrix, Material* material);
-	virtual void DrawBitmap(wstring bitmap, vector2 size, vector2 leftTop, vector2 rightBottom, Matrix3x3 matrix, Material* material);
+	virtual void DrawBitmap(wstring bitmap, vector2 size, vector2 offset, Matrix3x3 matrix, Material* material);
 	virtual wstring LoadBitmapImage(wstring);
 	virtual wstring MakePolygon(wstring, vector<vector2>);
 	virtual vector2 GetBitmapSize(wstring);
