@@ -1,1476 +1,1386 @@
-/******************************************************************************
- * Spine Runtimes License Agreement
- * Last updated September 24, 2021. Replaces all prior versions.
- *
- * Copyright (c) 2013-2021, Esoteric Software LLC
- *
- * Integration of the Spine Runtimes into software or otherwise creating
- * derivative works of the Spine Runtimes is permitted under the terms and
- * conditions of Section 2 of the Spine Editor License Agreement:
- * http://esotericsoftware.com/spine-editor-license
- *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software
- * or otherwise create derivative works of the Spine Runtimes (collectively,
- * "Products"), provided that each user of the Products must obtain their own
- * Spine Editor license and redistribution of the Products in any form must
- * include this license and copyright notice.
- *
- * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
- * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+////////////////////////////////////////////////////////////////////////////////
+// Spine Runtimes Software License
+// Version 2.4
+//
+// Copyright (c) 2013-2016, Esoteric Software
+// Copyright (c) 2016, Chobolabs
+// All rights reserved.
+//
+// You are granted a perpetual, non-exclusive, non-sublicensable and
+// non-transferable license to use, install, execute and perform the Spine
+// Runtimes Software (the "Software") and derivative works solely for personal
+// or internal use. Without the written permission of Esoteric Software (see
+// Section 2 of the Spine Software License Agreement), you may not (a) modify,
+// translate, adapt or otherwise create derivative works, improvements of
+// the Software or develop new applications using the Software or (b) remove,
+// delete, alter or obscure any trademarks or any copyright, trademark, patent
+// or other intellectual property or proprietary rights notices on or in the
+// Software, including any copy thereof. Redistributions in binary or source
+// form must include this license and terms.
+//
+// THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE AND CHOBOLABS "AS IS" AND ANY
+// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE OR CHOBOLABS BE LIABLE FOR
+// ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+////////////////////////////////////////////////////////////////////////////////
+#include "spinecpp/SkeletonJson.h"
+#include "spinecpp/extension.h"
+#include "spinecpp/SkeletonData.h"
+#include "spinecpp/Atlas.h"
+#include "spinecpp/AtlasAttachmentLoader.h"
+#include "spinecpp/RegionAttachment.h"
+#include "spinecpp/MeshAttachment.h"
+#include "spinecpp/PathAttachment.h"
+#include "spinecpp/BoundingBoxAttachment.h"
+#include "spinecpp/Timelines.h"
+#include "spinecpp/Event.h"
+#include "third_party/sajson/sajson.h"
 
-#include "spine/SkeletonJson.h"
+#include <memory>
 
-#include "spine/Atlas.h"
-#include "spine/AtlasAttachmentLoader.h"
-#include "spine/CurveTimeline.h"
-#include "spine/Json.h"
-#include "spine/LinkedMesh.h"
-#include "spine/SkeletonData.h"
-#include "spine/VertexAttachment.h"
+using namespace std;
 
-#include "spine/AttachmentTimeline.h"
-#include "spine/AttachmentType.h"
-#include "spine/BoneData.h"
-#include "spine/BoundingBoxAttachment.h"
-#include "spine/ClippingAttachment.h"
-#include "spine/ColorTimeline.h"
-#include "spine/ContainerUtil.h"
-#include "spine/DeformTimeline.h"
-#include "spine/DrawOrderTimeline.h"
-#include "spine/Event.h"
-#include "spine/EventData.h"
-#include "spine/EventTimeline.h"
-#include "spine/IkConstraintData.h"
-#include "spine/IkConstraintTimeline.h"
-#include "spine/MeshAttachment.h"
-#include "spine/PathAttachment.h"
-#include "spine/PathConstraintData.h"
-#include "spine/PathConstraintMixTimeline.h"
-#include "spine/PathConstraintPositionTimeline.h"
-#include "spine/PathConstraintSpacingTimeline.h"
-#include "spine/PointAttachment.h"
-#include "spine/RegionAttachment.h"
-#include "spine/RotateTimeline.h"
-#include "spine/ScaleTimeline.h"
-#include "spine/ShearTimeline.h"
-#include "spine/Skin.h"
-#include "spine/SlotData.h"
-#include "spine/TransformConstraintData.h"
-#include "spine/TransformConstraintTimeline.h"
-#include "spine/TranslateTimeline.h"
-#include "spine/Vertices.h"
-#include "spine/SequenceTimeline.h"
-#include "spine/Version.h"
+namespace spine
+{
 
-using namespace spine;
-
-static float toColor(const char *value, size_t index) {
-	char digits[3];
-	char *error;
-	int color;
-
-	if (index >= strlen(value) / 2) return -1;
-
-	value += index * 2;
-
-	digits[0] = *value;
-	digits[1] = *(value + 1);
-	digits[2] = '\0';
-	color = (int) strtoul(digits, &error, 16);
-	if (*error != 0) return -1;
-
-	return color / (float) 255;
+SkeletonJson::SkeletonJson(AttachmentLoader& loader)
+    : m_ownsLoader(false)
+    , m_loader(&loader)
+{
 }
 
-static void toColor(Color &color, const char *value, bool hasAlpha) {
-	color.r = toColor(value, 0);
-	color.g = toColor(value, 1);
-	color.b = toColor(value, 2);
-	if (hasAlpha) color.a = toColor(value, 3);
+SkeletonJson::SkeletonJson(const Atlas& atlas)
+    : SkeletonJson(*new AtlasAttachmentLoader(atlas))
+{
+    m_ownsLoader = true;
 }
 
-SkeletonJson::SkeletonJson(Atlas *atlas) : _attachmentLoader(new (__FILE__, __LINE__) AtlasAttachmentLoader(atlas)),
-										   _scale(1), _ownsLoader(true) {}
-
-SkeletonJson::SkeletonJson(AttachmentLoader *attachmentLoader, bool ownsLoader) : _attachmentLoader(attachmentLoader),
-																				  _scale(1),
-																				  _ownsLoader(ownsLoader) {
-	assert(_attachmentLoader != NULL);
+SkeletonJson::~SkeletonJson()
+{
+    if (m_ownsLoader)
+    {
+        delete m_loader;
+    }
 }
 
-SkeletonJson::~SkeletonJson() {
-	ContainerUtil::cleanUpVectorOfPointers(_linkedMeshes);
+void SkeletonJson::setError(const std::string& e1, const std::string& e2)
+{
+    m_error.clear();
+    m_error.reserve(e1.length() + e2.length() + 10);
 
-	if (_ownsLoader) delete _attachmentLoader;
+    m_error = e1;
+    m_error += e2;
 }
 
-SkeletonData *SkeletonJson::readSkeletonDataFile(const String &path) {
-	int length;
-	SkeletonData *skeletonData;
-	const char *json = SpineExtension::readFile(path, &length);
-	if (length == 0 || !json) {
-		setError(NULL, "Unable to read skeleton file: ", path);
-		return NULL;
-	}
+SkeletonData* SkeletonJson::readSkeletonDataFile(const std::wstring& path)
+{
+    string json = Util_readFile(path);
 
-	skeletonData = readSkeletonData(json);
+    if (json.empty())
+    {
+        setError("Unable to read file: ", path);
+        return nullptr;
+    }
 
-	SpineExtension::free(json, __FILE__, __LINE__);
-
-	return skeletonData;
+    return readSkeletonData(json);
 }
 
-SkeletonData *SkeletonJson::readSkeletonData(const char *json) {
-	int i, ii;
-	SkeletonData *skeletonData;
-	Json *root, *skeleton, *bones, *boneMap, *ik, *transform, *path, *slots, *skins, *animations, *events;
-
-	_error = "";
-	_linkedMeshes.clear();
-
-	root = new (__FILE__, __LINE__) Json(json);
-
-	if (!root) {
-		setError(NULL, "Invalid skeleton JSON: ", Json::getError());
-		return NULL;
-	}
-
-	skeletonData = new (__FILE__, __LINE__) SkeletonData();
-
-	skeleton = Json::getItem(root, "skeleton");
-	if (skeleton) {
-		skeletonData->_hash = Json::getString(skeleton, "hash", 0);
-		skeletonData->_version = Json::getString(skeleton, "spine", 0);
-		if (!skeletonData->_version.startsWith(SPINE_VERSION_STRING)) {
-			char errorMsg[255];
-			sprintf(errorMsg, "Skeleton version %s does not match runtime version %s", skeletonData->_version.buffer(), SPINE_VERSION_STRING);
-			setError(NULL, errorMsg, "");
-			return NULL;
-		}
-		skeletonData->_x = Json::getFloat(skeleton, "x", 0);
-		skeletonData->_y = Json::getFloat(skeleton, "y", 0);
-		skeletonData->_width = Json::getFloat(skeleton, "width", 0);
-		skeletonData->_height = Json::getFloat(skeleton, "height", 0);
-		skeletonData->_fps = Json::getFloat(skeleton, "fps", 30);
-		skeletonData->_audioPath = Json::getString(skeleton, "audio", 0);
-		skeletonData->_imagesPath = Json::getString(skeleton, "images", 0);
-	}
-
-	/* Bones. */
-	bones = Json::getItem(root, "bones");
-	skeletonData->_bones.setSize(bones->_size, 0);
-	int bonesCount = 0;
-	for (boneMap = bones->_child, i = 0; boneMap; boneMap = boneMap->_next, ++i) {
-		BoneData *data;
-		const char *transformMode;
-
-		BoneData *parent = 0;
-		const char *parentName = Json::getString(boneMap, "parent", 0);
-		if (parentName) {
-			parent = skeletonData->findBone(parentName);
-			if (!parent) {
-				delete skeletonData;
-				setError(root, "Parent bone not found: ", parentName);
-				return NULL;
-			}
-		}
-
-		data = new (__FILE__, __LINE__) BoneData(bonesCount, Json::getString(boneMap, "name", 0), parent);
-
-		data->_length = Json::getFloat(boneMap, "length", 0) * _scale;
-		data->_x = Json::getFloat(boneMap, "x", 0) * _scale;
-		data->_y = Json::getFloat(boneMap, "y", 0) * _scale;
-		data->_rotation = Json::getFloat(boneMap, "rotation", 0);
-		data->_scaleX = Json::getFloat(boneMap, "scaleX", 1);
-		data->_scaleY = Json::getFloat(boneMap, "scaleY", 1);
-		data->_shearX = Json::getFloat(boneMap, "shearX", 0);
-		data->_shearY = Json::getFloat(boneMap, "shearY", 0);
-		transformMode = Json::getString(boneMap, "transform", "normal");
-		data->_transformMode = TransformMode_Normal;
-		if (strcmp(transformMode, "normal") == 0) data->_transformMode = TransformMode_Normal;
-		else if (strcmp(transformMode, "onlyTranslation") == 0)
-			data->_transformMode = TransformMode_OnlyTranslation;
-		else if (strcmp(transformMode, "noRotationOrReflection") == 0)
-			data->_transformMode = TransformMode_NoRotationOrReflection;
-		else if (strcmp(transformMode, "noScale") == 0)
-			data->_transformMode = TransformMode_NoScale;
-		else if (strcmp(transformMode, "noScaleOrReflection") == 0)
-			data->_transformMode = TransformMode_NoScaleOrReflection;
-		data->_skinRequired = Json::getBoolean(boneMap, "skin", false);
-
-		const char *color = Json::getString(boneMap, "color", NULL);
-		if (color) toColor(data->getColor(), color, true);
-
-		skeletonData->_bones[i] = data;
-		bonesCount++;
-	}
-
-	/* Slots. */
-	slots = Json::getItem(root, "slots");
-	if (slots) {
-		Json *slotMap;
-		skeletonData->_slots.ensureCapacity(slots->_size);
-		skeletonData->_slots.setSize(slots->_size, 0);
-		for (slotMap = slots->_child, i = 0; slotMap; slotMap = slotMap->_next, ++i) {
-			SlotData *data;
-			const char *color;
-			const char *dark;
-			Json *item;
-
-			const char *boneName = Json::getString(slotMap, "bone", 0);
-			BoneData *boneData = skeletonData->findBone(boneName);
-			if (!boneData) {
-				delete skeletonData;
-				setError(root, "Slot bone not found: ", boneName);
-				return NULL;
-			}
-
-			data = new (__FILE__, __LINE__) SlotData(i, Json::getString(slotMap, "name", 0), *boneData);
-
-			color = Json::getString(slotMap, "color", 0);
-			if (color) {
-				Color &c = data->getColor();
-				c.r = toColor(color, 0);
-				c.g = toColor(color, 1);
-				c.b = toColor(color, 2);
-				c.a = toColor(color, 3);
-			}
-
-			dark = Json::getString(slotMap, "dark", 0);
-			if (dark) {
-				Color &darkColor = data->getDarkColor();
-				darkColor.r = toColor(dark, 0);
-				darkColor.g = toColor(dark, 1);
-				darkColor.b = toColor(dark, 2);
-				darkColor.a = 1;
-				data->setHasDarkColor(true);
-			}
-
-			item = Json::getItem(slotMap, "attachment");
-			if (item) data->setAttachmentName(item->_valueString);
-
-			item = Json::getItem(slotMap, "blend");
-			if (item) {
-				if (strcmp(item->_valueString, "additive") == 0) data->_blendMode = BlendMode_Additive;
-				else if (strcmp(item->_valueString, "multiply") == 0)
-					data->_blendMode = BlendMode_Multiply;
-				else if (strcmp(item->_valueString, "screen") == 0)
-					data->_blendMode = BlendMode_Screen;
-			}
-
-			skeletonData->_slots[i] = data;
-		}
-	}
-
-	/* IK constraints. */
-	ik = Json::getItem(root, "ik");
-	if (ik) {
-		Json *constraintMap;
-		skeletonData->_ikConstraints.ensureCapacity(ik->_size);
-		skeletonData->_ikConstraints.setSize(ik->_size, 0);
-		for (constraintMap = ik->_child, i = 0; constraintMap; constraintMap = constraintMap->_next, ++i) {
-			const char *targetName;
-
-			IkConstraintData *data = new (__FILE__, __LINE__) IkConstraintData(
-					Json::getString(constraintMap, "name", 0));
-			data->setOrder(Json::getInt(constraintMap, "order", 0));
-			data->setSkinRequired(Json::getBoolean(constraintMap, "skin", false));
-
-			boneMap = Json::getItem(constraintMap, "bones");
-			data->_bones.ensureCapacity(boneMap->_size);
-			data->_bones.setSize(boneMap->_size, 0);
-			for (boneMap = boneMap->_child, ii = 0; boneMap; boneMap = boneMap->_next, ++ii) {
-				data->_bones[ii] = skeletonData->findBone(boneMap->_valueString);
-				if (!data->_bones[ii]) {
-					delete skeletonData;
-					setError(root, "IK bone not found: ", boneMap->_valueString);
-					return NULL;
-				}
-			}
-
-			targetName = Json::getString(constraintMap, "target", 0);
-			data->_target = skeletonData->findBone(targetName);
-			if (!data->_target) {
-				delete skeletonData;
-				setError(root, "Target bone not found: ", targetName);
-				return NULL;
-			}
-
-			data->_mix = Json::getFloat(constraintMap, "mix", 1);
-			data->_softness = Json::getFloat(constraintMap, "softness", 0) * _scale;
-			data->_bendDirection = Json::getInt(constraintMap, "bendPositive", 1) ? 1 : -1;
-			data->_compress = Json::getInt(constraintMap, "compress", 0) ? true : false;
-			data->_stretch = Json::getInt(constraintMap, "stretch", 0) ? true : false;
-			data->_uniform = Json::getInt(constraintMap, "uniform", 0) ? true : false;
-
-			skeletonData->_ikConstraints[i] = data;
-		}
-	}
-
-	/* Transform constraints. */
-	transform = Json::getItem(root, "transform");
-	if (transform) {
-		Json *constraintMap;
-		skeletonData->_transformConstraints.ensureCapacity(transform->_size);
-		skeletonData->_transformConstraints.setSize(transform->_size, 0);
-		for (constraintMap = transform->_child, i = 0; constraintMap; constraintMap = constraintMap->_next, ++i) {
-			const char *name;
-
-			TransformConstraintData *data = new (__FILE__, __LINE__) TransformConstraintData(
-					Json::getString(constraintMap, "name", 0));
-			data->setOrder(Json::getInt(constraintMap, "order", 0));
-			data->setSkinRequired(Json::getBoolean(constraintMap, "skin", false));
-
-			boneMap = Json::getItem(constraintMap, "bones");
-			data->_bones.ensureCapacity(boneMap->_size);
-			data->_bones.setSize(boneMap->_size, 0);
-			for (boneMap = boneMap->_child, ii = 0; boneMap; boneMap = boneMap->_next, ++ii) {
-				data->_bones[ii] = skeletonData->findBone(boneMap->_valueString);
-				if (!data->_bones[ii]) {
-					delete skeletonData;
-					setError(root, "Transform bone not found: ", boneMap->_valueString);
-					return NULL;
-				}
-			}
-
-			name = Json::getString(constraintMap, "target", 0);
-			data->_target = skeletonData->findBone(name);
-			if (!data->_target) {
-				delete skeletonData;
-				setError(root, "Target bone not found: ", name);
-				return NULL;
-			}
-
-			data->_local = Json::getInt(constraintMap, "local", 0) ? true : false;
-			data->_relative = Json::getInt(constraintMap, "relative", 0) ? true : false;
-			data->_offsetRotation = Json::getFloat(constraintMap, "rotation", 0);
-			data->_offsetX = Json::getFloat(constraintMap, "x", 0) * _scale;
-			data->_offsetY = Json::getFloat(constraintMap, "y", 0) * _scale;
-			data->_offsetScaleX = Json::getFloat(constraintMap, "scaleX", 0);
-			data->_offsetScaleY = Json::getFloat(constraintMap, "scaleY", 0);
-			data->_offsetShearY = Json::getFloat(constraintMap, "shearY", 0);
-
-			data->_mixRotate = Json::getFloat(constraintMap, "mixRotate", 1);
-			data->_mixX = Json::getFloat(constraintMap, "mixX", 1);
-			data->_mixY = Json::getFloat(constraintMap, "mixY", data->_mixX);
-			data->_mixScaleX = Json::getFloat(constraintMap, "mixScaleX", 1);
-			data->_mixScaleY = Json::getFloat(constraintMap, "mixScaleY", data->_mixScaleX);
-			data->_mixShearY = Json::getFloat(constraintMap, "mixShearY", 1);
-
-			skeletonData->_transformConstraints[i] = data;
-		}
-	}
-
-	/* Path constraints */
-	path = Json::getItem(root, "path");
-	if (path) {
-		Json *constraintMap;
-		skeletonData->_pathConstraints.ensureCapacity(path->_size);
-		skeletonData->_pathConstraints.setSize(path->_size, 0);
-		for (constraintMap = path->_child, i = 0; constraintMap; constraintMap = constraintMap->_next, ++i) {
-			const char *name;
-			const char *item;
-
-			PathConstraintData *data = new (__FILE__, __LINE__) PathConstraintData(
-					Json::getString(constraintMap, "name", 0));
-			data->setOrder(Json::getInt(constraintMap, "order", 0));
-			data->setSkinRequired(Json::getBoolean(constraintMap, "skin", false));
-
-			boneMap = Json::getItem(constraintMap, "bones");
-			data->_bones.ensureCapacity(boneMap->_size);
-			data->_bones.setSize(boneMap->_size, 0);
-			for (boneMap = boneMap->_child, ii = 0; boneMap; boneMap = boneMap->_next, ++ii) {
-				data->_bones[ii] = skeletonData->findBone(boneMap->_valueString);
-				if (!data->_bones[ii]) {
-					delete skeletonData;
-					setError(root, "Path bone not found: ", boneMap->_valueString);
-					return NULL;
-				}
-			}
-
-			name = Json::getString(constraintMap, "target", 0);
-			data->_target = skeletonData->findSlot(name);
-			if (!data->_target) {
-				delete skeletonData;
-				setError(root, "Target slot not found: ", name);
-				return NULL;
-			}
-
-			item = Json::getString(constraintMap, "positionMode", "percent");
-			if (strcmp(item, "fixed") == 0) {
-				data->_positionMode = PositionMode_Fixed;
-			} else if (strcmp(item, "percent") == 0) {
-				data->_positionMode = PositionMode_Percent;
-			}
-
-			item = Json::getString(constraintMap, "spacingMode", "length");
-			if (strcmp(item, "length") == 0) data->_spacingMode = SpacingMode_Length;
-			else if (strcmp(item, "fixed") == 0)
-				data->_spacingMode = SpacingMode_Fixed;
-			else if (strcmp(item, "percent") == 0)
-				data->_spacingMode = SpacingMode_Percent;
-			else
-				data->_spacingMode = SpacingMode_Proportional;
-
-			item = Json::getString(constraintMap, "rotateMode", "tangent");
-			if (strcmp(item, "tangent") == 0) data->_rotateMode = RotateMode_Tangent;
-			else if (strcmp(item, "chain") == 0)
-				data->_rotateMode = RotateMode_Chain;
-			else if (strcmp(item, "chainScale") == 0)
-				data->_rotateMode = RotateMode_ChainScale;
-
-			data->_offsetRotation = Json::getFloat(constraintMap, "rotation", 0);
-			data->_position = Json::getFloat(constraintMap, "position", 0);
-			if (data->_positionMode == PositionMode_Fixed) data->_position *= _scale;
-			data->_spacing = Json::getFloat(constraintMap, "spacing", 0);
-			if (data->_spacingMode == SpacingMode_Length || data->_spacingMode == SpacingMode_Fixed)
-				data->_spacing *= _scale;
-			data->_mixRotate = Json::getFloat(constraintMap, "mixRotate", 1);
-			data->_mixX = Json::getFloat(constraintMap, "mixX", 1);
-			data->_mixY = Json::getFloat(constraintMap, "mixY", data->_mixX);
-
-			skeletonData->_pathConstraints[i] = data;
-		}
-	}
-
-	/* Skins. */
-	skins = Json::getItem(root, "skins");
-	if (skins) {
-		Json *skinMap;
-		skeletonData->_skins.ensureCapacity(skins->_size);
-		skeletonData->_skins.setSize(skins->_size, 0);
-		int skinsIndex = 0;
-		for (skinMap = skins->_child, i = 0; skinMap; skinMap = skinMap->_next, ++i) {
-			Json *attachmentsMap;
-			Json *curves;
-
-			Skin *skin = new (__FILE__, __LINE__) Skin(Json::getString(skinMap, "name", ""));
-
-			Json *item = Json::getItem(skinMap, "bones");
-			if (item) {
-				for (item = item->_child; item; item = item->_next) {
-					BoneData *data = skeletonData->findBone(item->_valueString);
-					if (!data) {
-						delete skeletonData;
-						setError(root, String("Skin bone not found: "), item->_valueString);
-						return NULL;
-					}
-					skin->getBones().add(data);
-				}
-			}
-
-			item = Json::getItem(skinMap, "ik");
-			if (item) {
-				for (item = item->_child; item; item = item->_next) {
-					IkConstraintData *data = skeletonData->findIkConstraint(item->_valueString);
-					if (!data) {
-						delete skeletonData;
-						setError(root, String("Skin IK constraint not found: "), item->_valueString);
-						return NULL;
-					}
-					skin->getConstraints().add(data);
-				}
-			}
-
-			item = Json::getItem(skinMap, "transform");
-			if (item) {
-				for (item = item->_child; item; item = item->_next) {
-					TransformConstraintData *data = skeletonData->findTransformConstraint(item->_valueString);
-					if (!data) {
-						delete skeletonData;
-						setError(root, String("Skin transform constraint not found: "), item->_valueString);
-						return NULL;
-					}
-					skin->getConstraints().add(data);
-				}
-			}
-
-			item = Json::getItem(skinMap, "path");
-			if (item) {
-				for (item = item->_child; item; item = item->_next) {
-					PathConstraintData *data = skeletonData->findPathConstraint(item->_valueString);
-					if (!data) {
-						delete skeletonData;
-						setError(root, String("Skin path constraint not found: "), item->_valueString);
-						return NULL;
-					}
-					skin->getConstraints().add(data);
-				}
-			}
-
-			skeletonData->_skins[skinsIndex++] = skin;
-			if (strcmp(Json::getString(skinMap, "name", ""), "default") == 0) {
-				skeletonData->_defaultSkin = skin;
-			}
-
-			Json *attachments = Json::getItem(skinMap, "attachments");
-			if (attachments)
-				for (attachmentsMap = attachments->_child;
-					 attachmentsMap; attachmentsMap = attachmentsMap->_next) {
-					SlotData *slot = skeletonData->findSlot(attachmentsMap->_name);
-					Json *attachmentMap;
-
-					for (attachmentMap = attachmentsMap->_child; attachmentMap; attachmentMap = attachmentMap->_next) {
-						Attachment *attachment = NULL;
-						const char *skinAttachmentName = attachmentMap->_name;
-						const char *attachmentName = Json::getString(attachmentMap, "name", skinAttachmentName);
-						const char *attachmentPath = Json::getString(attachmentMap, "path", attachmentName);
-						const char *color;
-						Json *entry;
-
-						const char *typeString = Json::getString(attachmentMap, "type", "region");
-						AttachmentType type;
-						if (strcmp(typeString, "region") == 0) type = AttachmentType_Region;
-						else if (strcmp(typeString, "mesh") == 0)
-							type = AttachmentType_Mesh;
-						else if (strcmp(typeString, "linkedmesh") == 0)
-							type = AttachmentType_Linkedmesh;
-						else if (strcmp(typeString, "boundingbox") == 0)
-							type = AttachmentType_Boundingbox;
-						else if (strcmp(typeString, "path") == 0)
-							type = AttachmentType_Path;
-						else if (strcmp(typeString, "clipping") == 0)
-							type = AttachmentType_Clipping;
-						else if (strcmp(typeString, "point") == 0)
-							type = AttachmentType_Point;
-						else {
-							delete skeletonData;
-							setError(root, "Unknown attachment type: ", typeString);
-							return NULL;
-						}
-
-						switch (type) {
-							case AttachmentType_Region: {
-								Sequence *sequence = readSequence(Json::getItem(attachmentMap, "sequence"));
-								attachment = _attachmentLoader->newRegionAttachment(*skin, attachmentName, attachmentPath, sequence);
-								if (!attachment) {
-									delete skeletonData;
-									setError(root, "Error reading attachment: ", skinAttachmentName);
-									return NULL;
-								}
-
-								RegionAttachment *region = static_cast<RegionAttachment *>(attachment);
-								region->_path = attachmentPath;
-
-								region->_x = Json::getFloat(attachmentMap, "x", 0) * _scale;
-								region->_y = Json::getFloat(attachmentMap, "y", 0) * _scale;
-								region->_scaleX = Json::getFloat(attachmentMap, "scaleX", 1);
-								region->_scaleY = Json::getFloat(attachmentMap, "scaleY", 1);
-								region->_rotation = Json::getFloat(attachmentMap, "rotation", 0);
-								region->_width = Json::getFloat(attachmentMap, "width", 32) * _scale;
-								region->_height = Json::getFloat(attachmentMap, "height", 32) * _scale;
-								region->_sequence = sequence;
-
-								color = Json::getString(attachmentMap, "color", 0);
-								if (color) toColor(region->getColor(), color, true);
-
-								if (region->_region != NULL) region->updateRegion();
-								_attachmentLoader->configureAttachment(region);
-								break;
-							}
-							case AttachmentType_Mesh:
-							case AttachmentType_Linkedmesh: {
-								Sequence *sequence = readSequence(Json::getItem(attachmentMap, "sequence"));
-								attachment = _attachmentLoader->newMeshAttachment(*skin, attachmentName, attachmentPath, sequence);
-
-								if (!attachment) {
-									delete skeletonData;
-									setError(root, "Error reading attachment: ", skinAttachmentName);
-									return NULL;
-								}
-
-								MeshAttachment *mesh = static_cast<MeshAttachment *>(attachment);
-								mesh->_path = attachmentPath;
-
-								color = Json::getString(attachmentMap, "color", 0);
-								if (color) toColor(mesh->getColor(), color, true);
-
-								mesh->_width = Json::getFloat(attachmentMap, "width", 32) * _scale;
-								mesh->_height = Json::getFloat(attachmentMap, "height", 32) * _scale;
-								mesh->_sequence = sequence;
-
-								entry = Json::getItem(attachmentMap, "parent");
-								if (!entry) {
-									int verticesLength;
-									entry = Json::getItem(attachmentMap, "triangles");
-									mesh->_triangles.ensureCapacity(entry->_size);
-									mesh->_triangles.setSize(entry->_size, 0);
-									for (entry = entry->_child, ii = 0; entry; entry = entry->_next, ++ii)
-										mesh->_triangles[ii] = (unsigned short) entry->_valueInt;
-
-									entry = Json::getItem(attachmentMap, "uvs");
-									verticesLength = entry->_size;
-									mesh->_regionUVs.ensureCapacity(verticesLength);
-									mesh->_regionUVs.setSize(verticesLength, 0);
-									for (entry = entry->_child, ii = 0; entry; entry = entry->_next, ++ii)
-										mesh->_regionUVs[ii] = entry->_valueFloat;
-
-									readVertices(attachmentMap, mesh, verticesLength);
-
-									if (mesh->_region != NULL) mesh->updateRegion();
-
-									mesh->_hullLength = Json::getInt(attachmentMap, "hull", 0);
-
-									entry = Json::getItem(attachmentMap, "edges");
-									if (entry) {
-										mesh->_edges.ensureCapacity(entry->_size);
-										mesh->_edges.setSize(entry->_size, 0);
-										for (entry = entry->_child, ii = 0; entry; entry = entry->_next, ++ii)
-											mesh->_edges[ii] = entry->_valueInt;
-									}
-									_attachmentLoader->configureAttachment(mesh);
-								} else {
-									bool inheritTimelines = Json::getInt(attachmentMap, "timelines", 1) ? true : false;
-									LinkedMesh *linkedMesh = new (__FILE__, __LINE__) LinkedMesh(mesh,
-																								 String(Json::getString(
-																										 attachmentMap,
-																										 "skin", 0)),
-																								 slot->getIndex(),
-																								 String(entry->_valueString),
-																								 inheritTimelines);
-									_linkedMeshes.add(linkedMesh);
-								}
-								break;
-							}
-							case AttachmentType_Boundingbox: {
-								attachment = _attachmentLoader->newBoundingBoxAttachment(*skin, attachmentName);
-
-								BoundingBoxAttachment *box = static_cast<BoundingBoxAttachment *>(attachment);
-
-								int vertexCount = Json::getInt(attachmentMap, "vertexCount", 0) << 1;
-								readVertices(attachmentMap, box, vertexCount);
-								color = Json::getString(attachmentMap, "color", NULL);
-								if (color) toColor(box->getColor(), color, true);
-								_attachmentLoader->configureAttachment(attachment);
-								break;
-							}
-							case AttachmentType_Path: {
-								attachment = _attachmentLoader->newPathAttachment(*skin, attachmentName);
-
-								PathAttachment *pathAttatchment = static_cast<PathAttachment *>(attachment);
-
-								int vertexCount = 0;
-								pathAttatchment->_closed = Json::getInt(attachmentMap, "closed", 0) ? true : false;
-								pathAttatchment->_constantSpeed = Json::getInt(attachmentMap, "constantSpeed", 1) ? true
-																												  : false;
-								vertexCount = Json::getInt(attachmentMap, "vertexCount", 0);
-								readVertices(attachmentMap, pathAttatchment, vertexCount << 1);
-
-								pathAttatchment->_lengths.ensureCapacity(vertexCount / 3);
-								pathAttatchment->_lengths.setSize(vertexCount / 3, 0);
-
-								curves = Json::getItem(attachmentMap, "lengths");
-								for (curves = curves->_child, ii = 0; curves; curves = curves->_next, ++ii)
-									pathAttatchment->_lengths[ii] = curves->_valueFloat * _scale;
-								color = Json::getString(attachmentMap, "color", NULL);
-								if (color) toColor(pathAttatchment->getColor(), color, true);
-								_attachmentLoader->configureAttachment(attachment);
-								break;
-							}
-							case AttachmentType_Point: {
-								attachment = _attachmentLoader->newPointAttachment(*skin, attachmentName);
-
-								PointAttachment *point = static_cast<PointAttachment *>(attachment);
-
-								point->_x = Json::getFloat(attachmentMap, "x", 0) * _scale;
-								point->_y = Json::getFloat(attachmentMap, "y", 0) * _scale;
-								point->_rotation = Json::getFloat(attachmentMap, "rotation", 0);
-								color = Json::getString(attachmentMap, "color", NULL);
-								if (color) toColor(point->getColor(), color, true);
-								_attachmentLoader->configureAttachment(attachment);
-								break;
-							}
-							case AttachmentType_Clipping: {
-								attachment = _attachmentLoader->newClippingAttachment(*skin, attachmentName);
-
-								ClippingAttachment *clip = static_cast<ClippingAttachment *>(attachment);
-
-								int vertexCount = 0;
-								const char *end = Json::getString(attachmentMap, "end", 0);
-								if (end) clip->_endSlot = skeletonData->findSlot(end);
-								vertexCount = Json::getInt(attachmentMap, "vertexCount", 0) << 1;
-								readVertices(attachmentMap, clip, vertexCount);
-								color = Json::getString(attachmentMap, "color", NULL);
-								if (color) toColor(clip->getColor(), color, true);
-								_attachmentLoader->configureAttachment(attachment);
-								break;
-							}
-						}
-
-						skin->setAttachment(slot->getIndex(), skinAttachmentName, attachment);
-					}
-				}
-		}
-	}
-
-	/* Linked meshes. */
-	int n = (int) _linkedMeshes.size();
-	for (i = 0; i < n; ++i) {
-		LinkedMesh *linkedMesh = _linkedMeshes[i];
-		Skin *skin = linkedMesh->_skin.length() == 0 ? skeletonData->getDefaultSkin() : skeletonData->findSkin(linkedMesh->_skin);
-		if (skin == NULL) {
-			delete skeletonData;
-			setError(root, "Skin not found: ", linkedMesh->_skin.buffer());
-			return NULL;
-		}
-		Attachment *parent = skin->getAttachment(linkedMesh->_slotIndex, linkedMesh->_parent);
-		if (parent == NULL) {
-			delete skeletonData;
-			setError(root, "Parent mesh not found: ", linkedMesh->_parent.buffer());
-			return NULL;
-		}
-		linkedMesh->_mesh->_timelineAttachment = linkedMesh->_inheritTimeline ? static_cast<VertexAttachment *>(parent)
-																			  : linkedMesh->_mesh;
-		linkedMesh->_mesh->setParentMesh(static_cast<MeshAttachment *>(parent));
-		if (linkedMesh->_mesh->_region != NULL) linkedMesh->_mesh->updateRegion();
-		_attachmentLoader->configureAttachment(linkedMesh->_mesh);
-	}
-	ContainerUtil::cleanUpVectorOfPointers(_linkedMeshes);
-	_linkedMeshes.clear();
-
-	/* Events. */
-	events = Json::getItem(root, "events");
-	if (events) {
-		Json *eventMap;
-		skeletonData->_events.ensureCapacity(events->_size);
-		skeletonData->_events.setSize(events->_size, 0);
-		for (eventMap = events->_child, i = 0; eventMap; eventMap = eventMap->_next, ++i) {
-			EventData *eventData = new (__FILE__, __LINE__) EventData(String(eventMap->_name));
-
-			eventData->_intValue = Json::getInt(eventMap, "int", 0);
-			eventData->_floatValue = Json::getFloat(eventMap, "float", 0);
-			const char *stringValue = Json::getString(eventMap, "string", 0);
-			eventData->_stringValue = stringValue;
-			const char *audioPath = Json::getString(eventMap, "audio", 0);
-			eventData->_audioPath = audioPath;
-			if (audioPath) {
-				eventData->_volume = Json::getFloat(eventMap, "volume", 1);
-				eventData->_balance = Json::getFloat(eventMap, "balance", 0);
-			}
-			skeletonData->_events[i] = eventData;
-		}
-	}
-
-	/* Animations. */
-	animations = Json::getItem(root, "animations");
-	if (animations) {
-		Json *animationMap;
-		skeletonData->_animations.ensureCapacity(animations->_size);
-		skeletonData->_animations.setSize(animations->_size, 0);
-		int animationsIndex = 0;
-		for (animationMap = animations->_child; animationMap; animationMap = animationMap->_next) {
-			SpineAnimation*animation = readAnimation(animationMap, skeletonData);
-			if (!animation) {
-				delete skeletonData;
-				delete root;
-				return NULL;
-			}
-			skeletonData->_animations[animationsIndex++] = animation;
-		}
-	}
-
-	delete root;
-
-	return skeletonData;
+static Color Color_fromHexString(const string& c)
+{
+    if (c.length() != 8) return Color(1, 1, 1, 1);
+
+    Color ret;
+
+    char digits[3];
+    digits[2] = 0;
+    for (size_t i = 0; i < 4; ++i)
+    {
+        digits[0] = c[2 * i];
+        digits[1] = c[2 * i + 1];
+        ret.at(i) = float(strtoul(digits, nullptr, 16)) / 255;
+    }
+
+    return ret;
 }
 
-Sequence *SkeletonJson::readSequence(Json *item) {
-	if (item == NULL) return NULL;
-	Sequence *sequence = new Sequence(Json::getInt(item, "count", 0));
-	sequence->_start = Json::getInt(item, "start", 1);
-	sequence->_digits = Json::getInt(item, "digits", 0);
-	sequence->_setupIndex = Json::getInt(item, "setupIndex", 0);
-	return sequence;
+SkeletonData* SkeletonJson::readSkeletonData(const std::string& json)
+{
+    using sajson::literal;
+    const sajson::document& doc = sajson::parse(sajson::string(json.c_str(), json.length()));
+
+    if (!doc.is_valid())
+    {
+        setError("Invalid skeleton json: ", doc.get_error_message());
+        return nullptr;
+    }
+
+    m_error.clear();
+
+    std::unique_ptr<SkeletonData> skeletonData(new SkeletonData);
+
+    const auto& root = doc.get_root();
+    const auto len = root.get_length();
+
+    /* Skeleton. */
+    auto iskeleton = root.find_object_key(literal("skeleton"));
+    if (iskeleton < len)
+    {
+        const auto& jskeleton = root.get_object_value(iskeleton);
+        skeletonData->hash = jskeleton.get_value_of_key(literal("hash")).get_string_value();
+        skeletonData->version = jskeleton.get_value_of_key(literal("spine")).get_string_value();
+        skeletonData->size.x = jskeleton.get_value_of_key(literal("width")).get_safe_float_value();
+        skeletonData->size.y = jskeleton.get_value_of_key(literal("height")).get_safe_float_value();
+    }
+
+    {
+        /* Bones. */
+        const auto ibones = root.find_object_key(literal("bones"));
+        assert(ibones < len);
+        const auto& jbones = root.get_object_value(ibones);
+        const auto numBones = jbones.get_length();
+        skeletonData->bones.reserve(numBones);
+
+        for (size_t i = 0; i < numBones; ++i)
+        {
+            const auto& jbone = jbones.get_array_element(i);
+            const char* parentName = jbone.get_safe_string_value_of_key(literal("parent"));
+
+            const BoneData* parent = nullptr;
+            if (parentName)
+            {
+                parent = skeletonData->findBone(parentName);
+                if (!parent)
+                {
+                    setError("Parent bone not found: ", parentName);
+                    return nullptr;
+                }
+            }
+
+            string boneName = jbone.get_safe_value_of_key_as_string(literal("name"));
+            skeletonData->bones.emplace_back(int(i), boneName, parent);
+            auto& bone = skeletonData->bones.back();
+
+            bone.length = jbone.get_safe_float_value_of_key(literal("length")) * m_scale;
+            bone.translation.x = jbone.get_safe_float_value_of_key(literal("x")) * m_scale;
+            bone.translation.y = jbone.get_safe_float_value_of_key(literal("y")) * m_scale;
+            bone.rotation = jbone.get_safe_float_value_of_key(literal("rotation"));
+            bone.scale.x = jbone.get_safe_float_value_of_key(literal("scaleX"), 1);
+            bone.scale.y = jbone.get_safe_float_value_of_key(literal("scaleY"), 1);
+            bone.shear.x = jbone.get_safe_float_value_of_key(literal("shearY"));
+            bone.shear.y = jbone.get_safe_float_value_of_key(literal("shearY"));
+            bone.inheritRotation = !!jbone.get_safe_integer_value_of_key(literal("inheritRotation"), 1);
+            bone.inheritScale = !!jbone.get_safe_integer_value_of_key(literal("inheritScale"), 1);
+            // no color...
+        }
+    }
+    
+    /* Slots. */
+    const auto islots = root.find_object_key(literal("slots"));
+    if (islots < len)
+    {
+        const auto& jslots = root.get_object_value(islots);
+        const auto numSlots = jslots.get_length();
+
+        skeletonData->slots.reserve(numSlots);
+
+        for (size_t i = 0; i < numSlots; ++i)
+        {
+            const auto& jslot = jslots.get_array_element(i);
+
+            // bone
+            const char* boneName = jslot.get_safe_string_value_of_key(literal("bone"));
+            auto bone = skeletonData->findBone(boneName);
+            if (!bone)
+            {
+                setError("Slot bone not found: ", boneName);
+                return nullptr;
+            }
+
+            string slotName = jslot.get_safe_value_of_key_as_string(literal("name"));
+            skeletonData->slots.emplace_back(int(i), slotName, bone);
+            auto& slot = skeletonData->slots.back();
+
+            string color = jslot.get_safe_value_of_key_as_string(literal("color"));
+            slot.color = Color_fromHexString(color);
+
+            slot.attachmentName = jslot.get_safe_value_of_key_as_string(literal("attachment"));
+
+            string blendStr = jslot.get_safe_value_of_key_as_string(literal("blend"));
+            if (!blendStr.empty())
+            {
+                if (blendStr == "additive")
+                {
+                    slot.blendMode = BlendMode::Additive;
+                }
+                else if (blendStr == "multiply")
+                {
+                    slot.blendMode = BlendMode::Multiply;
+                }
+                else if (blendStr == "screen")
+                {
+                    slot.blendMode = BlendMode::Screen;
+                }
+            }
+        }
+    }
+
+    /* IK constraints. */
+    const auto iiks = root.find_object_key(literal("ik"));
+    if (iiks < len)
+    {
+        const auto& jiks = root.get_object_value(iiks);
+        const auto numIks = jiks.get_length();
+
+        skeletonData->ikConstraints.reserve(numIks);
+
+        for (size_t i = 0; i < numIks; ++i)
+        {
+            const auto& jik = jiks.get_array_element(i);
+
+            string ikName = jik.get_safe_value_of_key_as_string(literal("name"));
+            skeletonData->ikConstraints.emplace_back(ikName);
+            auto& ik = skeletonData->ikConstraints.back();
+
+            // ik bones
+            const auto ibones = jik.find_object_key(literal("bones"));
+            assert(ibones < jik.get_length());
+            const auto& jbones = jik.get_object_value(ibones);
+            const auto numBones = jbones.get_length();
+            ik.bones.reserve(numBones);
+            for (size_t j = 0; j < numBones; ++j)
+            {
+                const auto& jbone = jbones.get_array_element(j);
+                const char* boneName = jbone.get_string_value();
+                auto bone = skeletonData->findBone(boneName);
+                if (!bone)
+                {
+                    setError("IK bone not found: ", boneName);
+                    return nullptr;
+                }
+
+                ik.bones.emplace_back(bone);
+            }
+
+            // ik target
+            const char* targetBoneName = jik.get_safe_string_value_of_key(literal("target"));
+            auto targetBone = skeletonData->findBone(targetBoneName);
+            if (!targetBone)
+            {
+                setError("IK target bone not found: ", targetBoneName);
+                return nullptr;
+            }
+            ik.target = targetBone;
+
+            // other
+            ik.bendDirection = jik.get_safe_integer_value_of_key(literal("bendPositive"), 1);
+            if (!ik.bendDirection) ik.bendDirection = -1;
+
+            ik.mix = jik.get_safe_float_value_of_key(literal("mix"), 1);
+        }
+    }
+
+
+    /* Transform constraints. */
+    const auto itransforms = root.find_object_key(literal("transform"));
+    if (itransforms < len)
+    {
+        const auto& jtransforms = root.get_object_value(itransforms);
+        const auto numTransforms = jtransforms.get_length();
+
+        skeletonData->transformConstraints.reserve(numTransforms);
+
+        for (size_t i = 0; i < numTransforms; ++i)
+        {
+            const auto& jtransform = jtransforms.get_array_element(i);
+
+            string transformName = jtransform.get_safe_value_of_key_as_string(literal("name"));
+            skeletonData->transformConstraints.emplace_back(transformName);
+            auto& transform = skeletonData->transformConstraints.back();
+
+            // bones
+            const auto& jbones = jtransform.get_value_of_key(literal("bones"));
+            transform.bones.resize(jbones.get_length());
+            for (size_t b = 0; b < jbones.get_length(); ++b)
+            {
+                const char* boneName = jbones.get_array_element(b).get_string_value();
+                auto bone = skeletonData->findBone(boneName);
+                if (!bone)
+                {
+                    setError("Transform bone not found: ", boneName);
+                    return nullptr;
+                }
+                transform.bones[b] = bone;
+            }
+
+            // target
+            const char* targetBoneName = jtransform.get_safe_string_value_of_key(literal("target"));
+            auto targetBone = skeletonData->findBone(targetBoneName);
+            if (!targetBone)
+            {
+                setError("Transform constraint target bone not found: ", targetBoneName);
+                return nullptr;
+            }
+            transform.target = targetBone;
+
+            // other
+            transform.offsetRotation = jtransform.get_safe_float_value_of_key(literal("rotation"));
+            transform.offsetTranslation.x = jtransform.get_safe_float_value_of_key(literal("x")) * m_scale;
+            transform.offsetTranslation.y = jtransform.get_safe_float_value_of_key(literal("y")) * m_scale;
+            transform.offsetScale.x = jtransform.get_safe_float_value_of_key(literal("scaleX")) * m_scale;
+            transform.offsetScale.y = jtransform.get_safe_float_value_of_key(literal("scaleY")) * m_scale;
+            transform.offsetShearY = jtransform.get_safe_float_value_of_key(literal("shearY")) * m_scale;
+            transform.rotateMix = jtransform.get_safe_float_value_of_key(literal("rotateMix"), 1);
+            transform.translateMix = jtransform.get_safe_float_value_of_key(literal("translateMix"), 1);
+            transform.scaleMix = jtransform.get_safe_float_value_of_key(literal("scaleMix"), 1);
+            transform.shearMix = jtransform.get_safe_float_value_of_key(literal("shearMix"), 1);
+        }
+    }
+
+    /* Path constraints */
+    const auto ipaths = root.find_object_key(literal("path"));
+    if (ipaths < len)
+    {
+        const auto& jpaths = root.get_object_value(ipaths);
+        const auto numPaths = jpaths.get_length();
+
+        skeletonData->pathConstraints.reserve(numPaths);
+
+        for (size_t i = 0; i < numPaths; ++i)
+        {
+            const auto& jpath = jpaths.get_array_element(i);
+            string pathName = jpath.get_safe_value_of_key_as_string(literal("name"));
+            skeletonData->pathConstraints.emplace_back(pathName);
+            auto& path = skeletonData->pathConstraints.back();
+
+            auto ibones = jpath.find_object_key(literal("bones"));
+            if (ibones < jpath.get_length())
+            {
+                const auto& jbones = jpath.get_object_value(ibones);
+                path.bones.resize(jbones.get_length());
+                for (size_t b = 0; b < jbones.get_length(); ++b)
+                {
+                    const char* boneName = jbones.get_array_element(b).get_string_value();
+                    auto bone = skeletonData->findBone(boneName);
+                    if (!bone)
+                    {
+                        setError("Path bone not found: ", boneName);
+                        return nullptr;
+                    }
+                    path.bones[b] = bone;
+                }
+            }
+
+            const char* targetName = jpath.get_safe_string_value_of_key(literal("target"));
+            path.target = skeletonData->findSlot(targetName);
+            if (!path.target)
+            {
+                setError("Path target slot not found: ", targetName);
+                return nullptr;
+            }
+
+            const char* mode = jpath.get_safe_string_value_of_key(literal("positionMode"), "percent");
+            if (strcmp(mode, "fixed") == 0) path.positionMode = PositionMode::Fixed;
+            else if (strcmp(mode, "percent") == 0) path.positionMode = PositionMode::Percent;
+
+            mode = jpath.get_safe_string_value_of_key(literal("spacingMode"), "length");
+            if (strcmp(mode, "length") == 0) path.spacingMode = SpacingMode::Length;
+            else if (strcmp(mode, "fixed") == 0) path.spacingMode = SpacingMode::Fixed;
+            else if (strcmp(mode, "percent") == 0) path.spacingMode = SpacingMode::Percent;
+
+            mode = jpath.get_safe_string_value_of_key(literal("rotateMode"), "tangent");
+            if (strcmp(mode, "tangent") == 0) path.rotateMode = RotateMode::Tangent;
+            else if (strcmp(mode, "chain") == 0) path.rotateMode = RotateMode::Chain;
+            else if (strcmp(mode, "chainScale") == 0) path.rotateMode = RotateMode::ChainScale;
+
+            path.offsetRotation = jpath.get_safe_float_value_of_key(literal("rotation"), 0);
+            path.position = jpath.get_safe_float_value_of_key(literal("position"), 0);
+            if (path.positionMode == PositionMode::Fixed) path.position *= m_scale;
+            path.spacing = jpath.get_safe_float_value_of_key(literal("spacing"), 0);
+            if (path.spacingMode == SpacingMode::Length || path.spacingMode == SpacingMode::Fixed) path.spacing *= m_scale;
+            path.rotateMix = jpath.get_safe_float_value_of_key(literal("rotateMix"), 1);
+            path.translateMix = jpath.get_safe_float_value_of_key(literal("translateMix"), 1);
+        }
+    }
+
+    /* Skins. */
+    const auto iskins = root.find_object_key(literal("skins"));
+    if (iskins < len)
+    {
+        const auto& jskins = root.get_object_value(iskins);
+        const auto numSkins = jskins.get_length();
+
+        skeletonData->skins.reserve(numSkins);
+
+        for (size_t i = 0; i < numSkins; ++i)
+        {
+            const auto& jskin = jskins.get_object_value(i);
+            string skinName = jskins.get_object_key(i);
+
+            skeletonData->skins.emplace_back(skinName);
+            Skin& skin = skeletonData->skins.back();
+
+            if (skin.name == "default")
+            {
+                skeletonData->defaultSkin = &skin;
+            }
+
+            const auto numSlots = jskin.get_length();
+            skin.m_entries.reserve(numSlots);
+            for (size_t j = 0; j < numSlots; ++j)
+            {
+                const auto& jslot = jskin.get_object_value(j);
+                const char* slotName = jskin.get_object_key(j);
+
+                auto slotIndex = skeletonData->findSlotIndex(slotName);
+                const auto numAttachments = jslot.get_length();
+                for (size_t k = 0; k < numAttachments; ++k)
+                {
+                    const auto& jattachment = jslot.get_object_value(k);
+                    string skinAttachmentName = jslot.get_object_key(k);
+
+                    string name = jattachment.get_safe_value_of_key_as_string(literal("name"), skinAttachmentName);
+                    string path = jattachment.get_safe_value_of_key_as_string(literal("path"), name);
+
+                    const char* stype = jattachment.get_safe_string_value_of_key(literal("type"), "region");
+                    Attachment::Type type;
+                    if (strcmp(stype, "region") == 0)
+                    {
+                        type = Attachment::Type::Region;
+                    }
+                    else if (strcmp(stype, "mesh") == 0)
+                    {
+                        type = Attachment::Type::Mesh;
+                    }
+                    else if (strcmp(stype, "linkedmesh") == 0)
+                    {
+                        type = Attachment::Type::LinkedMesh;
+                    }
+                    else if (strcmp(stype, "boundingbox") == 0)
+                    {
+                        type = Attachment::Type::BoundingBox;
+                    }
+                    else if (strcmp(stype, "path") == 0)
+                    {
+                        type = Attachment::Type::Path;
+                    }
+                    else
+                    {
+                        setError("Unknown skin attachment type: ", stype);
+                        return nullptr;
+                    }
+
+                    auto attachment = m_loader->createAttachment(skin, type, name, path);
+
+                    if (!attachment)
+                    {
+                        if (!m_loader->error1.empty())
+                        {
+                            setError(m_loader->error1, m_loader->error2);
+                            return nullptr;
+                        }
+                        continue;
+                    }
+
+                    switch (type)
+                    {
+                    case Attachment::Type::Region:
+                    {
+                        auto region = static_cast<RegionAttachment*>(attachment);
+                        region->translation.x = jattachment.get_safe_float_value_of_key(literal("x")) * m_scale;
+                        region->translation.y = jattachment.get_safe_float_value_of_key(literal("y")) * m_scale;
+                        region->scale.x = jattachment.get_safe_float_value_of_key(literal("scaleX"), 1);
+                        region->scale.y = jattachment.get_safe_float_value_of_key(literal("scaleY"), 1);
+                        region->rotation = jattachment.get_safe_float_value_of_key(literal("rotation"));
+                        region->size.x = jattachment.get_safe_float_value_of_key(literal("width"), 32) * m_scale;
+                        region->size.y = jattachment.get_safe_float_value_of_key(literal("height"), 32) * m_scale;
+
+                        string color = jattachment.get_safe_value_of_key_as_string(literal("color"));
+                        region->color = Color_fromHexString(color);
+
+                        region->updateOffset();
+
+                        m_loader->configureAttachment(region);
+                    }
+                    break;
+                    case Attachment::Type::Mesh:
+                    case Attachment::Type::LinkedMesh:
+                    {
+                        auto mesh = static_cast<MeshAttachment*>(attachment);
+
+                        string color = jattachment.get_safe_value_of_key_as_string(literal("color"));
+                        mesh->color = Color_fromHexString(color);
+
+                        mesh->size.x = jattachment.get_safe_float_value_of_key(literal("width"), 32) * m_scale;
+                        mesh->size.y = jattachment.get_safe_float_value_of_key(literal("height"), 32) * m_scale;
+
+                        auto iparent = jattachment.find_object_key(literal("parent"));
+                        if (iparent == jattachment.get_length())
+                        {
+                            const auto& jtriangles = jattachment.get_value_of_key(literal("triangles"));
+                            auto numTriangles = jtriangles.get_length();
+                            mesh->triangles.resize(numTriangles);
+                            for (size_t t = 0; t < numTriangles; ++t)
+                            {
+                                mesh->triangles[t] = jtriangles.get_array_element(t).get_integer_value();
+                            }
+
+                            const auto& juvs = jattachment.get_value_of_key(literal("uvs"));
+                            auto numUVs = juvs.get_length();
+                            mesh->regionUVs.reserve(numUVs / 2);
+                            for (size_t uv = 0; uv < numUVs; uv += 2)
+                            {
+                                float x = juvs.get_array_element(uv).get_safe_float_value();
+                                float y = juvs.get_array_element(uv + 1).get_safe_float_value();
+
+                                mesh->regionUVs.emplace_back(x, y);
+                            }
+
+                            readVertices(jattachment, *mesh, int(numUVs));
+
+                            mesh->updateUVs();
+
+                            mesh->hullLength = jattachment.get_safe_integer_value_of_key(literal("hull"));
+
+                            auto iedges = jattachment.find_object_key(literal("edges"));
+                            if (iedges < jattachment.get_length())
+                            {
+                                const auto& jedges = jattachment.get_object_value(iedges);
+                                mesh->edges.resize(jedges.get_length());
+                                for (size_t e = 0; e < mesh->edges.size(); ++e)
+                                {
+                                    mesh->edges[e] = jedges.get_array_element(e).get_integer_value();
+                                }
+                            }
+
+                            m_loader->configureAttachment(mesh);
+                        }
+                        else
+                        {
+                            mesh->inheritDeform = !!jattachment.get_safe_integer_value_of_key(literal("deform"), 1);
+                            const char* skin = jattachment.get_safe_string_value_of_key(literal("skin"));
+                            const auto& jparent = jattachment.get_object_value(iparent);
+                            const char* parent = jparent.get_string_value();
+                            m_linkedMeshes.emplace_back(mesh, skin, slotIndex, parent);
+                        }
+                    }
+                    break;
+                    case Attachment::Type::BoundingBox:
+                    {
+                        auto bbox = static_cast<BoundingBoxAttachment*>(attachment);
+
+                        int vertexCount = jattachment.get_safe_integer_value_of_key(literal("vertexCount"));
+                        readVertices(jattachment, *bbox, 2 * vertexCount);
+
+                        m_loader->configureAttachment(bbox);
+                    }
+                    break;
+                    case Attachment::Type::Path:
+                    {
+                        auto path = static_cast<PathAttachment*>(attachment);
+
+                        path->closed = jattachment.get_safe_integer_value_of_key(literal("closed"));
+                        path->constantSpeed = jattachment.get_safe_integer_value_of_key(literal("constantSpeed"), 1);
+                        int vertexCount = jattachment.get_safe_integer_value_of_key(literal("vertexCount"));
+                        readVertices(jattachment, *path, 2 * vertexCount);
+
+                        path->lengths.resize(vertexCount / 3);
+
+                        auto ilengths = jattachment.find_object_key(literal("lengths"));
+                        const auto& jlengths = jattachment.get_object_value(ilengths);
+                        for (size_t l = 0; l < path->lengths.size(); ++l)
+                        {
+                            path->lengths[l] = jlengths.get_array_element(l).get_safe_float_value() * m_scale;
+                        }
+                    }
+                    break;
+                    }
+                    
+                    skin.m_entries.emplace_back(slotIndex, skinAttachmentName, attachment);
+                }
+            }
+        }
+    }
+
+    /* Linked meshes. */
+    for (const auto& linkedMesh : m_linkedMeshes)
+    {
+        auto skin = linkedMesh.skin ? skeletonData->findSkin(linkedMesh.skin) : skeletonData->defaultSkin;
+        if (!skin)
+        {
+            setError("Linked mesh skin not found:", linkedMesh.skin);
+            return nullptr;
+        }
+
+        auto parent = skin->getAttachment(linkedMesh.slotIndex, linkedMesh.parent);
+        if (!parent)
+        {
+            setError("Parent mesh not found:", linkedMesh.parent);
+            return nullptr;
+        }
+
+        linkedMesh.mesh->setParentMesh(static_cast<const MeshAttachment*>(parent));
+        linkedMesh.mesh->updateUVs();
+
+        m_loader->configureAttachment(linkedMesh.mesh);
+    }
+
+    m_linkedMeshes.clear();
+
+    /* Events. */
+    const auto ievents = root.find_object_key(literal("events"));
+    if (ievents < len)
+    {
+        const auto& jevents = root.get_object_value(ievents);
+        const auto numEvents = jevents.get_length();
+
+        skeletonData->events.reserve(numEvents);
+
+        for (size_t i = 0; i < numEvents; ++i)
+        {
+            const auto& jevent = jevents.get_object_value(i);
+            string eventName = jevents.get_object_key(i);
+
+            skeletonData->events.emplace_back(eventName);
+            EventData& event = skeletonData->events.back();
+
+            event.intValue = jevent.get_safe_integer_value_of_key(literal("int"));
+            event.floatValue = jevent.get_safe_float_value_of_key(literal("float"));
+            event.stringValue = jevent.get_safe_value_of_key_as_string(literal("string"));
+        }
+
+    }
+
+    /* Animations. */
+    const auto ianims = root.find_object_key(literal("animations"));
+    if (ianims < len)
+    {
+        const auto& janims = root.get_object_value(ianims);
+        const auto numAnims = janims.get_length();
+
+        skeletonData->animations.reserve(numAnims);
+
+        for (size_t i = 0; i < numAnims; ++i)
+        {
+            const auto& janim = janims.get_object_value(i);
+            string animName = janims.get_object_key(i);
+
+            skeletonData->animations.emplace_back(animName);
+            Animation& anim = skeletonData->animations.back();
+
+            readAnimation(anim, *skeletonData, janim);
+        }
+    }
+
+    return skeletonData.release();
 }
 
-void SkeletonJson::setBezier(CurveTimeline *timeline, int frame, int value, int bezier, float time1, float value1, float cx1,
-							 float cy1,
-							 float cx2, float cy2, float time2, float value2) {
-	timeline->setBezier(bezier, frame, value, time1, value1, cx1, cy1, cx2, cy2, time2, value2);
+void SkeletonJson::readAnimation(Animation& anim, const SkeletonData& skeletonData, const sajson::value& json)
+{
+    using sajson::literal;
+
+    auto len = json.get_length();
+
+    auto ibones = json.find_object_key(literal("bones"));
+    auto islots = json.find_object_key(literal("slots"));
+    auto iik = json.find_object_key(literal("ik"));
+    auto itransform = json.find_object_key(literal("transform"));
+    auto ipaths = json.find_object_key(literal("paths"));
+    auto ideform = json.find_object_key(literal("deform"));
+
+    auto idrawOrder = json.find_object_key(literal("drawOrder"));
+    if (idrawOrder >= len)
+    {
+        // backwards compatibility
+        idrawOrder = json.find_object_key(literal("draworder"));
+    }
+
+    auto ievents = json.find_object_key(literal("events"));
+
+    // count timelines
+    size_t numTimelines = 0;
+    if (ibones < len)
+    {
+        const auto& jbones = json.get_object_value(ibones);
+        for (size_t i = 0; i < jbones.get_length(); ++i)
+        {
+            numTimelines += jbones.get_object_value(i).get_length();
+        }
+    }
+
+    if (islots < len)
+    {
+        const auto& jslots = json.get_object_value(islots);
+        for (size_t i = 0; i < jslots.get_length(); ++i)
+        {
+            numTimelines += jslots.get_object_value(i).get_length();
+        }
+    }
+
+    if (iik < len)
+    {
+        numTimelines += json.get_object_value(iik).get_length();
+    }
+
+    if (itransform < len)
+    {
+        numTimelines += json.get_object_value(itransform).get_length();
+    }
+
+    if (ipaths < len)
+    {
+        const auto& jpaths = json.get_object_value(ipaths);
+        for (size_t i = 0; i < jpaths.get_length(); ++i)
+        {
+            numTimelines += jpaths.get_object_value(i).get_length();
+        }
+    }
+
+    if (ideform < len)
+    {
+        const auto& jdeform = json.get_object_value(ideform);
+        for (size_t s = 0; s < jdeform.get_length(); ++s)
+        {
+            const auto& jslots = jdeform.get_object_value(s);
+            for (size_t i = 0; i < jslots.get_length(); ++i)
+            {
+                numTimelines += jslots.get_object_value(i).get_length();
+            }
+        }
+    }
+
+    if (idrawOrder < len) ++numTimelines;
+
+    if (ievents < len) ++numTimelines;
+
+    anim.timelines.reserve(numTimelines);
+
+    /* Slot timelines. */
+    if (islots < len)
+    {
+        const auto& jslots = json.get_object_value(islots);
+        for (size_t i = 0; i < jslots.get_length(); ++i)
+        {
+            const auto& jslot = jslots.get_object_value(i);
+            const char* slotName = jslots.get_object_key(i);
+
+            int slotIndex = skeletonData.findSlotIndex(slotName);
+            if (slotIndex == -1)
+            {
+                setError("Animation slot not found: ", slotName);
+                return;
+            }
+
+            for (size_t j = 0; j < jslot.get_length(); ++j)
+            {
+                const auto& jtimeline = jslot.get_object_value(j);
+                const char* timelineTypeName = jslot.get_object_key(j);
+
+                if (strcmp(timelineTypeName, "color") == 0)
+                {
+                    auto timeline = new ColorTimeline(int(jtimeline.get_length()));
+                    timeline->slotIndex = slotIndex;
+
+                    for (size_t f = 0; f < jtimeline.get_length(); ++f)
+                    {
+                        const auto& jframe = jtimeline.get_array_element(f);
+                        string color = jframe.get_safe_value_of_key_as_string(literal("color"));
+                        float time = jframe.get_safe_float_value_of_key(literal("time"));
+                        timeline->frames[f].time = time;
+                        timeline->frames[f].color = Color_fromHexString(color);
+                        readCurve(timeline->frames[f], jframe);
+                    }
+
+                    anim.timelines.emplace_back(timeline);
+                    anim.duration = std::max(anim.duration, timeline->frames.back().time);
+                }
+                else if (strcmp(timelineTypeName, "attachment") == 0)
+                {
+                    auto timeline = new AttachmentTimeline;
+                    timeline->slotIndex = slotIndex;
+                    timeline->frames.reserve(jtimeline.get_length());
+
+                    for (size_t f = 0; f < jtimeline.get_length(); ++f)
+                    {
+                        const auto& jframe = jtimeline.get_array_element(f);
+
+                        const auto& jname = jframe.get_value_of_key(literal("name"));
+                        string attachmentName;
+                        if (jname.get_type() == sajson::TYPE_STRING)
+                        {
+                            attachmentName = jname.as_std_string();
+                        }
+
+                        float time = jframe.get_safe_float_value_of_key(literal("time"));
+
+                        timeline->frames.emplace_back(time, attachmentName);
+                    }
+
+                    anim.timelines.emplace_back(timeline);
+                    anim.duration = std::max(anim.duration, timeline->frames.back().time);
+                }
+                else
+                {
+                    setError("Invalid timeline type for a slot", timelineTypeName);
+                    return;
+                }
+            }
+        }
+    }
+
+    /* Bone timelines. */
+    if (ibones < len)
+    {
+        const auto& jbones = json.get_object_value(ibones);
+        for (size_t i = 0; i < jbones.get_length(); ++i)
+        {
+            const auto& jbone = jbones.get_object_value(i);
+            const char* boneName = jbones.get_object_key(i);
+
+            int boneIndex = skeletonData.findBoneIndex(boneName);
+            if (boneIndex == -1)
+            {
+                setError("Animation bone not found: ", boneName);
+                return;
+            }
+
+            for (size_t j = 0; j < jbone.get_length(); ++j)
+            {
+                const auto& jtimeline = jbone.get_object_value(j);
+                const char* timelineTypeName = jbone.get_object_key(j);
+
+                if (strcmp(timelineTypeName, "rotate") == 0)
+                {
+                    auto timeline = new RotateTimeline(int(jtimeline.get_length()));
+                    timeline->boneIndex = boneIndex;
+
+                    for (size_t f = 0; f < jtimeline.get_length(); ++f)
+                    {
+                        const auto& jframe = jtimeline.get_array_element(f);
+                        float time = jframe.get_safe_float_value_of_key(literal("time"));
+                        float angle = jframe.get_safe_float_value_of_key(literal("angle"));
+                        timeline->frames[f].time = time;
+                        timeline->frames[f].angle = angle;
+                        readCurve(timeline->frames[f], jframe);
+                    }
+
+                    anim.timelines.emplace_back(timeline);
+                    anim.duration = std::max(anim.duration, timeline->frames.back().time);
+                }
+                else if (strcmp(timelineTypeName, "scale") == 0)
+                {
+                    auto timeline = new ScaleTimeline(int(jtimeline.get_length()));
+                    timeline->boneIndex = boneIndex;
+
+                    for (size_t f = 0; f < jtimeline.get_length(); ++f)
+                    {
+                        const auto& jframe = jtimeline.get_array_element(f);
+                        float time = jframe.get_safe_float_value_of_key(literal("time"));
+                        Vector scale;
+                        scale.x = jframe.get_safe_float_value_of_key(literal("x"));
+                        scale.y = jframe.get_safe_float_value_of_key(literal("y"));
+                        timeline->frames[f].time = time;
+                        timeline->frames[f].scale = scale;
+                        readCurve(timeline->frames[f], jframe);
+                    }
+
+                    anim.timelines.emplace_back(timeline);
+                    anim.duration = std::max(anim.duration, timeline->frames.back().time);
+                }
+                else if (strcmp(timelineTypeName, "translate") == 0)
+                {
+                    auto timeline = new TranslateTimeline(int(jtimeline.get_length()));
+                    timeline->boneIndex = boneIndex;
+
+                    for (size_t f = 0; f < jtimeline.get_length(); ++f)
+                    {
+                        const auto& jframe = jtimeline.get_array_element(f);
+                        float time = jframe.get_safe_float_value_of_key(literal("time"));
+                        Vector t;
+                        t.x = jframe.get_safe_float_value_of_key(literal("x")) * m_scale;
+                        t.y = jframe.get_safe_float_value_of_key(literal("y")) * m_scale;
+                        timeline->frames[f].time = time;
+                        timeline->frames[f].translation = t;
+                        readCurve(timeline->frames[f], jframe);
+                    }
+
+                    anim.timelines.emplace_back(timeline);
+                    anim.duration = std::max(anim.duration, timeline->frames.back().time);
+                }
+                else if (strcmp(timelineTypeName, "shear") == 0)
+                {
+                    auto timeline = new ShearTimeline(int(jtimeline.get_length()));
+                    timeline->boneIndex = boneIndex;
+
+                    for (size_t f = 0; f < jtimeline.get_length(); ++f)
+                    {
+                        const auto& jframe = jtimeline.get_array_element(f);
+                        float time = jframe.get_safe_float_value_of_key(literal("time"));
+                        Vector sh;
+                        sh.x = jframe.get_safe_float_value_of_key(literal("x")) * m_scale;
+                        sh.y = jframe.get_safe_float_value_of_key(literal("y")) * m_scale;
+                        timeline->frames[f].time = time;
+                        timeline->frames[f].shear = sh;
+                        readCurve(timeline->frames[f], jframe);
+                    }
+
+                    anim.timelines.emplace_back(timeline);
+                    anim.duration = std::max(anim.duration, timeline->frames.back().time);
+                }
+                else
+                {
+                    setError("Invalid timeline type for a bone", timelineTypeName);
+                    return;
+                }
+            }
+        }
+    }
+
+    /* IK constraint timelines. */
+    if (iik < len)
+    {
+        const auto& jiks = json.get_object_value(iik);
+        for (size_t i = 0; i < jiks.get_length(); ++i)
+        {
+            const auto& jtimeline = jiks.get_object_value(i);
+            const char* ikConstraintName = jiks.get_object_key(i);
+
+            auto ikConstraintIndex = skeletonData.findIkConstraintIndex(ikConstraintName);
+            auto timeline = new IkConstraintTimeline(int(jtimeline.get_length()));
+
+            timeline->ikConstraintIndex = ikConstraintIndex;
+
+            for (size_t f = 0; f < jtimeline.get_length(); ++f)
+            {
+                const auto& jframe = jtimeline.get_array_element(f);
+                float time = jframe.get_safe_float_value_of_key(literal("time"));
+                float mix = jframe.get_safe_float_value_of_key(literal("mix"), 1.f);
+                int bendPositive = jframe.get_safe_integer_value_of_key(literal("bendPositive"), 1);
+                timeline->frames[f].time = time;
+                timeline->frames[f].mix = mix;
+                timeline->frames[f].bendDirection = bendPositive ? 1 : -1;
+                readCurve(timeline->frames[f], jframe);
+            }
+
+            anim.timelines.emplace_back(timeline);
+            anim.duration = std::max(anim.duration, timeline->frames.back().time);
+        }
+    }
+
+    /* Transform constraint timelines. */
+    if (itransform < len)
+    {
+        const auto& jtransforms = json.get_object_value(itransform);
+        for (size_t i = 0; i < jtransforms.get_length(); ++i)
+        {
+            const auto& jtimeline = jtransforms.get_object_value(i);
+            const char* transformConstraintName = jtransforms.get_object_key(i);
+
+            auto transformConstraintIndex = skeletonData.findTransformConstraintIndex(transformConstraintName);
+            auto timeline = new TransformConstraintTimeline(int(jtimeline.get_length()));
+            timeline->transformConstraintIndex = transformConstraintIndex;
+
+            for (size_t f = 0; f < jtimeline.get_length(); ++f)
+            {
+                const auto& jframe = jtimeline.get_array_element(f);
+                timeline->frames[f].time = jframe.get_safe_float_value_of_key(literal("time"));
+                timeline->frames[f].rotateMix = jframe.get_safe_float_value_of_key(literal("rotateMix"), 1);
+                timeline->frames[f].translateMix = jframe.get_safe_float_value_of_key(literal("translateMix"), 1);
+                timeline->frames[f].scaleMix = jframe.get_safe_float_value_of_key(literal("scaleMix"), 1);
+                timeline->frames[f].shearMix = jframe.get_safe_float_value_of_key(literal("shearMix"), 1);
+                readCurve(timeline->frames[f], jframe);
+            }
+
+            anim.timelines.emplace_back(timeline);
+            anim.duration = std::max(anim.duration, timeline->frames.back().time);
+        }
+    }
+
+    /** Path constraint timelines. */
+    if (ipaths < len)
+    {
+        const auto& jpaths = json.get_object_value(ipaths);
+
+        for (size_t i = 0; i < jpaths.get_length(); ++i)
+        {
+            const auto& jpath = jpaths.get_object_value(i);
+            const char* pathConstraintName = jpaths.get_object_key(i);
+
+            int constraintIndex = skeletonData.findPathConstraintIndex(pathConstraintName);
+
+            if (constraintIndex == -1)
+            {
+                setError("Path constraint not found: ", pathConstraintName);
+                return;
+            }
+
+            auto& data = skeletonData.pathConstraints[constraintIndex];
+
+            for (size_t j = 0; j < jpath.get_length(); ++j)
+            {
+                const auto& jtimeline = jpath.get_object_value(j);
+                const char* timelineTypeName = jpath.get_object_key(j);
+
+                if (strcmp(timelineTypeName, "position") == 0 || strcmp(timelineTypeName, "spacing") == 0)
+                {
+                    PathConstraintTimeline* timeline;
+                    float timelineScale = 1;
+
+                    if(strcmp(timelineTypeName, "spacing") == 0)
+                    {
+                        timeline = new PathConstraintSpacingTimeline(int(jtimeline.get_length()));
+                        if (data.spacingMode == SpacingMode::Length || data.spacingMode == SpacingMode::Fixed)
+                        {
+                            timelineScale = m_scale;
+                        }
+                    }
+                    else
+                    {
+                        timeline = new PathConstraintPositionTimeline(int(jtimeline.get_length()));
+                        if (data.positionMode == PositionMode::Fixed)
+                        {
+                            timelineScale = m_scale;
+                        }
+                    }
+
+                    timeline->pathConstraintIndex = constraintIndex;
+
+                    for (size_t f = 0; f < jtimeline.get_length(); ++f)
+                    {
+                        const auto& jframe = jtimeline.get_array_element(f);
+                        timeline->frames[f].time = jframe.get_safe_float_value_of_key(literal("time"));
+                        timeline->frames[f].value = jframe.get_safe_float_value_of_key(literal(timelineTypeName)) * timelineScale;
+                        readCurve(timeline->frames[f], jframe);
+                    }
+
+                    anim.timelines.emplace_back(timeline);
+                    anim.duration = std::max(anim.duration, timeline->frames.back().time);
+                }
+                else if (strcmp(timelineTypeName, "mix") == 0)
+                {
+                    auto timeline = new PathConstraintMixTimeline(int(jtimeline.get_length()));
+                    timeline->pathConstraintIndex = constraintIndex;
+
+                    for (size_t f = 0; f < jtimeline.get_length(); ++f)
+                    {
+                        const auto& jframe = jtimeline.get_array_element(f);
+                        timeline->frames[f].time = jframe.get_safe_float_value_of_key(literal("time"));
+                        timeline->frames[f].rotateMix = jframe.get_safe_float_value_of_key(literal("rotateMix"), 1);
+                        timeline->frames[f].translateMix = jframe.get_safe_float_value_of_key(literal("translateMix"), 1);
+                        readCurve(timeline->frames[f], jframe);
+                    }
+
+                    anim.timelines.emplace_back(timeline);
+                    anim.duration = std::max(anim.duration, timeline->frames.back().time);
+                }
+            }
+        }
+    }
+
+    /* Deform timelines. */
+    if (ideform < len)
+    {
+        const auto& jdeforms = json.get_object_value(ideform);
+
+        for (size_t i = 0; i < jdeforms.get_length(); ++i)
+        {
+            const auto& jdeform = jdeforms.get_object_value(i);
+            const char* skinName = jdeforms.get_object_key(i);
+
+            auto skin = skeletonData.findSkin(skinName);
+
+            for (size_t j = 0; j < jdeform.get_length(); ++j)
+            {
+                const auto& jslot = jdeform.get_object_value(j);
+                const char* slotName = jdeform.get_object_key(j);
+
+                auto slotIndex = skeletonData.findSlotIndex(slotName);
+
+                for (size_t t = 0; t < jslot.get_length(); ++t)
+                {
+                    const auto& jtimeline = jslot.get_object_value(t);
+                    const char* attachmentName = jslot.get_object_key(t);
+
+                    auto attachment = static_cast<const VertexAttachment*>(skin->getAttachment(slotIndex, attachmentName));
+                    if (!attachment)
+                    {
+                        setError("Animation ffd skin attachment not found: ", attachmentName);
+                        return;
+                    }
+
+                    bool weighted = !attachment->bones.empty();
+                    size_t numVertices = 0;                    
+                    if (weighted)
+                    {
+                        numVertices = attachment->vertices.size() / 3;
+                    }
+                    else
+                    {
+                        numVertices = attachment->vertices.size() / 2;
+                    }
+
+                    auto timeline = new DeformTimeline(int(jtimeline.get_length()), numVertices);
+                    timeline->slotIndex = slotIndex;
+                    timeline->attachment = attachment;
+
+                    vector<Vector> verts;
+
+                    for (size_t f = 0; f < jtimeline.get_length(); ++f)
+                    {
+                        const auto& jframe = jtimeline.get_array_element(f);
+
+                        float time = jframe.get_safe_float_value_of_key(literal("time"));
+
+                        const auto& ivertices = jframe.find_object_key(literal("vertices"));
+                        if (ivertices >= jframe.get_length())
+                        {
+                            if (weighted)
+                            {
+                                verts.assign(numVertices, Vector(0, 0));
+                                timeline->setFrame(int(f), time, verts);
+                            }
+                            else
+                            {
+                                timeline->setFrame(int(f), time, *attachment->vertices.get());
+                            }
+                        }
+                        else
+                        {
+                            int offset = jframe.get_safe_integer_value_of_key(literal("offset"));
+
+                            const auto& jvertices = jframe.get_object_value(ivertices);
+                            verts.assign(numVertices, Vector(0, 0));
+                            float* fverts = reinterpret_cast<float*>(verts.data()) + offset;
+                            for (size_t v = 0; v < jvertices.get_length(); ++v)
+                            {
+                                *fverts++ = jvertices.get_array_element(v).get_safe_float_value() * m_scale;
+                            }
+
+                            if (!weighted)
+                            {
+                                float* fverts = reinterpret_cast<float*>(verts.data());
+                                for (size_t v = 0; v < 2*numVertices; ++v)
+                                {
+                                    fverts[v] += attachment->vertices[v];
+                                }
+                            }
+
+                            timeline->setFrame(int(f), time, verts);
+                        }
+
+                        readCurve(timeline->frames[f], jframe);
+                    }
+                    anim.timelines.emplace_back(timeline);                    
+                    anim.duration = std::max(anim.duration, timeline->frames.back().time);
+                }
+            }
+        }
+    }
+
+    /* Draw order timeline. */
+    if (idrawOrder < len)
+    {
+        const auto& jdrawOrder = json.get_object_value(idrawOrder);
+
+        auto timeline = new DrawOrderTimeline(int(jdrawOrder.get_length()), int(skeletonData.slots.size()));
+
+        vector<int> drawOrder;
+        vector<int> drawOrderUnchanged; // keeps a list of the unchanged indices
+
+        for (size_t f = 0; f < jdrawOrder.get_length(); ++f)
+        {
+            const auto& jframe = jdrawOrder.get_array_element(f);
+
+            float time = jframe.get_safe_float_value_of_key(literal("time"));
+
+            const auto ioffsets = jframe.find_object_key(literal("offsets"));
+            if (ioffsets < jframe.get_length())
+            {
+                const auto& joffsets = jframe.get_object_value(ioffsets);
+
+                // mark all indices as unchanged
+                drawOrder.assign(skeletonData.slots.size(), -1);
+                // prepare unchaged list
+                drawOrderUnchanged.reserve(skeletonData.slots.size());
+                drawOrderUnchanged.resize(drawOrder.size() - joffsets.get_length());
+                int unchangedIndex = 0;
+                int drawOrderIndex = 0;
+
+                for (size_t i = 0; i < joffsets.get_length(); ++i)
+                {
+                    const auto& joffset = joffsets.get_array_element(i);
+                    auto slotName = joffset.get_safe_string_value_of_key(literal("slot"));
+
+                    int slotIndex = skeletonData.findSlotIndex(slotName);
+                    if (slotIndex == -1)
+                    {
+                        setError("Animation drawOrder timeline slot not found: ", slotName);
+                        return;
+                    }
+
+                    // collect unchaged indices in helper
+                    while (drawOrderIndex != slotIndex)
+                    {
+                        drawOrderUnchanged[unchangedIndex++] = drawOrderIndex++;
+                    }
+
+                    int offset = joffset.get_safe_integer_value_of_key(literal("offset"));
+
+                    // set changed item
+                    drawOrder[drawOrderIndex + offset] = drawOrderIndex;
+                    ++drawOrderIndex;
+                }
+
+                // collect remaining unchanged
+                while (drawOrderIndex < int(drawOrder.size()))
+                {
+                    drawOrderUnchanged[unchangedIndex++] = drawOrderIndex++;
+                }
+
+                // fill unchanged in draw order
+                unchangedIndex = 0;
+                for (auto& d : drawOrder)
+                {
+                    if (d == -1)
+                    {
+                        d = drawOrderUnchanged[unchangedIndex++];
+                    }
+                }
+            }
+
+            timeline->setFrame(int(f), time, drawOrder);
+            drawOrder.clear();
+            drawOrderUnchanged.clear();
+        }
+
+        anim.timelines.emplace_back(timeline);
+        anim.duration = std::max(anim.duration, timeline->frames.back().time);
+    }
+
+    /* Event timeline. */
+    if (ievents < len)
+    {
+        const auto& jevents = json.get_object_value(ievents);
+
+        auto timeline = new EventTimeline;
+        timeline->frames.reserve(jevents.get_length());
+
+        for (size_t f = 0; f < jevents.get_length(); ++f)
+        {
+            const auto& jframe = jevents.get_array_element(f);
+
+            float time = jframe.get_safe_float_value_of_key(literal("time"));
+
+            auto eventName = jframe.get_safe_string_value_of_key(literal("name"));
+
+            auto eventData = skeletonData.findEvent(eventName);
+            if (!eventData)
+            {
+                setError("Event in animation timeline not found: ", eventName);
+                return;
+            }
+
+            timeline->frames.emplace_back(time, *eventData);
+            auto& event = timeline->frames.back();
+
+            event.intValue = jframe.get_safe_integer_value_of_key(literal("int"));
+            event.floatValue = jframe.get_safe_float_value_of_key(literal("float"));
+            event.stringValue = jframe.get_safe_value_of_key_as_string(literal("string"));
+        }
+
+        anim.timelines.emplace_back(timeline);
+        anim.duration = std::max(anim.duration, timeline->frames.back().time);
+    }
 }
 
-int SkeletonJson::readCurve(Json *curve, CurveTimeline *timeline, int bezier, int frame, int value, float time1,
-							float time2,
-							float value1, float value2, float scale) {
-	if (curve->_type == Json::JSON_STRING && strcmp(curve->_valueString, "stepped") == 0) {
-		timeline->setStepped(frame);
-		return bezier;
-	}
-	curve = Json::getItem(curve, value << 2);
-	float cx1 = curve->_valueFloat;
-	curve = curve->_next;
-	float cy1 = curve->_valueFloat * scale;
-	curve = curve->_next;
-	float cx2 = curve->_valueFloat;
-	curve = curve->_next;
-	float cy2 = curve->_valueFloat * scale;
-	setBezier(timeline, frame, value, bezier, time1, value1, cx1, cy1, cx2, cy2, time2, value2);
-	return bezier + 1;
+void SkeletonJson::readCurve(CurveFrame& frame, const sajson::value& json)
+{
+    using sajson::literal;
+    auto icurve = json.find_object_key(literal("curve"));
+
+    if (icurve >= json.get_length()) return;
+
+    const auto& jcurve = json.get_object_value(icurve);
+
+    if (jcurve.get_type() == sajson::TYPE_STRING && strcmp(jcurve.get_string_value(), "stepped") == 0)
+    {
+        frame.setStepped();
+    }
+    else if (jcurve.get_type() == sajson::TYPE_ARRAY)
+    {
+        Vector c1, c2;
+
+        c1.x = jcurve.get_array_element(0).get_safe_float_value();
+        c1.y = jcurve.get_array_element(1).get_safe_float_value();
+
+        c2.x = jcurve.get_array_element(2).get_safe_float_value();
+        c2.y = jcurve.get_array_element(3).get_safe_float_value();
+
+        frame.setCurve(c1, c2);
+    }
 }
 
-Timeline *SkeletonJson::readTimeline(Json *keyMap, CurveTimeline1 *timeline, float defaultValue, float scale) {
-	float time = Json::getFloat(keyMap, "time", 0);
-	float value = Json::getFloat(keyMap, "value", defaultValue) * scale;
-	int bezier = 0;
-	for (int frame = 0;; frame++) {
-		timeline->setFrame(frame, time, value);
-		Json *nextMap = keyMap->_next;
-		if (!nextMap) break;
-		float time2 = Json::getFloat(nextMap, "time", 0);
-		float value2 = Json::getFloat(nextMap, "value", defaultValue) * scale;
-		Json *curve = Json::getItem(keyMap, "curve");
-		if (curve != NULL) bezier = readCurve(curve, timeline, bezier, frame, 0, time, time2, value, value2, scale);
-		time = time2;
-		value = value2;
-		keyMap = nextMap;
-	}
-	// timeline.shrink(); // BOZO
-	return timeline;
+void SkeletonJson::readVertices(const sajson::value& json, VertexAttachment& attachment, int verticesLength)
+{
+    attachment.worldVerticesCount = verticesLength / 2;
+
+    auto ivertices = json.find_object_key(sajson::literal("vertices"));
+
+    if (ivertices >= json.get_length()) return;
+
+    const auto& jvertices = json.get_object_value(ivertices);
+    const auto numVertices = jvertices.get_length();
+
+    if (int(numVertices) == verticesLength)
+    {
+        // no bones and weights just plain vertices
+        auto& v = attachment.vertices;
+        v.resize(verticesLength);
+        for (size_t i = 0; i < verticesLength; ++i)
+        {
+            v[i] = jvertices.get_array_element(i).get_safe_float_value() * m_scale;
+        }
+
+        attachment.bones.clear();
+    }
+    else
+    {
+        // format of jvertices is bones, bone, x, y, weight
+
+        size_t numBones = 0;
+        size_t numWeights = 0;
+        for (size_t v = 0; v < numVertices;)
+        {
+            int bc = jvertices.get_array_element(v).get_integer_value();
+            numBones += bc + 1;
+            numWeights += 3 * bc;
+            v += 1 + bc * 4;
+        }
+
+        attachment.bones.resize(numBones);
+        attachment.vertices.resize(numWeights);
+
+        int b = 0;
+        int w = 0;
+        for (size_t v = 0; v < numVertices;)
+        {
+            int bc = jvertices.get_array_element(v++).get_integer_value();
+            attachment.bones[b++] = bc;
+            for (int ib = 0; ib < bc; ++ib)
+            {
+                attachment.bones[b++] = jvertices.get_array_element(v).get_integer_value();
+                attachment.vertices[w++] = jvertices.get_array_element(v + 1).get_safe_float_value() * m_scale;
+                attachment.vertices[w++] = jvertices.get_array_element(v + 2).get_safe_float_value() * m_scale;
+                attachment.vertices[w++] = jvertices.get_array_element(v + 3).get_safe_float_value();
+                v += 4;
+            }
+        }
+    }
 }
 
-Timeline *SkeletonJson::readTimeline(Json *keyMap, CurveTimeline2 *timeline, const char *name1, const char *name2,
-									 float defaultValue, float scale) {
-	float time = Json::getFloat(keyMap, "time", 0);
-	float value1 = Json::getFloat(keyMap, name1, defaultValue) * scale;
-	float value2 = Json::getFloat(keyMap, name2, defaultValue) * scale;
-	int bezier = 0;
-	for (int frame = 0;; frame++) {
-		timeline->setFrame(frame, time, value1, value2);
-		Json *nextMap = keyMap->_next;
-		if (!nextMap) break;
-		float time2 = Json::getFloat(nextMap, "time", 0);
-		float nvalue1 = Json::getFloat(nextMap, name1, defaultValue) * scale;
-		float nvalue2 = Json::getFloat(nextMap, name2, defaultValue) * scale;
-		Json *curve = Json::getItem(keyMap, "curve");
-		if (curve != NULL) {
-			bezier = readCurve(curve, timeline, bezier, frame, 0, time, time2, value1, nvalue1, scale);
-			bezier = readCurve(curve, timeline, bezier, frame, 1, time, time2, value2, nvalue2, scale);
-		}
-		time = time2;
-		value1 = nvalue1;
-		value2 = nvalue2;
-		keyMap = nextMap;
-	}
-	// timeline.shrink(); // BOZO
-	return timeline;
-}
-
-int SkeletonJson::findSlotIndex(SkeletonData *skeletonData, const String &slotName, Vector<Timeline *> timelines) {
-	int slotIndex = ContainerUtil::findIndexWithName(skeletonData->getSlots(), slotName);
-	if (slotIndex == -1) {
-		ContainerUtil::cleanUpVectorOfPointers(timelines);
-		setError(NULL, "Slot not found: ", slotName);
-	}
-	return slotIndex;
-}
-
-SpineAnimation*SkeletonJson::readAnimation(Json *root, SkeletonData *skeletonData) {
-	Vector<Timeline *> timelines;
-	Json *bones = Json::getItem(root, "bones");
-	Json *slots = Json::getItem(root, "slots");
-	Json *ik = Json::getItem(root, "ik");
-	Json *transform = Json::getItem(root, "transform");
-	Json *paths = Json::getItem(root, "path");
-	Json *attachments = Json::getItem(root, "attachments");
-	Json *drawOrder = Json::getItem(root, "drawOrder");
-	Json *events = Json::getItem(root, "events");
-	Json *boneMap, *slotMap, *keyMap, *nextMap, *curve;
-	int frame, bezier;
-	Color color, color2, newColor, newColor2;
-
-	/** Slot timelines. */
-	for (slotMap = slots ? slots->_child : 0; slotMap; slotMap = slotMap->_next) {
-		int slotIndex = findSlotIndex(skeletonData, slotMap->_name, timelines);
-		if (slotIndex == -1) return NULL;
-
-		for (Json *timelineMap = slotMap->_child; timelineMap; timelineMap = timelineMap->_next) {
-			int frames = timelineMap->_size;
-			if (strcmp(timelineMap->_name, "attachment") == 0) {
-				AttachmentTimeline *timeline = new (__FILE__, __LINE__) AttachmentTimeline(frames, slotIndex);
-				for (keyMap = timelineMap->_child, frame = 0; keyMap; keyMap = keyMap->_next, ++frame) {
-					timeline->setFrame(frame, Json::getFloat(keyMap, "time", 0),
-									   Json::getItem(keyMap, "name") ? Json::getItem(keyMap, "name")->_valueString : NULL);
-				}
-				timelines.add(timeline);
-
-			} else if (strcmp(timelineMap->_name, "rgba") == 0) {
-				RGBATimeline *timeline = new (__FILE__, __LINE__) RGBATimeline(frames, frames << 2, slotIndex);
-				keyMap = timelineMap->_child;
-				float time = Json::getFloat(keyMap, "time", 0);
-				toColor(color, Json::getString(keyMap, "color", 0), true);
-
-				for (frame = 0, bezier = 0;; ++frame) {
-					timeline->setFrame(frame, time, color.r, color.g, color.b, color.a);
-					nextMap = keyMap->_next;
-					if (!nextMap) {
-						// timeline.shrink(); // BOZO
-						break;
-					}
-					float time2 = Json::getFloat(nextMap, "time", 0);
-					toColor(newColor, Json::getString(nextMap, "color", 0), true);
-					curve = Json::getItem(keyMap, "curve");
-					if (curve) {
-						bezier = readCurve(curve, timeline, bezier, frame, 0, time, time2, color.r, newColor.r, 1);
-						bezier = readCurve(curve, timeline, bezier, frame, 1, time, time2, color.g, newColor.g, 1);
-						bezier = readCurve(curve, timeline, bezier, frame, 2, time, time2, color.b, newColor.b, 1);
-						bezier = readCurve(curve, timeline, bezier, frame, 3, time, time2, color.a, newColor.a, 1);
-					}
-					time = time2;
-					color = newColor;
-					keyMap = nextMap;
-				}
-				timelines.add(timeline);
-			} else if (strcmp(timelineMap->_name, "rgb") == 0) {
-				RGBTimeline *timeline = new (__FILE__, __LINE__) RGBTimeline(frames, frames * 3, slotIndex);
-				keyMap = timelineMap->_child;
-				float time = Json::getFloat(keyMap, "time", 0);
-				toColor(color, Json::getString(keyMap, "color", 0), false);
-
-				for (frame = 0, bezier = 0;; ++frame) {
-					timeline->setFrame(frame, time, color.r, color.g, color.b);
-					nextMap = keyMap->_next;
-					if (!nextMap) {
-						// timeline.shrink(); // BOZO
-						break;
-					}
-					float time2 = Json::getFloat(nextMap, "time", 0);
-					toColor(newColor, Json::getString(nextMap, "color", 0), false);
-					curve = Json::getItem(keyMap, "curve");
-					if (curve) {
-						bezier = readCurve(curve, timeline, bezier, frame, 0, time, time2, color.r, newColor.r, 1);
-						bezier = readCurve(curve, timeline, bezier, frame, 1, time, time2, color.g, newColor.g, 1);
-						bezier = readCurve(curve, timeline, bezier, frame, 2, time, time2, color.b, newColor.b, 1);
-					}
-					time = time2;
-					color = newColor;
-					keyMap = nextMap;
-				}
-				timelines.add(timeline);
-			} else if (strcmp(timelineMap->_name, "alpha") == 0) {
-				timelines.add(readTimeline(timelineMap->_child,
-										   new (__FILE__, __LINE__) AlphaTimeline(frames, frames, slotIndex),
-										   0, 1));
-			} else if (strcmp(timelineMap->_name, "rgba2") == 0) {
-				RGBA2Timeline *timeline = new (__FILE__, __LINE__) RGBA2Timeline(frames, frames * 7, slotIndex);
-				keyMap = timelineMap->_child;
-				float time = Json::getFloat(keyMap, "time", 0);
-				toColor(color, Json::getString(keyMap, "light", 0), true);
-				toColor(color2, Json::getString(keyMap, "dark", 0), false);
-
-				for (frame = 0, bezier = 0;; ++frame) {
-					timeline->setFrame(frame, time, color.r, color.g, color.b, color.a, color2.r, color2.g, color2.b);
-					nextMap = keyMap->_next;
-					if (!nextMap) {
-						// timeline.shrink(); // BOZO
-						break;
-					}
-					float time2 = Json::getFloat(nextMap, "time", 0);
-					toColor(newColor, Json::getString(nextMap, "light", 0), true);
-					toColor(newColor2, Json::getString(nextMap, "dark", 0), false);
-					curve = Json::getItem(keyMap, "curve");
-					if (curve) {
-						bezier = readCurve(curve, timeline, bezier, frame, 0, time, time2, color.r, newColor.r, 1);
-						bezier = readCurve(curve, timeline, bezier, frame, 1, time, time2, color.g, newColor.g, 1);
-						bezier = readCurve(curve, timeline, bezier, frame, 2, time, time2, color.b, newColor.b, 1);
-						bezier = readCurve(curve, timeline, bezier, frame, 3, time, time2, color.a, newColor.a, 1);
-						bezier = readCurve(curve, timeline, bezier, frame, 4, time, time2, color2.r, newColor2.r, 1);
-						bezier = readCurve(curve, timeline, bezier, frame, 5, time, time2, color2.g, newColor2.g, 1);
-						bezier = readCurve(curve, timeline, bezier, frame, 6, time, time2, color2.b, newColor2.b, 1);
-					}
-					time = time2;
-					color = newColor;
-					color2 = newColor2;
-					keyMap = nextMap;
-				}
-				timelines.add(timeline);
-			} else if (strcmp(timelineMap->_name, "rgb2") == 0) {
-				RGBA2Timeline *timeline = new (__FILE__, __LINE__) RGBA2Timeline(frames, frames * 6, slotIndex);
-				keyMap = timelineMap->_child;
-				float time = Json::getFloat(keyMap, "time", 0);
-				toColor(color, Json::getString(keyMap, "light", 0), false);
-				toColor(color2, Json::getString(keyMap, "dark", 0), false);
-
-				for (frame = 0, bezier = 0;; ++frame) {
-					timeline->setFrame(frame, time, color.r, color.g, color.b, color.a, color2.r, color2.g, color2.b);
-					nextMap = keyMap->_next;
-					if (!nextMap) {
-						// timeline.shrink(); // BOZO
-						break;
-					}
-					float time2 = Json::getFloat(nextMap, "time", 0);
-					toColor(newColor, Json::getString(nextMap, "light", 0), false);
-					toColor(newColor2, Json::getString(nextMap, "dark", 0), false);
-					curve = Json::getItem(keyMap, "curve");
-					if (curve) {
-						bezier = readCurve(curve, timeline, bezier, frame, 0, time, time2, color.r, newColor.r, 1);
-						bezier = readCurve(curve, timeline, bezier, frame, 1, time, time2, color.g, newColor.g, 1);
-						bezier = readCurve(curve, timeline, bezier, frame, 2, time, time2, color.b, newColor.b, 1);
-						bezier = readCurve(curve, timeline, bezier, frame, 3, time, time2, color2.r, newColor2.r, 1);
-						bezier = readCurve(curve, timeline, bezier, frame, 4, time, time2, color2.g, newColor2.g, 1);
-						bezier = readCurve(curve, timeline, bezier, frame, 5, time, time2, color2.b, newColor2.b, 1);
-					}
-					time = time2;
-					color = newColor;
-					color2 = newColor2;
-					keyMap = nextMap;
-				}
-				timelines.add(timeline);
-			} else {
-				ContainerUtil::cleanUpVectorOfPointers(timelines);
-				setError(NULL, "Invalid timeline type for a slot: ", timelineMap->_name);
-				return NULL;
-			}
-		}
-	}
-
-	/** Bone timelines. */
-	for (boneMap = bones ? bones->_child : 0; boneMap; boneMap = boneMap->_next) {
-		int boneIndex = ContainerUtil::findIndexWithName(skeletonData->_bones, boneMap->_name);
-		if (boneIndex == -1) {
-			ContainerUtil::cleanUpVectorOfPointers(timelines);
-			setError(NULL, "Bone not found: ", boneMap->_name);
-			return NULL;
-		}
-
-		for (Json *timelineMap = boneMap->_child; timelineMap; timelineMap = timelineMap->_next) {
-			int frames = timelineMap->_size;
-			if (frames == 0) continue;
-
-			if (strcmp(timelineMap->_name, "rotate") == 0) {
-				timelines.add(readTimeline(timelineMap->_child,
-										   new RotateTimeline(frames, frames, boneIndex), 0,
-										   1));
-			} else if (strcmp(timelineMap->_name, "translate") == 0) {
-				TranslateTimeline *timeline = new TranslateTimeline(frames, frames << 1,
-																	boneIndex);
-				timelines.add(readTimeline(timelineMap->_child, timeline, "x", "y", 0, _scale));
-			} else if (strcmp(timelineMap->_name, "translatex") == 0) {
-				TranslateXTimeline *timeline = new TranslateXTimeline(frames, frames,
-																	  boneIndex);
-				timelines.add(readTimeline(timelineMap->_child, timeline, 0, _scale));
-			} else if (strcmp(timelineMap->_name, "translatey") == 0) {
-				TranslateYTimeline *timeline = new TranslateYTimeline(frames, frames,
-																	  boneIndex);
-				timelines.add(readTimeline(timelineMap->_child, timeline, 0, _scale));
-			} else if (strcmp(timelineMap->_name, "scale") == 0) {
-				ScaleTimeline *timeline = new (__FILE__, __LINE__) ScaleTimeline(frames,
-																				 frames << 1, boneIndex);
-				timelines.add(readTimeline(timelineMap->_child, timeline, "x", "y", 1, 1));
-			} else if (strcmp(timelineMap->_name, "scalex") == 0) {
-				ScaleXTimeline *timeline = new (__FILE__, __LINE__) ScaleXTimeline(frames,
-																				   frames, boneIndex);
-				timelines.add(readTimeline(timelineMap->_child, timeline, 1, 1));
-			} else if (strcmp(timelineMap->_name, "scaley") == 0) {
-				ScaleYTimeline *timeline = new (__FILE__, __LINE__) ScaleYTimeline(frames,
-																				   frames, boneIndex);
-				timelines.add(readTimeline(timelineMap->_child, timeline, 1, 1));
-			} else if (strcmp(timelineMap->_name, "shear") == 0) {
-				ShearTimeline *timeline = new (__FILE__, __LINE__) ShearTimeline(frames,
-																				 frames << 1, boneIndex);
-				timelines.add(readTimeline(timelineMap->_child, timeline, "x", "y", 0, 1));
-			} else if (strcmp(timelineMap->_name, "shearx") == 0) {
-				ShearXTimeline *timeline = new (__FILE__, __LINE__) ShearXTimeline(frames,
-																				   frames, boneIndex);
-				timelines.add(readTimeline(timelineMap->_child, timeline, 0, 1));
-			} else if (strcmp(timelineMap->_name, "sheary") == 0) {
-				ShearYTimeline *timeline = new (__FILE__, __LINE__) ShearYTimeline(frames,
-																				   frames, boneIndex);
-				timelines.add(readTimeline(timelineMap->_child, timeline, 0, 1));
-			} else {
-				ContainerUtil::cleanUpVectorOfPointers(timelines);
-				setError(NULL, "Invalid timeline type for a bone: ", timelineMap->_name);
-				return NULL;
-			}
-		}
-	}
-
-	/** IK constraint timelines. */
-	for (Json *constraintMap = ik ? ik->_child : 0; constraintMap; constraintMap = constraintMap->_next) {
-		keyMap = constraintMap->_child;
-		if (keyMap == NULL) continue;
-
-		IkConstraintData *constraint = skeletonData->findIkConstraint(constraintMap->_name);
-		int constraintIndex = skeletonData->_ikConstraints.indexOf(constraint);
-		IkConstraintTimeline *timeline = new (__FILE__, __LINE__) IkConstraintTimeline(constraintMap->_size,
-																					   constraintMap->_size << 1,
-																					   constraintIndex);
-
-		float time = Json::getFloat(keyMap, "time", 0);
-		float mix = Json::getFloat(keyMap, "mix", 1);
-		float softness = Json::getFloat(keyMap, "softness", 0) * _scale;
-
-		for (frame = 0, bezier = 0;; frame++) {
-			int bendDirection = Json::getBoolean(keyMap, "bendPositive", true) ? 1 : -1;
-			timeline->setFrame(frame, time, mix, softness, bendDirection, Json::getBoolean(keyMap, "compress", false),
-							   Json::getBoolean(keyMap, "stretch", false));
-			nextMap = keyMap->_next;
-			if (!nextMap) {
-				// timeline.shrink(); // BOZO
-				break;
-			}
-
-			float time2 = Json::getFloat(nextMap, "time", 0);
-			float mix2 = Json::getFloat(nextMap, "mix", 1);
-			float softness2 = Json::getFloat(nextMap, "softness", 0) * _scale;
-			curve = Json::getItem(keyMap, "curve");
-			if (curve) {
-				bezier = readCurve(curve, timeline, bezier, frame, 0, time, time2, mix, mix2, 1);
-				bezier = readCurve(curve, timeline, bezier, frame, 1, time, time2, softness, softness2, _scale);
-			}
-
-			time = time2;
-			mix = mix2;
-			softness = softness2;
-			keyMap = nextMap;
-		}
-
-		timelines.add(timeline);
-	}
-
-	/** Transform constraint timelines. */
-	for (Json *constraintMap = transform ? transform->_child : 0; constraintMap; constraintMap = constraintMap->_next) {
-		keyMap = constraintMap->_child;
-		if (keyMap == NULL) continue;
-
-		TransformConstraintData *constraint = skeletonData->findTransformConstraint(constraintMap->_name);
-		int constraintIndex = skeletonData->_transformConstraints.indexOf(constraint);
-		TransformConstraintTimeline *timeline = new (__FILE__, __LINE__) TransformConstraintTimeline(
-				constraintMap->_size, constraintMap->_size << 2, constraintIndex);
-
-		float time = Json::getFloat(keyMap, "time", 0);
-		float mixRotate = Json::getFloat(keyMap, "mixRotate", 1);
-		float mixShearY = Json::getFloat(keyMap, "mixShearY", 1);
-		float mixX = Json::getFloat(keyMap, "mixX", 1);
-		float mixY = Json::getFloat(keyMap, "mixY", mixX);
-		float mixScaleX = Json::getFloat(keyMap, "mixScaleX", 1);
-		float mixScaleY = Json::getFloat(keyMap, "mixScaleY", mixScaleX);
-
-		for (frame = 0, bezier = 0;; frame++) {
-			timeline->setFrame(frame, time, mixRotate, mixX, mixY, mixScaleX, mixScaleY, mixShearY);
-			nextMap = keyMap->_next;
-			if (!nextMap) {
-				// timeline.shrink(); // BOZO
-				break;
-			}
-
-			float time2 = Json::getFloat(nextMap, "time", 0);
-			float mixRotate2 = Json::getFloat(nextMap, "mixRotate", 1);
-			float mixShearY2 = Json::getFloat(nextMap, "mixShearY", 1);
-			float mixX2 = Json::getFloat(nextMap, "mixX", 1);
-			float mixY2 = Json::getFloat(nextMap, "mixY", mixX2);
-			float mixScaleX2 = Json::getFloat(nextMap, "mixScaleX", 1);
-			float mixScaleY2 = Json::getFloat(nextMap, "mixScaleY", mixScaleX2);
-			curve = Json::getItem(keyMap, "curve");
-			if (curve) {
-				bezier = readCurve(curve, timeline, bezier, frame, 0, time, time2, mixRotate, mixRotate2, 1);
-				bezier = readCurve(curve, timeline, bezier, frame, 1, time, time2, mixX, mixX2, 1);
-				bezier = readCurve(curve, timeline, bezier, frame, 2, time, time2, mixY, mixY2, 1);
-				bezier = readCurve(curve, timeline, bezier, frame, 3, time, time2, mixScaleX, mixScaleX2, 1);
-				bezier = readCurve(curve, timeline, bezier, frame, 4, time, time2, mixScaleY, mixScaleY2, 1);
-				bezier = readCurve(curve, timeline, bezier, frame, 5, time, time2, mixShearY, mixShearY2, 1);
-			}
-
-			time = time2;
-			mixRotate = mixRotate2;
-			mixX = mixX2;
-			mixY = mixY2;
-			mixScaleX = mixScaleX2;
-			mixScaleY = mixScaleY2;
-			mixScaleX = mixScaleX2;
-			keyMap = nextMap;
-		}
-
-		timelines.add(timeline);
-	}
-
-	/** Path constraint timelines. */
-	for (Json *constraintMap = paths ? paths->_child : 0; constraintMap; constraintMap = constraintMap->_next) {
-		PathConstraintData *constraint = skeletonData->findPathConstraint(constraintMap->_name);
-		if (!constraint) {
-			ContainerUtil::cleanUpVectorOfPointers(timelines);
-			setError(NULL, "Path constraint not found: ", constraintMap->_name);
-			return NULL;
-		}
-		int constraintIndex = skeletonData->_pathConstraints.indexOf(constraint);
-		for (Json *timelineMap = constraintMap->_child; timelineMap; timelineMap = timelineMap->_next) {
-			keyMap = timelineMap->_child;
-			if (keyMap == NULL) continue;
-			const char *timelineName = timelineMap->_name;
-			int frames = timelineMap->_size;
-			if (strcmp(timelineName, "position") == 0) {
-				PathConstraintPositionTimeline *timeline = new (__FILE__, __LINE__) PathConstraintPositionTimeline(
-						frames, frames, constraintIndex);
-				timelines.add(
-						readTimeline(keyMap, timeline, 0, constraint->_positionMode == PositionMode_Fixed ? _scale : 1));
-			} else if (strcmp(timelineName, "spacing") == 0) {
-				CurveTimeline1 *timeline = new PathConstraintSpacingTimeline(frames, frames,
-																			 constraintIndex);
-				timelines.add(readTimeline(keyMap, timeline, 0,
-										   constraint->_spacingMode == SpacingMode_Length ||
-														   constraint->_spacingMode == SpacingMode_Fixed
-												   ? _scale
-												   : 1));
-			} else if (strcmp(timelineName, "mix") == 0) {
-				PathConstraintMixTimeline *timeline = new PathConstraintMixTimeline(frames,
-																					frames * 3, constraintIndex);
-				float time = Json::getFloat(keyMap, "time", 0);
-				float mixRotate = Json::getFloat(keyMap, "mixRotate", 1);
-				float mixX = Json::getFloat(keyMap, "mixX", 1);
-				float mixY = Json::getFloat(keyMap, "mixY", mixX);
-				for (frame = 0, bezier = 0;; frame++) {
-					timeline->setFrame(frame, time, mixRotate, mixX, mixY);
-					nextMap = keyMap->_next;
-					if (!nextMap) {
-						// timeline.shrink(); // BOZO
-						break;
-					}
-					float time2 = Json::getFloat(nextMap, "time", 0);
-					float mixRotate2 = Json::getFloat(nextMap, "mixRotate", 1);
-					float mixX2 = Json::getFloat(nextMap, "mixX", 1);
-					float mixY2 = Json::getFloat(nextMap, "mixY", mixX2);
-					curve = Json::getItem(keyMap, "curve");
-					if (curve != NULL) {
-						bezier = readCurve(curve, timeline, bezier, frame, 0, time, time2, mixRotate, mixRotate2, 1);
-						bezier = readCurve(curve, timeline, bezier, frame, 1, time, time2, mixX, mixX2, 1);
-						bezier = readCurve(curve, timeline, bezier, frame, 2, time, time2, mixY, mixY2, 1);
-					}
-					time = time2;
-					mixRotate = mixRotate2;
-					mixX = mixX2;
-					mixY = mixY2;
-					keyMap = nextMap;
-				}
-				timelines.add(timeline);
-			}
-		}
-	}
-
-	/** Attachment timelines. */
-	for (Json *attachmenstMap = attachments ? attachments->_child : NULL; attachmenstMap; attachmenstMap = attachmenstMap->_next) {
-		Skin *skin = skeletonData->findSkin(attachmenstMap->_name);
-		for (slotMap = attachmenstMap->_child; slotMap; slotMap = slotMap->_next) {
-			int slotIndex = findSlotIndex(skeletonData, slotMap->_name, timelines);
-			if (slotIndex == -1) return NULL;
-
-			for (Json *attachmentMap = slotMap->_child; attachmentMap; attachmentMap = attachmentMap->_next) {
-				Attachment *attachment = skin->getAttachment(slotIndex, attachmentMap->_name);
-				if (!attachment) {
-					ContainerUtil::cleanUpVectorOfPointers(timelines);
-					setError(NULL, "Attachment not found: ", attachmentMap->_name);
-					return NULL;
-				}
-
-				for (Json *timelineMap = attachmentMap->_child; timelineMap; timelineMap = timelineMap->_next) {
-					keyMap = timelineMap->_child;
-					if (keyMap == NULL) continue;
-					int frames = timelineMap->_size;
-					String timelineName = timelineMap->_name;
-					if (timelineName == "deform") {
-						VertexAttachment *vertexAttachment = static_cast<VertexAttachment *>(attachment);
-						bool weighted = vertexAttachment->_bones.size() != 0;
-						Vector<float> &verts = vertexAttachment->_vertices;
-						int deformLength = weighted ? (int) verts.size() / 3 * 2 : (int) verts.size();
-
-						DeformTimeline *timeline = new (__FILE__, __LINE__) DeformTimeline(frames,
-																						   frames, slotIndex, vertexAttachment);
-						float time = Json::getFloat(keyMap, "time", 0);
-						for (frame = 0, bezier = 0;; frame++) {
-							Json *vertices = Json::getItem(keyMap, "vertices");
-							Vector<float> deformed;
-							if (!vertices) {
-								if (weighted) {
-									deformed.setSize(deformLength, 0);
-								} else {
-									deformed.clearAndAddAll(vertexAttachment->_vertices);
-								}
-							} else {
-								deformed.setSize(deformLength, 0);
-								int v, start = Json::getInt(keyMap, "offset", 0);
-								Json *vertex;
-								if (_scale == 1) {
-									for (vertex = vertices->_child, v = start; vertex; vertex = vertex->_next, ++v) {
-										deformed[v] = vertex->_valueFloat;
-									}
-								} else {
-									for (vertex = vertices->_child, v = start; vertex; vertex = vertex->_next, ++v) {
-										deformed[v] = vertex->_valueFloat * _scale;
-									}
-								}
-								if (!weighted) {
-									Vector<float> &verticesAttachment = vertexAttachment->_vertices;
-									for (v = 0; v < deformLength; ++v) {
-										deformed[v] += verticesAttachment[v];
-									}
-								}
-							}
-							timeline->setFrame(frame, time, deformed);
-							nextMap = keyMap->_next;
-							if (!nextMap) {
-								// timeline.shrink(); // BOZO
-								break;
-							}
-							float time2 = Json::getFloat(nextMap, "time", 0);
-							curve = Json::getItem(keyMap, "curve");
-							if (curve) {
-								bezier = readCurve(curve, timeline, bezier, frame, 0, time, time2, 0, 1, 1);
-							}
-							time = time2;
-							keyMap = nextMap;
-						}
-						timelines.add(timeline);
-					} else if (timelineName == "sequence") {
-						SequenceTimeline *timeline = new SequenceTimeline(frames, slotIndex, attachment);
-						float lastDelay = 0;
-						for (frame = 0; keyMap != NULL; keyMap = keyMap->_next, frame++) {
-							float delay = Json::getFloat(keyMap, "delay", lastDelay);
-							float time = Json::getFloat(keyMap, "time", 0);
-							String modeString = Json::getString(keyMap, "mode", "hold");
-							int index = Json::getInt(keyMap, "index", 0);
-							SequenceMode mode = SequenceMode::hold;
-							if (modeString == "once") mode = SequenceMode::once;
-							if (modeString == "loop") mode = SequenceMode::loop;
-							if (modeString == "pingpong") mode = SequenceMode::pingpong;
-							if (modeString == "onceReverse") mode = SequenceMode::onceReverse;
-							if (modeString == "loopReverse") mode = SequenceMode::loopReverse;
-							if (modeString == "pingpongReverse") mode = SequenceMode::pingpongReverse;
-							timeline->setFrame(frame, time, mode, index, delay);
-							lastDelay = delay;
-						}
-						timelines.add(timeline);
-					}
-				}
-			}
-		}
-	}
-
-	/** Draw order timeline. */
-	if (drawOrder) {
-		DrawOrderTimeline *timeline = new (__FILE__, __LINE__) DrawOrderTimeline(drawOrder->_size);
-
-		for (keyMap = drawOrder->_child, frame = 0; keyMap; keyMap = keyMap->_next, ++frame) {
-			int ii;
-			Vector<int> drawOrder2;
-			Json *offsets = Json::getItem(keyMap, "offsets");
-			if (offsets) {
-				Json *offsetMap;
-				Vector<int> unchanged;
-				unchanged.ensureCapacity(skeletonData->_slots.size() - offsets->_size);
-				unchanged.setSize(skeletonData->_slots.size() - offsets->_size, 0);
-				size_t originalIndex = 0, unchangedIndex = 0;
-
-				drawOrder2.ensureCapacity(skeletonData->_slots.size());
-				drawOrder2.setSize(skeletonData->_slots.size(), 0);
-				for (ii = (int) skeletonData->_slots.size() - 1; ii >= 0; --ii)
-					drawOrder2[ii] = -1;
-
-				for (offsetMap = offsets->_child; offsetMap; offsetMap = offsetMap->_next) {
-					int slotIndex = findSlotIndex(skeletonData, Json::getString(offsetMap, "slot", 0), timelines);
-					if (slotIndex == -1) return NULL;
-
-					/* Collect unchanged items. */
-					while (originalIndex != (size_t) slotIndex)
-						unchanged[unchangedIndex++] = (int) originalIndex++;
-					/* Set changed items. */
-					drawOrder2[originalIndex + Json::getInt(offsetMap, "offset", 0)] = (int) originalIndex;
-					originalIndex++;
-				}
-				/* Collect remaining unchanged items. */
-				while ((int) originalIndex < (int) skeletonData->_slots.size())
-					unchanged[unchangedIndex++] = (int) originalIndex++;
-				/* Fill in unchanged items. */
-				for (ii = (int) skeletonData->_slots.size() - 1; ii >= 0; ii--)
-					if (drawOrder2[ii] == -1) drawOrder2[ii] = unchanged[--unchangedIndex];
-			}
-			timeline->setFrame(frame, Json::getFloat(keyMap, "time", 0), drawOrder2);
-		}
-		timelines.add(timeline);
-	}
-
-	/** Event timeline. */
-	if (events) {
-		EventTimeline *timeline = new (__FILE__, __LINE__) EventTimeline(events->_size);
-
-		for (keyMap = events->_child, frame = 0; keyMap; keyMap = keyMap->_next, ++frame) {
-			Event *event;
-			EventData *eventData = skeletonData->findEvent(Json::getString(keyMap, "name", 0));
-			if (!eventData) {
-				ContainerUtil::cleanUpVectorOfPointers(timelines);
-				setError(NULL, "Event not found: ", Json::getString(keyMap, "name", 0));
-				return NULL;
-			}
-
-			event = new (__FILE__, __LINE__) Event(Json::getFloat(keyMap, "time", 0), *eventData);
-			event->_intValue = Json::getInt(keyMap, "int", eventData->_intValue);
-			event->_floatValue = Json::getFloat(keyMap, "float", eventData->_floatValue);
-			event->_stringValue = Json::getString(keyMap, "string", eventData->_stringValue.buffer());
-			if (!eventData->_audioPath.isEmpty()) {
-				event->_volume = Json::getFloat(keyMap, "volume", 1);
-				event->_balance = Json::getFloat(keyMap, "balance", 0);
-			}
-			timeline->setFrame(frame, event);
-		}
-		timelines.add(timeline);
-	}
-
-	float duration = 0;
-	for (size_t i = 0; i < timelines.size(); i++)
-		duration = MathUtil::max(duration, timelines[i]->getDuration());
-	return new (__FILE__, __LINE__) SpineAnimation(String(root->_name), timelines, duration);
-}
-
-void SkeletonJson::readVertices(Json *attachmentMap, VertexAttachment *attachment, size_t verticesLength) {
-	Json *entry;
-	size_t i, n, nn, entrySize;
-	Vector<float> vertices;
-
-	attachment->setWorldVerticesLength(verticesLength);
-
-	entry = Json::getItem(attachmentMap, "vertices");
-	entrySize = entry->_size;
-	vertices.ensureCapacity(entrySize);
-	vertices.setSize(entrySize, 0);
-	for (entry = entry->_child, i = 0; entry; entry = entry->_next, ++i)
-		vertices[i] = entry->_valueFloat;
-
-	if (verticesLength == entrySize) {
-		if (_scale != 1) {
-			for (i = 0; i < entrySize; ++i)
-				vertices[i] *= _scale;
-		}
-
-		attachment->getVertices().clearAndAddAll(vertices);
-		return;
-	}
-
-	Vertices bonesAndWeights;
-	bonesAndWeights._bones.ensureCapacity(verticesLength * 3);
-	bonesAndWeights._vertices.ensureCapacity(verticesLength * 3 * 3);
-
-	for (i = 0, n = entrySize; i < n;) {
-		int boneCount = (int) vertices[i++];
-		bonesAndWeights._bones.add(boneCount);
-		for (nn = i + boneCount * 4; i < nn; i += 4) {
-			bonesAndWeights._bones.add((int) vertices[i]);
-			bonesAndWeights._vertices.add(vertices[i + 1] * _scale);
-			bonesAndWeights._vertices.add(vertices[i + 2] * _scale);
-			bonesAndWeights._vertices.add(vertices[i + 3]);
-		}
-	}
-
-	attachment->getVertices().clearAndAddAll(bonesAndWeights._vertices);
-	attachment->getBones().clearAndAddAll(bonesAndWeights._bones);
-}
-
-void SkeletonJson::setError(Json *root, const String &value1, const String &value2) {
-	_error = String(value1).append(value2);
-	delete root;
 }

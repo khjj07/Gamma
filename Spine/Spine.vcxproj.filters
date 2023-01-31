@@ -15,151 +15,135 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ConstraintData.cpp">
+    <ClInclude Include="spinecpp\AtlasAttachmentLoader.h">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="CurveTimeline.cpp">
+    </ClInclude>
+    <ClInclude Include="spinecpp\Attachment.h">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="DeformTimeline.cpp">
+    </ClInclude>
+    <ClInclude Include="spinecpp\AttachmentLoader.h">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="DrawOrderTimeline.cpp">
+    </ClInclude>
+    <ClInclude Include="spinecpp\Bone.h">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Event.cpp">
+    </ClInclude>
+    <ClInclude Include="spinecpp\BoneData.h">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="EventData.cpp">
+    </ClInclude>
+    <ClInclude Include="spinecpp\BoundingBoxAttachment.h">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="EventTimeline.cpp">
+    </ClInclude>
+    <ClInclude Include="spinecpp\Color.h">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Extension.cpp">
+    </ClInclude>
+    <ClInclude Include="spinecpp\Event.h">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="IkConstraint.cpp">
+    </ClInclude>
+    <ClInclude Include="spinecpp\EventData.h">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="IkConstraintData.cpp">
+    </ClInclude>
+    <ClInclude Include="spinecpp\IkConstraint.h">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="IkConstraintTimeline.cpp">
+    </ClInclude>
+    <ClInclude Include="spinecpp\IkConstraintData.h">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Json.cpp">
+    </ClInclude>
+    <ClInclude Include="spinecpp\MeshAttachment.h">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="LinkedMesh.cpp">
+    </ClInclude>
+    <ClInclude Include="spinecpp\PathAttachment.h">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Log.cpp">
+    </ClInclude>
+    <ClInclude Include="spinecpp\PathConstraint.h">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="MeshAttachment.cpp">
+    </ClInclude>
+    <ClInclude Include="spinecpp\PathConstraintData.h">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="PathAttachment.cpp">
+    </ClInclude>
+    <ClInclude Include="spinecpp\PoolTrackEntryFactory.h">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="PathConstraint.cpp">
+    </ClInclude>
+    <ClInclude Include="spinecpp\RegionAttachment.h">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="PathConstraintData.cpp">
+    </ClInclude>
+    <ClInclude Include="spinecpp\Skeleton.h">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="PathConstraintMixTimeline.cpp">
+    </ClInclude>
+    <ClInclude Include="spinecpp\SkeletonBounds.h">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="PathConstraintPositionTimeline.cpp">
+    </ClInclude>
+    <ClInclude Include="spinecpp\SkeletonData.h">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="PathConstraintSpacingTimeline.cpp">
+    </ClInclude>
+    <ClInclude Include="spinecpp\SkeletonJson.h">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="PointAttachment.cpp">
+    </ClInclude>
+    <ClInclude Include="spinecpp\Skin.h">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="RegionAttachment.cpp">
+    </ClInclude>
+    <ClInclude Include="spinecpp\Slot.h">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="RotateTimeline.cpp">
+    </ClInclude>
+    <ClInclude Include="spinecpp\SlotData.h">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="RTTI.cpp">
+    </ClInclude>
+    <ClInclude Include="spinecpp\spinecpp.h">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="ScaleTimeline.cpp">
+    </ClInclude>
+    <ClInclude Include="spinecpp\Timeline.h">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Sequence.cpp">
+    </ClInclude>
+    <ClInclude Include="spinecpp\Timelines.h">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="SequenceTimeline.cpp">
+    </ClInclude>
+    <ClInclude Include="spinecpp\TrackEntryFactory.h">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="ShearTimeline.cpp">
+    </ClInclude>
+    <ClInclude Include="spinecpp\TransformConstraint.h">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Skeleton.cpp">
+    </ClInclude>
+    <ClInclude Include="spinecpp\TransformConstraintData.h">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="SkeletonBinary.cpp">
+    </ClInclude>
+    <ClInclude Include="spinecpp\Vector.h">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="SkeletonBounds.cpp">
+    </ClInclude>
+    <ClInclude Include="spinecpp\VertexAttachment.h">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="SkeletonClipping.cpp">
+    </ClInclude>
+    <ClInclude Include="spinecpp\Animation.h">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="SkeletonData.cpp">
+    </ClInclude>
+    <ClInclude Include="spinecpp\AnimationState.h">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="SkeletonJson.cpp">
+    </ClInclude>
+    <ClInclude Include="spinecpp\AnimationStateData.h">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Skin.cpp">
+    </ClInclude>
+    <ClInclude Include="spinecpp\Atlas.h">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Slot.cpp">
+    </ClInclude>
+    <ClInclude Include="third_party\sajson\sajson.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\chobo\vector_ptr.hpp">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="extension.h">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="SlotData.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="SpineObject.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="TextureLoader.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Timeline.cpp">
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Timelines.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="TransformConstraint.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="TransformConstraintData.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="TransformConstraintTimeline.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="TranslateTimeline.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Triangulator.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Updatable.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="VertexAttachment.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="SpineAnimation.cpp">
+    <ClCompile Include="Animation.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="AnimationState.cpp">
@@ -174,283 +158,50 @@
     <ClCompile Include="AtlasAttachmentLoader.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Attachment.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="AttachmentLoader.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="AttachmentTimeline.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Bone.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="BoneData.cpp">
+    <ClCompile Include="IkConstraint.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="BoundingBoxAttachment.cpp">
+    <ClCompile Include="MeshAttachment.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="ClippingAttachment.cpp">
+    <ClCompile Include="PathConstraint.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="ColorTimeline.cpp">
+    <ClCompile Include="PoolTrackEntryFactory.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="spine\PathConstraintMixTimeline.h">
+    <ClCompile Include="RegionAttachment.cpp">
       <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\PathConstraintPositionTimeline.h">
+    </ClCompile>
+    <ClCompile Include="Skeleton.cpp">
       <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\PathConstraintSpacingTimeline.h">
+    </ClCompile>
+    <ClCompile Include="SkeletonBounds.cpp">
       <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\PointAttachment.h">
+    </ClCompile>
+    <ClCompile Include="SkeletonData.cpp">
       <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\Pool.h">
+    </ClCompile>
+    <ClCompile Include="SkeletonJson.cpp">
       <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\PositionMode.h">
+    </ClCompile>
+    <ClCompile Include="Skin.cpp">
       <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\Property.h">
+    </ClCompile>
+    <ClCompile Include="Slot.cpp">
       <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\RegionAttachment.h">
+    </ClCompile>
+    <ClCompile Include="main.cpp">
       <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\RotateMode.h">
+    </ClCompile>
+    <ClCompile Include="extension.cpp">
       <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\RotateTimeline.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\RTTI.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\ScaleTimeline.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\Sequence.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\SequenceTimeline.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\ShearTimeline.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\Skeleton.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\SkeletonBinary.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\SkeletonBounds.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\SkeletonClipping.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\SkeletonData.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\SkeletonJson.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\Skin.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\Slot.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\SlotData.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\SpacingMode.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\spine.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\SpineObject.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\SpineString.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\TextureLoader.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\TextureRegion.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\Timeline.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\TransformConstraint.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\TransformConstraintData.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\TransformConstraintTimeline.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\TransformMode.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\TranslateTimeline.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\Triangulator.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\Updatable.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\Vector.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\Version.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\VertexAttachment.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\Vertices.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\SpineAnimation.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\AnimationState.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\AnimationStateData.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\Atlas.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\AtlasAttachmentLoader.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\Attachment.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\AttachmentLoader.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\AttachmentTimeline.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\AttachmentType.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\BlendMode.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\Bone.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\BoneData.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\BoundingBoxAttachment.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\ClippingAttachment.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\Color.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\ColorTimeline.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\ConstraintData.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\ContainerUtil.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\CurveTimeline.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\Debug.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\DeformTimeline.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\dll.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\DrawOrderTimeline.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\Event.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\EventData.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\EventTimeline.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\Extension.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\HashMap.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\HasRendererObject.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\IkConstraint.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\IkConstraintData.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\IkConstraintTimeline.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\Json.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\LinkedMesh.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\Log.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\MeshAttachment.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\MixBlend.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\MixDirection.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\PathAttachment.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\PathConstraint.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="spine\PathConstraintData.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="mathUtil.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
+    </ClCompile>
   </ItemGroup>
 </Project>

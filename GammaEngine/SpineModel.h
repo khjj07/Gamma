@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
 
-
 #ifdef GammaEngineAPI_Exporting
 #define GammaEngineAPI __declspec(dllexport)
 #else
@@ -21,18 +20,15 @@ namespace GammaEngine
 	public:
 		SpineModel(spine::Skeleton*, spine::AnimationStateData*, spine::AnimationState*);
 	public:
-		static string Create(string, string, string);
+		static wstring Create(wstring,string, string);
 		static void Initialize();
 		void Update();
-		void Render();
-
 	public:
 		spine::Skeleton* skeleton;
 		spine::AnimationStateData* animationStateData;
 		spine::AnimationState* animationState;
-		wstring* image;
 
 	public:
-		static unordered_map<string, SpineModel*>* spineModelMap;
+		static unordered_map<wstring, SpineModel*>* spineModelMap;
 	};
 }

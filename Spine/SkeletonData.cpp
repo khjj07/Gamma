@@ -1,225 +1,134 @@
-/******************************************************************************
- * Spine Runtimes License Agreement
- * Last updated September 24, 2021. Replaces all prior versions.
- *
- * Copyright (c) 2013-2021, Esoteric Software LLC
- *
- * Integration of the Spine Runtimes into software or otherwise creating
- * derivative works of the Spine Runtimes is permitted under the terms and
- * conditions of Section 2 of the Spine Editor License Agreement:
- * http://esotericsoftware.com/spine-editor-license
- *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software
- * or otherwise create derivative works of the Spine Runtimes (collectively,
- * "Products"), provided that each user of the Products must obtain their own
- * Spine Editor license and redistribution of the Products in any form must
- * include this license and copyright notice.
- *
- * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
- * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+////////////////////////////////////////////////////////////////////////////////
+// Spine Runtimes Software License
+// Version 2.4
+//
+// Copyright (c) 2013-2016, Esoteric Software
+// Copyright (c) 2016, Chobolabs
+// All rights reserved.
+//
+// You are granted a perpetual, non-exclusive, non-sublicensable and
+// non-transferable license to use, install, execute and perform the Spine
+// Runtimes Software (the "Software") and derivative works solely for personal
+// or internal use. Without the written permission of Esoteric Software (see
+// Section 2 of the Spine Software License Agreement), you may not (a) modify,
+// translate, adapt or otherwise create derivative works, improvements of
+// the Software or develop new applications using the Software or (b) remove,
+// delete, alter or obscure any trademarks or any copyright, trademark, patent
+// or other intellectual property or proprietary rights notices on or in the
+// Software, including any copy thereof. Redistributions in binary or source
+// form must include this license and terms.
+//
+// THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE AND CHOBOLABS "AS IS" AND ANY
+// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE OR CHOBOLABS BE LIABLE FOR
+// ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+////////////////////////////////////////////////////////////////////////////////
+#include "spinecpp/SkeletonData.h"
 
-#include "spine/SkeletonData.h"
+namespace
+{
+    template <typename T>
+    const T* findByName(const std::vector<T>& v, const wchar_t* name)
+    {
+        for (auto& t : v)
+        {
+            if (t.name == name)
+            {
+                return &t;
+            }
+        }
 
-#include "spine/SpineAnimation.h"
-#include "spine/BoneData.h"
-#include "spine/EventData.h"
-#include "spine/IkConstraintData.h"
-#include "spine/PathConstraintData.h"
-#include "spine/Skin.h"
-#include "spine/SlotData.h"
-#include "spine/TransformConstraintData.h"
+        return nullptr;
+    }
 
-#include "spine/ContainerUtil.h"
+    template <typename T>
+    int findIndexByName(const std::vector<T>& v, const wchar_t* name)
+    {
+        for (size_t i = 0; i < v.size(); ++i)
+        {
+            if (v[i].name == name)
+            {
+                return int(i);
+            }
+        }
 
-using namespace spine;
-
-SkeletonData::SkeletonData() : _name(),
-							   _defaultSkin(NULL),
-							   _x(0),
-							   _y(0),
-							   _width(0),
-							   _height(0),
-							   _version(),
-							   _hash(),
-							   _fps(0),
-							   _imagesPath() {
+        return -1;
+    }
 }
 
-SkeletonData::~SkeletonData() {
-	ContainerUtil::cleanUpVectorOfPointers(_bones);
-	ContainerUtil::cleanUpVectorOfPointers(_slots);
-	ContainerUtil::cleanUpVectorOfPointers(_skins);
+namespace spine
+{
 
-	_defaultSkin = NULL;
-
-	ContainerUtil::cleanUpVectorOfPointers(_events);
-	ContainerUtil::cleanUpVectorOfPointers(_animations);
-	ContainerUtil::cleanUpVectorOfPointers(_ikConstraints);
-	ContainerUtil::cleanUpVectorOfPointers(_transformConstraints);
-	ContainerUtil::cleanUpVectorOfPointers(_pathConstraints);
-	for (size_t i = 0; i < _strings.size(); i++) {
-		SpineExtension::free(_strings[i], __FILE__, __LINE__);
-	}
+const BoneData* SkeletonData::findBone(const wchar_t* boneName) const
+{
+    return findByName(bones, boneName);
 }
 
-BoneData *SkeletonData::findBone(const String &boneName) {
-	return ContainerUtil::findWithName(_bones, boneName);
+int SkeletonData::findBoneIndex(const wchar_t* boneName) const
+{
+    return findIndexByName(bones, boneName);
 }
 
-SlotData *SkeletonData::findSlot(const String &slotName) {
-	return ContainerUtil::findWithName(_slots, slotName);
+const SlotData* SkeletonData::findSlot(const wchar_t* slotName) const
+{
+    return findByName(slots, slotName);
 }
 
-Skin *SkeletonData::findSkin(const String &skinName) {
-	return ContainerUtil::findWithName(_skins, skinName);
+int SkeletonData::findSlotIndex(const wchar_t* slotName) const
+{
+    return findIndexByName(slots, slotName);
 }
 
-spine::EventData *SkeletonData::findEvent(const String &eventDataName) {
-	return ContainerUtil::findWithName(_events, eventDataName);
+const Skin* SkeletonData::findSkin(const wchar_t* skinName) const
+{
+    return findByName(skins, skinName);
 }
 
-SpineAnimation*SkeletonData::findAnimation(const String &animationName) {
-	return ContainerUtil::findWithName(_animations, animationName);
+const EventData* SkeletonData::findEvent(const wchar_t* eventName) const
+{
+    return findByName(events, eventName);
 }
 
-IkConstraintData *SkeletonData::findIkConstraint(const String &constraintName) {
-	return ContainerUtil::findWithName(_ikConstraints, constraintName);
+const Animation* SkeletonData::findAnimation(const wchar_t* animationName) const
+{
+    return findByName(animations, animationName);
 }
 
-TransformConstraintData *SkeletonData::findTransformConstraint(const String &constraintName) {
-	return ContainerUtil::findWithName(_transformConstraints, constraintName);
+const IkConstraintData* SkeletonData::findIkConstraint(const wchar_t* constraintName) const
+{
+    return findByName(ikConstraints, constraintName);
 }
 
-PathConstraintData *SkeletonData::findPathConstraint(const String &constraintName) {
-	return ContainerUtil::findWithName(_pathConstraints, constraintName);
+int SkeletonData::findIkConstraintIndex(const wchar_t* constraintName) const
+{
+    return findIndexByName(ikConstraints, constraintName);
 }
 
-const String &SkeletonData::getName() {
-	return _name;
+const TransformConstraintData* SkeletonData::findTransformConstraint(const wchar_t* constraintName) const
+{
+    return findByName(transformConstraints, constraintName);
 }
 
-void SkeletonData::setName(const String &inValue) {
-	_name = inValue;
+int SkeletonData::findTransformConstraintIndex(const wchar_t* constraintName) const
+{
+    return findIndexByName(transformConstraints, constraintName);
 }
 
-Vector<BoneData *> &SkeletonData::getBones() {
-	return _bones;
-}
-
-Vector<SlotData *> &SkeletonData::getSlots() {
-	return _slots;
-}
-
-Vector<Skin *> &SkeletonData::getSkins() {
-	return _skins;
-}
-
-Skin *SkeletonData::getDefaultSkin() {
-	return _defaultSkin;
-}
-
-void SkeletonData::setDefaultSkin(Skin *inValue) {
-	_defaultSkin = inValue;
-}
-
-Vector<spine::EventData *> &SkeletonData::getEvents() {
-	return _events;
-}
-
-Vector<SpineAnimation*> &SkeletonData::getAnimations() {
-	return _animations;
-}
-
-Vector<IkConstraintData *> &SkeletonData::getIkConstraints() {
-	return _ikConstraints;
-}
-
-Vector<TransformConstraintData *> &SkeletonData::getTransformConstraints() {
-	return _transformConstraints;
-}
-
-Vector<PathConstraintData *> &SkeletonData::getPathConstraints() {
-	return _pathConstraints;
-}
-
-float SkeletonData::getX() {
-	return _x;
-}
-
-void SkeletonData::setX(float inValue) {
-	_x = inValue;
-}
-
-float SkeletonData::getY() {
-	return _y;
-}
-
-void SkeletonData::setY(float inValue) {
-	_y = inValue;
-}
-
-float SkeletonData::getWidth() {
-	return _width;
-}
-
-void SkeletonData::setWidth(float inValue) {
-	_width = inValue;
-}
-
-float SkeletonData::getHeight() {
-	return _height;
-}
-
-void SkeletonData::setHeight(float inValue) {
-	_height = inValue;
-}
-
-const String &SkeletonData::getVersion() {
-	return _version;
-}
-
-void SkeletonData::setVersion(const String &inValue) {
-	_version = inValue;
-}
-
-const String &SkeletonData::getHash() {
-	return _hash;
-}
-
-void SkeletonData::setHash(const String &inValue) {
-	_hash = inValue;
-}
-
-const String &SkeletonData::getImagesPath() {
-	return _imagesPath;
-}
-
-void SkeletonData::setImagesPath(const String &inValue) {
-	_imagesPath = inValue;
+const PathConstraintData* SkeletonData::findPathConstraint(const wchar_t* constraintName) const
+{
+    return findByName(pathConstraints, constraintName);
 }
 
 
-const String &SkeletonData::getAudioPath() {
-	return _audioPath;
+int SkeletonData::findPathConstraintIndex(const wchar_t* constraintName) const
+{
+    return findIndexByName(pathConstraints, constraintName);
 }
 
-void SkeletonData::setAudioPath(const String &inValue) {
-	_audioPath = inValue;
-}
-
-float SkeletonData::getFps() {
-	return _fps;
-}
-
-void SkeletonData::setFps(float inValue) {
-	_fps = inValue;
 }

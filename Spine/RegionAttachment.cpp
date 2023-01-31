@@ -1,276 +1,116 @@
-/******************************************************************************
- * Spine Runtimes License Agreement
- * Last updated September 24, 2021. Replaces all prior versions.
- *
- * Copyright (c) 2013-2021, Esoteric Software LLC
- *
- * Integration of the Spine Runtimes into software or otherwise creating
- * derivative works of the Spine Runtimes is permitted under the terms and
- * conditions of Section 2 of the Spine Editor License Agreement:
- * http://esotericsoftware.com/spine-editor-license
- *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software
- * or otherwise create derivative works of the Spine Runtimes (collectively,
- * "Products"), provided that each user of the Products must obtain their own
- * Spine Editor license and redistribution of the Products in any form must
- * include this license and copyright notice.
- *
- * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
- * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+////////////////////////////////////////////////////////////////////////////////
+// Spine Runtimes Software License
+// Version 2.4
+//
+// Copyright (c) 2013-2016, Esoteric Software
+// Copyright (c) 2016, Chobolabs
+// All rights reserved.
+//
+// You are granted a perpetual, non-exclusive, non-sublicensable and
+// non-transferable license to use, install, execute and perform the Spine
+// Runtimes Software (the "Software") and derivative works solely for personal
+// or internal use. Without the written permission of Esoteric Software (see
+// Section 2 of the Spine Software License Agreement), you may not (a) modify,
+// translate, adapt or otherwise create derivative works, improvements of
+// the Software or develop new applications using the Software or (b) remove,
+// delete, alter or obscure any trademarks or any copyright, trademark, patent
+// or other intellectual property or proprietary rights notices on or in the
+// Software, including any copy thereof. Redistributions in binary or source
+// form must include this license and terms.
+//
+// THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE AND CHOBOLABS "AS IS" AND ANY
+// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE OR CHOBOLABS BE LIABLE FOR
+// ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+////////////////////////////////////////////////////////////////////////////////
+#include "spinecpp/RegionAttachment.h"
+#include "spinecpp/Slot.h"
+#include "spinecpp/Bone.h"
+#include "spinecpp/Skeleton.h"
+#include "spinecpp/extension.h"
+#include <cmath>
 
-#include "spine/RegionAttachment.h"
+namespace spine
+{
 
-#include "spine/Bone.h"
-#include "spine/Slot.h"
-
-#include <assert.h>
-
-using namespace spine;
-
-RTTI_IMPL(RegionAttachment, Attachment)
-
-const int RegionAttachment::BLX = 0;
-const int RegionAttachment::BLY = 1;
-const int RegionAttachment::ULX = 2;
-const int RegionAttachment::ULY = 3;
-const int RegionAttachment::URX = 4;
-const int RegionAttachment::URY = 5;
-const int RegionAttachment::BRX = 6;
-const int RegionAttachment::BRY = 7;
-
-RegionAttachment::RegionAttachment(const String &name) : Attachment(name), HasRendererObject(),
-														 _x(0),
-														 _y(0),
-														 _rotation(0),
-														 _scaleX(1),
-														 _scaleY(1),
-														 _width(0),
-														 _height(0),
-														 _path(),
-														 _color(1, 1, 1, 1),
-														 _region(NULL),
-														 _sequence(NULL) {
-	_vertexOffset.setSize(NUM_UVS, 0);
-	_uvs.setSize(NUM_UVS, 0);
+RegionAttachment::RegionAttachment(const std::string& name, const std::string& path)
+    : Attachment(name, Attachment::Type::Region)
+    , path(path)
+{
 }
 
-RegionAttachment::~RegionAttachment() {
-	if (_sequence) delete _sequence;
+void RegionAttachment::setUVs(float u, float v, float u2, float v2, bool rotate)
+{
+    if (rotate) {
+        uvs[1].x = u;
+        uvs[1].y = v2;
+        uvs[2].x = u;
+        uvs[2].y = v;
+        uvs[3].x = u2;
+        uvs[3].y = v;
+        uvs[0].x = u2;
+        uvs[0].y = v2;
+    }
+    else {
+        uvs[0].x = u;
+        uvs[0].y = v2;
+        uvs[1].x = u;
+        uvs[1].y = v;
+        uvs[2].x = u2;
+        uvs[2].y = v;
+        uvs[3].x = u2;
+        uvs[3].y = v2;
+    }
 }
 
-void RegionAttachment::updateRegion() {
-	if (_region == NULL) {
-		_uvs[BLX] = 0;
-		_uvs[BLY] = 0;
-		_uvs[ULX] = 0;
-		_uvs[ULY] = 1;
-		_uvs[URX] = 1;
-		_uvs[URY] = 1;
-		_uvs[BRX] = 1;
-		_uvs[BRY] = 0;
-		return;
-	}
 
-	float regionScaleX = _width / _region->originalWidth * _scaleX;
-	float regionScaleY = _height / _region->originalHeight * _scaleY;
-	float localX = -_width / 2 * _scaleX + _region->offsetX * regionScaleX;
-	float localY = -_height / 2 * _scaleY + _region->offsetY * regionScaleY;
-	float localX2 = localX + _region->width * regionScaleX;
-	float localY2 = localY + _region->height * regionScaleY;
-	float cos = MathUtil::cosDeg(_rotation);
-	float sin = MathUtil::sinDeg(_rotation);
-	float localXCos = localX * cos + _x;
-	float localXSin = localX * sin;
-	float localYCos = localY * cos + _y;
-	float localYSin = localY * sin;
-	float localX2Cos = localX2 * cos + _x;
-	float localX2Sin = localX2 * sin;
-	float localY2Cos = localY2 * cos + _y;
-	float localY2Sin = localY2 * sin;
-
-	_vertexOffset[BLX] = localXCos - localYSin;
-	_vertexOffset[BLY] = localYCos + localXSin;
-	_vertexOffset[ULX] = localXCos - localY2Sin;
-	_vertexOffset[ULY] = localY2Cos + localXSin;
-	_vertexOffset[URX] = localX2Cos - localY2Sin;
-	_vertexOffset[URY] = localY2Cos + localX2Sin;
-	_vertexOffset[BRX] = localX2Cos - localYSin;
-	_vertexOffset[BRY] = localYCos + localX2Sin;
-
-	if (_region->degrees == 90) {
-		_uvs[URX] = _region->u;
-		_uvs[URY] = _region->v2;
-		_uvs[BRX] = _region->u;
-		_uvs[BRY] = _region->v;
-		_uvs[BLX] = _region->u2;
-		_uvs[BLY] = _region->v;
-		_uvs[ULX] = _region->u2;
-		_uvs[ULY] = _region->v2;
-	} else {
-		_uvs[ULX] = _region->u;
-		_uvs[ULY] = _region->v2;
-		_uvs[URX] = _region->u;
-		_uvs[URY] = _region->v;
-		_uvs[BRX] = _region->u2;
-		_uvs[BRY] = _region->v;
-		_uvs[BLX] = _region->u2;
-		_uvs[BLY] = _region->v2;
-	}
+void RegionAttachment::updateOffset()
+{
+    float regionScaleX = size.x / regionOriginalWidth * scale.x;
+    float regionScaleY = size.y / regionOriginalHeight * scale.y;
+    float localX = -size.x / 2 * scale.x + regionOffsetX * regionScaleX;
+    float localY = -size.y / 2 * scale.y + regionOffsetY * regionScaleY;
+    float localX2 = localX + regionWidth * regionScaleX;
+    float localY2 = localY + regionHeight * regionScaleY;
+    float radians = rotation * DEG_RAD;
+    float cosine = std::cos(radians), sine = std::sin(radians);
+    float localXCos = localX * cosine + translation.x;
+    float localXSin = localX * sine;
+    float localYCos = localY * cosine + translation.y;
+    float localYSin = localY * sine;
+    float localX2Cos = localX2 * cosine + translation.x;
+    float localX2Sin = localX2 * sine;
+    float localY2Cos = localY2 * cosine + translation.y;
+    float localY2Sin = localY2 * sine;
+    offset[0].x = localXCos - localYSin;
+    offset[0].y = localYCos + localXSin;
+    offset[1].x = localXCos - localY2Sin;
+    offset[1].y = localY2Cos + localXSin;
+    offset[2].x = localX2Cos - localY2Sin;
+    offset[2].y = localY2Cos + localX2Sin;
+    offset[3].x = localX2Cos - localYSin;
+    offset[3].y = localYCos + localX2Sin;
 }
 
-void RegionAttachment::computeWorldVertices(Slot &slot, Vector<float> &worldVertices, size_t offset, size_t stride) {
-	assert(worldVertices.size() >= (offset + 8));
-	computeWorldVertices(slot, worldVertices.buffer(), offset, stride);
+void RegionAttachment::computeWorldVertices(const Bone& bone, float* vertices) const
+{
+    float x = bone.skeleton.translation.x + bone.worldPos.x;
+    float y = bone.skeleton.translation.y + bone.worldPos.y;
+
+    vertices[0] = offset[0].x * bone.a + offset[0].y * bone.b + x;
+    vertices[1] = offset[0].x * bone.c + offset[0].y * bone.d + y;
+    vertices[2] = offset[1].x * bone.a + offset[1].y * bone.b + x;
+    vertices[3] = offset[1].x * bone.c + offset[1].y * bone.d + y;
+    vertices[4] = offset[2].x * bone.a + offset[2].y * bone.b + x;
+    vertices[5] = offset[2].x * bone.c + offset[2].y * bone.d + y;
+    vertices[6] = offset[3].x * bone.a + offset[3].y * bone.b + x;
+    vertices[7] = offset[3].x * bone.c + offset[3].y * bone.d + y;
 }
 
-void RegionAttachment::computeWorldVertices(Slot &slot, float *worldVertices, size_t offset, size_t stride) {
-	if (_sequence) _sequence->apply(&slot, this);
-
-	Bone &bone = slot.getBone();
-	float x = bone.getWorldX(), y = bone.getWorldY();
-	float a = bone.getA(), b = bone.getB(), c = bone.getC(), d = bone.getD();
-	float offsetX, offsetY;
-
-	offsetX = _vertexOffset[BRX];
-	offsetY = _vertexOffset[BRY];
-	worldVertices[offset] = offsetX * a + offsetY * b + x;// br
-	worldVertices[offset + 1] = offsetX * c + offsetY * d + y;
-	offset += stride;
-
-	offsetX = _vertexOffset[BLX];
-	offsetY = _vertexOffset[BLY];
-	worldVertices[offset] = offsetX * a + offsetY * b + x;// bl
-	worldVertices[offset + 1] = offsetX * c + offsetY * d + y;
-	offset += stride;
-
-	offsetX = _vertexOffset[ULX];
-	offsetY = _vertexOffset[ULY];
-	worldVertices[offset] = offsetX * a + offsetY * b + x;// ul
-	worldVertices[offset + 1] = offsetX * c + offsetY * d + y;
-	offset += stride;
-
-	offsetX = _vertexOffset[URX];
-	offsetY = _vertexOffset[URY];
-	worldVertices[offset] = offsetX * a + offsetY * b + x;// ur
-	worldVertices[offset + 1] = offsetX * c + offsetY * d + y;
-}
-
-float RegionAttachment::getX() {
-	return _x;
-}
-
-void RegionAttachment::setX(float inValue) {
-	_x = inValue;
-}
-
-float RegionAttachment::getY() {
-	return _y;
-}
-
-void RegionAttachment::setY(float inValue) {
-	_y = inValue;
-}
-
-float RegionAttachment::getRotation() {
-	return _rotation;
-}
-
-void RegionAttachment::setRotation(float inValue) {
-	_rotation = inValue;
-}
-
-float RegionAttachment::getScaleX() {
-	return _scaleX;
-}
-
-void RegionAttachment::setScaleX(float inValue) {
-	_scaleX = inValue;
-}
-
-float RegionAttachment::getScaleY() {
-	return _scaleY;
-}
-
-void RegionAttachment::setScaleY(float inValue) {
-	_scaleY = inValue;
-}
-
-float RegionAttachment::getWidth() {
-	return _width;
-}
-
-void RegionAttachment::setWidth(float inValue) {
-	_width = inValue;
-}
-
-float RegionAttachment::getHeight() {
-	return _height;
-}
-
-void RegionAttachment::setHeight(float inValue) {
-	_height = inValue;
-}
-
-const String &RegionAttachment::getPath() {
-	return _path;
-}
-
-void RegionAttachment::setPath(const String &inValue) {
-	_path = inValue;
-}
-
-TextureRegion *RegionAttachment::getRegion() {
-	return _region;
-}
-
-void RegionAttachment::setRegion(TextureRegion *region) {
-	_region = region;
-}
-
-Sequence *RegionAttachment::getSequence() {
-	return _sequence;
-}
-
-void RegionAttachment::setSequence(Sequence *sequence) {
-	_sequence = sequence;
-}
-
-Vector<float> &RegionAttachment::getOffset() {
-	return _vertexOffset;
-}
-
-Vector<float> &RegionAttachment::getUVs() {
-	return _uvs;
-}
-
-spine::Color &RegionAttachment::getColor() {
-	return _color;
-}
-
-Attachment *RegionAttachment::copy() {
-	RegionAttachment *copy = new (__FILE__, __LINE__) RegionAttachment(getName());
-	copy->_region = _region;
-	copy->setRendererObject(getRendererObject());
-	copy->_path = _path;
-	copy->_x = _x;
-	copy->_y = _y;
-	copy->_scaleX = _scaleX;
-	copy->_scaleY = _scaleY;
-	copy->_rotation = _rotation;
-	copy->_width = _width;
-	copy->_height = _height;
-	copy->_uvs.clearAndAddAll(_uvs);
-	copy->_vertexOffset.clearAndAddAll(_vertexOffset);
-	copy->_color.set(_color);
-	copy->_sequence = _sequence != NULL ? _sequence->copy() : NULL;
-	return copy;
 }

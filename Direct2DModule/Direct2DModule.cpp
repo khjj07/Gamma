@@ -324,7 +324,7 @@ void Direct2DModule::DrawBitmap(wstring bitmap, vector2 size, Matrix3x3 matrix, 
 }
 
 
-void Direct2DModule::DrawBitmap(wstring bitmap, vector2 size, vector2 offset,Matrix3x3 matrix, Material* material)
+void Direct2DModule::DrawBitmap(wstring bitmap, vector2 size, vector2 leftTop,vector2 rightBottom,Matrix3x3 matrix, Material* material)
 {
 	D2D1_RECT_F rectangle,srcRectangle;
 
@@ -333,10 +333,10 @@ void Direct2DModule::DrawBitmap(wstring bitmap, vector2 size, vector2 offset,Mat
 	rectangle.right = size.x / 2;
 	rectangle.bottom = size.y / 2;
 
-	srcRectangle.left = offset.x - size.x / 2;
-	srcRectangle.top = offset.y - size.y / 2;
-	srcRectangle.right = offset.x+ size.x / 2;
-	srcRectangle.bottom = offset.y+ size.y / 2;
+	srcRectangle.left = leftTop.x;
+	srcRectangle.top = leftTop.y;
+	srcRectangle.right = rightBottom.x;
+	srcRectangle.bottom = rightBottom.y;
 	
 
 	Matrix3x2F t = Matrix3x2F(matrix[0][0], matrix[1][0], matrix[0][1], matrix[1][1], matrix[0][2], matrix[1][2]);

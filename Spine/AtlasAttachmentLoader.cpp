@@ -1,115 +1,109 @@
-/******************************************************************************
- * Spine Runtimes License Agreement
- * Last updated September 24, 2021. Replaces all prior versions.
- *
- * Copyright (c) 2013-2021, Esoteric Software LLC
- *
- * Integration of the Spine Runtimes into software or otherwise creating
- * derivative works of the Spine Runtimes is permitted under the terms and
- * conditions of Section 2 of the Spine Editor License Agreement:
- * http://esotericsoftware.com/spine-editor-license
- *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software
- * or otherwise create derivative works of the Spine Runtimes (collectively,
- * "Products"), provided that each user of the Products must obtain their own
- * Spine Editor license and redistribution of the Products in any form must
- * include this license and copyright notice.
- *
- * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
- * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+////////////////////////////////////////////////////////////////////////////////
+// Spine Runtimes Software License
+// Version 2.4
+//
+// Copyright (c) 2013-2016, Esoteric Software
+// Copyright (c) 2016, Chobolabs
+// All rights reserved.
+//
+// You are granted a perpetual, non-exclusive, non-sublicensable and
+// non-transferable license to use, install, execute and perform the Spine
+// Runtimes Software (the "Software") and derivative works solely for personal
+// or internal use. Without the written permission of Esoteric Software (see
+// Section 2 of the Spine Software License Agreement), you may not (a) modify,
+// translate, adapt or otherwise create derivative works, improvements of
+// the Software or develop new applications using the Software or (b) remove,
+// delete, alter or obscure any trademarks or any copyright, trademark, patent
+// or other intellectual property or proprietary rights notices on or in the
+// Software, including any copy thereof. Redistributions in binary or source
+// form must include this license and terms.
+//
+// THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE AND CHOBOLABS "AS IS" AND ANY
+// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE OR CHOBOLABS BE LIABLE FOR
+// ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+////////////////////////////////////////////////////////////////////////////////
+#include "spinecpp/AtlasAttachmentLoader.h"
+#include "spinecpp/Atlas.h"
+#include "spinecpp/RegionAttachment.h"
+#include "spinecpp/MeshAttachment.h"
+#include "spinecpp/PathAttachment.h"
+#include "spinecpp/BoundingBoxAttachment.h"
 
-#include "spine/AtlasAttachmentLoader.h"
-#include "spine/BoundingBoxAttachment.h"
-#include "spine/ClippingAttachment.h"
-#include "spine/MeshAttachment.h"
-#include "spine/PathAttachment.h"
-#include "spine/PointAttachment.h"
-#include "spine/RegionAttachment.h"
-#include "spine/Skin.h"
+namespace spine
+{
 
-#include "spine/Atlas.h"
+AtlasAttachmentLoader::AtlasAttachmentLoader(const Atlas& atlas)
+    : m_atlas(atlas)
+{
+}
 
-namespace spine {
-	RTTI_IMPL(AtlasAttachmentLoader, AttachmentLoader)
+Attachment* AtlasAttachmentLoader::createAttachmentImpl(const Skin& skin, Attachment::Type type, const std::string& name, const std::string& path)
+{
+    switch (type) {
+    case Attachment::Type::Region:
+    {
+        auto region = m_atlas.findRegion(path);
 
-	AtlasAttachmentLoader::AtlasAttachmentLoader(Atlas *atlas) : AttachmentLoader(), _atlas(atlas) {
-	}
+        if (!region)
+        {
+            setError("Region not found: ", path);
+            return nullptr;
+        }
 
-	bool loadSequence(Atlas *atlas, const String &basePath, Sequence *sequence) {
-		Vector<TextureRegion *> &regions = sequence->getRegions();
-		for (int i = 0, n = (int) regions.size(); i < n; i++) {
-			String path = sequence->getPath(basePath, i);
-			regions[i] = atlas->findRegion(path);
-			if (!regions[i]) return false;
-			regions[i]->rendererObject = regions[i];
-		}
-		return true;
-	}
+        auto attachment = new RegionAttachment(name, path);
 
-	RegionAttachment *AtlasAttachmentLoader::newRegionAttachment(Skin &skin, const String &name, const String &path, Sequence *sequence) {
-		SP_UNUSED(skin);
-		RegionAttachment *attachment = new (__FILE__, __LINE__) RegionAttachment(name);
-		if (sequence) {
-			if (!loadSequence(_atlas, path, sequence)) return NULL;
-		} else {
-			AtlasRegion *region = findRegion(path);
-			if (!region) return NULL;
-			attachment->setRendererObject(region);
-			attachment->setRegion(region);
-		}
-		return attachment;
-	}
+        attachment->rendererObject = region;
+        attachment->setUVs(region->u, region->v, region->u2, region->v2, region->rotate);
+        attachment->regionOffsetX = region->offsetX;
+        attachment->regionOffsetY = region->offsetY;
+        attachment->regionWidth = region->width;
+        attachment->regionHeight = region->height;
+        attachment->regionOriginalWidth = region->originalWidth;
+        attachment->regionOriginalHeight = region->originalHeight;
 
-	MeshAttachment *AtlasAttachmentLoader::newMeshAttachment(Skin &skin, const String &name, const String &path, Sequence *sequence) {
-		SP_UNUSED(skin);
-		MeshAttachment *attachment = new (__FILE__, __LINE__) MeshAttachment(name);
+        return attachment;
+    }
+    case Attachment::Type::Mesh:
+    case Attachment::Type::LinkedMesh:
+    {
+        auto region = m_atlas.findRegion(path);
 
-		if (sequence) {
-			if (!loadSequence(_atlas, path, sequence)) return NULL;
-		} else {
-			AtlasRegion *region = findRegion(path);
-			if (!region) return NULL;
-			attachment->setRendererObject(region);
-			attachment->setRegion(region);
-		}
-		return attachment;
-	}
+        if (!region)
+        {
+            setError("Region for mesh not found: ", path);
+            return nullptr;
+        }
 
-	BoundingBoxAttachment *AtlasAttachmentLoader::newBoundingBoxAttachment(Skin &skin, const String &name) {
-		SP_UNUSED(skin);
-		return new (__FILE__, __LINE__) BoundingBoxAttachment(name);
-	}
+        auto attachment = new MeshAttachment(name, path);
+        attachment->rendererObject = region;
+        attachment->regionUV.x = region->u;
+        attachment->regionUV.y = region->v;
+        attachment->regionUV2.x = region->u2;
+        attachment->regionUV2.y = region->v2;
+        attachment->regionRotate = region->rotate;
+        attachment->regionOffsetX = region->offsetX;
+        attachment->regionOffsetY = region->offsetY;
+        attachment->regionWidth = region->width;
+        attachment->regionHeight = region->height;
+        attachment->regionOriginalWidth = region->originalWidth;
+        attachment->regionOriginalHeight = region->originalHeight;
+        return attachment;
+    }
+    case Attachment::Type::BoundingBox:
+        return new BoundingBoxAttachment(name);
+    case Attachment::Type::Path:
+        return new PathAttachment(name);
+    default:
+        setUnknownTypeError(type);
+        return nullptr;
+    }
+}
 
-	PathAttachment *AtlasAttachmentLoader::newPathAttachment(Skin &skin, const String &name) {
-		SP_UNUSED(skin);
-		return new (__FILE__, __LINE__) PathAttachment(name);
-	}
-
-	PointAttachment *AtlasAttachmentLoader::newPointAttachment(Skin &skin, const String &name) {
-		SP_UNUSED(skin);
-		return new (__FILE__, __LINE__) PointAttachment(name);
-	}
-
-	ClippingAttachment *AtlasAttachmentLoader::newClippingAttachment(Skin &skin, const String &name) {
-		SP_UNUSED(skin);
-		return new (__FILE__, __LINE__) ClippingAttachment(name);
-	}
-
-	void AtlasAttachmentLoader::configureAttachment(Attachment *attachment) {
-		SP_UNUSED(attachment);
-	}
-
-	AtlasRegion *AtlasAttachmentLoader::findRegion(const String &name) {
-		return _atlas->findRegion(name);
-	}
-
-}// namespace spine
+}
