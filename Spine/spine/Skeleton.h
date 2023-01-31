@@ -31,7 +31,6 @@
 #define Spine_Skeleton_h
 
 #include "Vector.h"
-#include "MathUtil.h"
 #include "SpineObject.h"
 #include "SpineString.h"
 #include "Color.h"

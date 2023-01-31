@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "spine/spine.h"
+
 
 #ifdef GammaEngineAPI_Exporting
 #define GammaEngineAPI __declspec(dllexport)

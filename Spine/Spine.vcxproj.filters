@@ -57,9 +57,6 @@
     <ClCompile Include="Log.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="MathUtil.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="MeshAttachment.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -434,9 +431,6 @@
     <ClInclude Include="spine\Log.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="spine\MathUtil.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
     <ClInclude Include="spine\MeshAttachment.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
@@ -453,6 +447,9 @@
       <Filter>소스 파일</Filter>
     </ClInclude>
     <ClInclude Include="spine\PathConstraintData.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="mathUtil.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
   </ItemGroup>

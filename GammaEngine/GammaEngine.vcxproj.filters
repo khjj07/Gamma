@@ -163,10 +163,10 @@
     <ClInclude Include="Animator.h">
       <Filter>Framework\Component\Animation</Filter>
     </ClInclude>
-    <ClInclude Include="SpineModel.h">
+    <ClInclude Include="GammaTextureLoader.h">
       <Filter>Framework\Component\Spine</Filter>
     </ClInclude>
-    <ClInclude Include="GammaTextureLoader.h">
+    <ClInclude Include="SpineModel.h">
       <Filter>Framework\Component\Spine</Filter>
     </ClInclude>
   </ItemGroup>

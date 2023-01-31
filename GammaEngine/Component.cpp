@@ -1,5 +1,6 @@
 #include "stdafx.h"
-using namespace GammaEngine;
+
+GammaEngine;
 
 GammaEngine::Component::Component(GameObject* g):componentList((* g->componentList))
 {

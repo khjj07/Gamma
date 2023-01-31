@@ -30,7 +30,7 @@
 #ifndef SPINE_COLOR_H
 #define SPINE_COLOR_H
 
-#include "spine/MathUtil.h"
+#include "SpineObject.h"
 
 namespace spine {
 	class SP_API Color : public SpineObject {
@@ -39,7 +39,7 @@ namespace spine {
 		}
 
 		Color(float r, float g, float b, float a) : r(r), g(g), b(b), a(a) {
-			clamp();
+			//clamp();
 		}
 
 		inline Color &set(float _r, float _g, float _b, float _a) {
@@ -47,7 +47,7 @@ namespace spine {
 			this->g = _g;
 			this->b = _b;
 			this->a = _a;
-			clamp();
+			//clamp();
 			return *this;
 		}
 
@@ -55,7 +55,7 @@ namespace spine {
 			this->r = _r;
 			this->g = _g;
 			this->b = _b;
-			clamp();
+			//clamp();
 			return *this;
 		}
 
@@ -64,7 +64,7 @@ namespace spine {
 			g = other.g;
 			b = other.b;
 			a = other.a;
-			clamp();
+			//clamp();
 			return *this;
 		}
 
@@ -73,7 +73,7 @@ namespace spine {
 			this->g += _g;
 			this->b += _b;
 			this->a += _a;
-			clamp();
+			//clamp();
 			return *this;
 		}
 
@@ -81,7 +81,7 @@ namespace spine {
 			this->r += _r;
 			this->g += _g;
 			this->b += _b;
-			clamp();
+			//clamp();
 			return *this;
 		}
 
@@ -90,17 +90,17 @@ namespace spine {
 			g += other.g;
 			b += other.b;
 			a += other.a;
-			clamp();
+			//clamp();
 			return *this;
 		}
 
-		inline Color &clamp() {
-			r = MathUtil::clamp(this->r, 0, 1);
-			g = MathUtil::clamp(this->g, 0, 1);
-			b = MathUtil::clamp(this->b, 0, 1);
-			a = MathUtil::clamp(this->a, 0, 1);
-			return *this;
-		}
+// 		inline Color &clamp() {
+// // 			r = clamp(this->r, 0, 1);
+// // 			g = clamp(this->g, 0, 1);
+// // 			b = clamp(this->b, 0, 1);
+// // 			a = clamp(this->a, 0, 1);
+// // 			return *this;
+// 		}
 
 		float r, g, b, a;
 	};

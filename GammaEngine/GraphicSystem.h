@@ -1,9 +1,8 @@
 #pragma once
 #include <vector>
-using namespace std;
-
 class RenderModule;
 class Material;
+
 namespace GammaEngine
 {
 	class Renderer;

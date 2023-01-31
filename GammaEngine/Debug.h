@@ -1,6 +1,5 @@
 #pragma once
 #include <vector>
-using namespace std;
 
 #ifdef GammaEngineAPI_Exporting
 #define GammaEngineAPI __declspec(dllexport)

@@ -35,6 +35,9 @@
 
 #include "spine/BoneData.h"
 
+#include <cmath>
+
+
 using namespace spine;
 
 RTTI_IMPL(TransformConstraint, Updatable)
@@ -150,7 +153,7 @@ void TransformConstraint::applyAbsoluteWorld() {
 	bool translate = mixX != 0 || mixY != 0;
 	Bone &target = *_target;
 	float ta = target._a, tb = target._b, tc = target._c, td = target._d;
-	float degRadReflect = ta * td - tb * tc > 0 ? MathUtil::Deg_Rad : -MathUtil::Deg_Rad;
+	float degRadReflect = ta * td - tb * tc > 0 ? Deg_Rad : -Deg_Rad;
 	float offsetRotation = _data._offsetRotation * degRadReflect, offsetShearY = _data._offsetShearY * degRadReflect;
 
 	for (size_t i = 0; i < _bones.size(); ++i) {
@@ -159,18 +162,18 @@ void TransformConstraint::applyAbsoluteWorld() {
 
 		if (mixRotate != 0) {
 			float a = bone._a, b = bone._b, c = bone._c, d = bone._d;
-			float r = MathUtil::atan2(tc, ta) - MathUtil::atan2(c, a) + offsetRotation;
-			if (r > MathUtil::Pi)
-				r -= MathUtil::Pi_2;
-			else if (r < -MathUtil::Pi)
-				r += MathUtil::Pi_2;
+			float r = atan2(tc, ta) - atan2(c, a) + offsetRotation;
+			if (r >Pi)
+				r -= Pi_2;
+			else if (r < -Pi)
+				r += Pi_2;
 
 			r *= mixRotate;
-			float cos = MathUtil::cos(r), sin = MathUtil::sin(r);
-			bone._a = cos * a - sin * c;
-			bone._b = cos * b - sin * d;
-			bone._c = sin * a + cos * c;
-			bone._d = sin * b + cos * d;
+			float _cos = cos(r), _sin = sin(r);
+			bone._a = _cos * a - _sin * c;
+			bone._b = _cos * b - _sin * d;
+			bone._c = _sin * a + _cos * c;
+			bone._d = _sin * b + _cos * d;
 		}
 
 		if (translate) {
@@ -181,32 +184,32 @@ void TransformConstraint::applyAbsoluteWorld() {
 		}
 
 		if (mixScaleX > 0) {
-			float s = MathUtil::sqrt(bone._a * bone._a + bone._c * bone._c);
-			if (s != 0) s = (s + (MathUtil::sqrt(ta * ta + tc * tc) - s + _data._offsetScaleX) * mixScaleX) / s;
+			float s = sqrt(bone._a * bone._a + bone._c * bone._c);
+			if (s != 0) s = (s + (sqrt(ta * ta + tc * tc) - s + _data._offsetScaleX) * mixScaleX) / s;
 			bone._a *= s;
 			bone._c *= s;
 		}
 
 		if (mixScaleY > 0) {
-			float s = MathUtil::sqrt(bone._b * bone._b + bone._d * bone._d);
-			if (s != 0) s = (s + (MathUtil::sqrt(tb * tb + td * td) - s + _data._offsetScaleY) * mixScaleY) / s;
+			float s = sqrt(bone._b * bone._b + bone._d * bone._d);
+			if (s != 0) s = (s + (sqrt(tb * tb + td * td) - s + _data._offsetScaleY) * mixScaleY) / s;
 			bone._b *= s;
 			bone._d *= s;
 		}
 
 		if (mixShearY > 0) {
 			float b = bone._b, d = bone._d;
-			float by = MathUtil::atan2(d, b);
-			float r = MathUtil::atan2(td, tb) - MathUtil::atan2(tc, ta) - (by - MathUtil::atan2(bone._c, bone._a));
-			if (r > MathUtil::Pi)
-				r -= MathUtil::Pi_2;
-			else if (r < -MathUtil::Pi)
-				r += MathUtil::Pi_2;
+			float by = atan2(d, b);
+			float r = atan2(td, tb) - atan2(tc, ta) - (by - atan2(bone._c, bone._a));
+			if (r > Pi)
+				r -= Pi_2;
+			else if (r < -Pi)
+				r += Pi_2;
 
 			r = by + (r + offsetShearY) * mixShearY;
-			float s = MathUtil::sqrt(b * b + d * d);
-			bone._b = MathUtil::cos(r) * s;
-			bone._d = MathUtil::sin(r) * s;
+			float s = sqrt(b * b + d * d);
+			bone._b = cos(r) * s;
+			bone._d = sin(r) * s;
 		}
 
 		bone.updateAppliedTransform();
@@ -218,7 +221,7 @@ void TransformConstraint::applyRelativeWorld() {
 	bool translate = mixX != 0 || mixY != 0;
 	Bone &target = *_target;
 	float ta = target._a, tb = target._b, tc = target._c, td = target._d;
-	float degRadReflect = ta * td - tb * tc > 0 ? MathUtil::Deg_Rad : -MathUtil::Deg_Rad;
+	float degRadReflect = ta * td - tb * tc > 0 ? Deg_Rad : -Deg_Rad;
 	float offsetRotation = _data._offsetRotation * degRadReflect, offsetShearY = _data._offsetShearY * degRadReflect;
 	for (size_t i = 0; i < _bones.size(); ++i) {
 		Bone *item = _bones[i];
@@ -226,18 +229,18 @@ void TransformConstraint::applyRelativeWorld() {
 
 		if (mixRotate != 0) {
 			float a = bone._a, b = bone._b, c = bone._c, d = bone._d;
-			float r = MathUtil::atan2(tc, ta) + offsetRotation;
-			if (r > MathUtil::Pi)
-				r -= MathUtil::Pi_2;
-			else if (r < -MathUtil::Pi)
-				r += MathUtil::Pi_2;
+			float r = atan2(tc, ta) + offsetRotation;
+			if (r > Pi)
+				r -= Pi_2;
+			else if (r < -Pi)
+				r += Pi_2;
 
 			r *= mixRotate;
-			float cos = MathUtil::cos(r), sin = MathUtil::sin(r);
-			bone._a = cos * a - sin * c;
-			bone._b = cos * b - sin * d;
-			bone._c = sin * a + cos * c;
-			bone._d = sin * b + cos * d;
+			float _cos = cos(r), _sin = sin(r);
+			bone._a = _cos * a - _sin * c;
+			bone._b = _cos * b - _sin * d;
+			bone._c = _sin * a + _cos * c;
+			bone._d = _sin * b + _cos * d;
 		}
 
 		if (translate) {
@@ -248,28 +251,28 @@ void TransformConstraint::applyRelativeWorld() {
 		}
 
 		if (mixScaleX != 0) {
-			float s = (MathUtil::sqrt(ta * ta + tc * tc) - 1 + _data._offsetScaleX) * mixScaleX + 1;
+			float s = (sqrt(ta * ta + tc * tc) - 1 + _data._offsetScaleX) * mixScaleX + 1;
 			bone._a *= s;
 			bone._c *= s;
 		}
 		if (mixScaleY != 0) {
-			float s = (MathUtil::sqrt(tb * tb + td * td) - 1 + _data._offsetScaleY) * mixScaleY + 1;
+			float s = (sqrt(tb * tb + td * td) - 1 + _data._offsetScaleY) * mixScaleY + 1;
 			bone._b *= s;
 			bone._d *= s;
 		}
 
 		if (mixShearY > 0) {
-			float r = MathUtil::atan2(td, tb) - MathUtil::atan2(tc, ta);
-			if (r > MathUtil::Pi)
-				r -= MathUtil::Pi_2;
-			else if (r < -MathUtil::Pi)
-				r += MathUtil::Pi_2;
+			float r = atan2(td, tb) - atan2(tc, ta);
+			if (r > Pi)
+				r -= Pi_2;
+			else if (r < -Pi)
+				r += Pi_2;
 
 			float b = bone._b, d = bone._d;
-			r = MathUtil::atan2(d, b) + (r - MathUtil::Pi / 2 + offsetShearY) * mixShearY;
-			float s = MathUtil::sqrt(b * b + d * d);
-			bone._b = MathUtil::cos(r) * s;
-			bone._d = MathUtil::sin(r) * s;
+			r = atan2(d, b) + (r - Pi / 2 + offsetShearY) * mixShearY;
+			float s = sqrt(b * b + d * d);
+			bone._b = cos(r) * s;
+			bone._d = sin(r) * s;
 		}
 
 		bone.updateAppliedTransform();

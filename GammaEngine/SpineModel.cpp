@@ -22,7 +22,7 @@ string GammaEngine::SpineModel::Create(string name,string atlasName, string json
 	
 	atlas = new spine::Atlas(atlasName.c_str(), new GammaTextureLoader());
 	if (atlas->getPages().size() == 0) {
-		printf("Failed to load atlas");
+		//printf("Failed to load atlas");
 		delete atlas;
 		exit(0);
 	}
@@ -30,7 +30,7 @@ string GammaEngine::SpineModel::Create(string name,string atlasName, string json
 	spine::SkeletonJson json(atlas);
 	skeletonData = json.readSkeletonDataFile(jsonName.c_str());
 	if (!skeletonData) {
-		printf("Failed to load skeleton data");
+		//printf("Failed to load skeleton data");
 		delete atlas;
 		exit(0);
 	}

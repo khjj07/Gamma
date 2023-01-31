@@ -30,8 +30,8 @@
 #include "spine/PointAttachment.h"
 
 #include "spine/Bone.h"
-
-#include "spine/MathUtil.h"
+#include "mathUtil.h"
+#include <cmath>
 
 using namespace spine;
 
@@ -45,12 +45,12 @@ void PointAttachment::computeWorldPosition(Bone &bone, float &ox, float &oy) {
 }
 
 float PointAttachment::computeWorldRotation(Bone &bone) {
-	float cos = MathUtil::cosDeg(_rotation);
-	float sin = MathUtil::sinDeg(_rotation);
-	float ix = cos * bone._a + sin * bone._b;
-	float iy = cos * bone._c + sin * bone._d;
+	float _cos = cos(_rotation)* Deg_Rad;
+	float _sin = sin(_rotation) * Deg_Rad;
+	float ix = _cos * bone._a + _sin * bone._b;
+	float iy = _cos * bone._c + _sin * bone._d;
 
-	return MathUtil::atan2(iy, ix) * MathUtil::Rad_Deg;
+	return atan2(iy, ix) * Rad_Deg;
 }
 
 float PointAttachment::getX() {

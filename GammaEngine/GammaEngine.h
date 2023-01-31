@@ -70,5 +70,6 @@
 
 //spine
 #include "SpineModel.h"
+#include "GammaTextureLoader.h"
 
 #include "Debug.h"

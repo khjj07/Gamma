@@ -46,7 +46,6 @@
     <ClCompile Include="Json.cpp" />
     <ClCompile Include="LinkedMesh.cpp" />
     <ClCompile Include="Log.cpp" />
-    <ClCompile Include="MathUtil.cpp" />
     <ClCompile Include="MeshAttachment.cpp" />
     <ClCompile Include="PathAttachment.cpp" />
     <ClCompile Include="PathConstraint.cpp" />
@@ -83,6 +82,7 @@
     <ClCompile Include="VertexAttachment.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="mathUtil.h" />
     <ClInclude Include="spine\SpineAnimation.h" />
     <ClInclude Include="spine\AnimationState.h" />
     <ClInclude Include="spine\AnimationStateData.h" />
@@ -118,7 +118,6 @@
     <ClInclude Include="spine\Json.h" />
     <ClInclude Include="spine\LinkedMesh.h" />
     <ClInclude Include="spine\Log.h" />
-    <ClInclude Include="spine\MathUtil.h" />
     <ClInclude Include="spine\MeshAttachment.h" />
     <ClInclude Include="spine\MixBlend.h" />
     <ClInclude Include="spine\MixDirection.h" />
@@ -190,7 +189,7 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>

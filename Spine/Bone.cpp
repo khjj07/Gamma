@@ -31,7 +31,7 @@
 
 #include "spine/BoneData.h"
 #include "spine/Skeleton.h"
-
+#include "mathUtil.h"
 using namespace spine;
 
 RTTI_IMPL(Bone, Updatable)
@@ -100,10 +100,10 @@ void Bone::updateWorldTransform(float x, float y, float rotation, float scaleX, 
 		float rotationY = rotation + 90 + shearY;
 		float sx = _skeleton.getScaleX();
 		float sy = _skeleton.getScaleY();
-		_a = MathUtil::cosDeg(rotation + shearX) * scaleX * sx;
-		_b = MathUtil::cosDeg(rotationY) * scaleY * sx;
-		_c = MathUtil::sinDeg(rotation + shearX) * scaleX * sy;
-		_d = MathUtil::sinDeg(rotationY) * scaleY * sy;
+		_a = cos(rotation + shearX) * Deg_Rad * scaleX * sx;
+		_b = cos(rotationY) * Deg_Rad * scaleY * sx;
+		_c = sin(rotation + shearX) * Deg_Rad * scaleX * sy;
+		_d = sin(rotationY)*Deg_Rad * scaleY * sy;
 		_worldX = x * sx + _skeleton.getX();
 		_worldY = y * sy + _skeleton.getY();
 		return;
